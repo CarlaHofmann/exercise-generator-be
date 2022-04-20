@@ -1,58 +1,87 @@
 openapi: '3.0.0'
 servers:
-  - url: http://localhost:8080/
+    -   url: http://localhost:8080/
 info:
-  version: 1.0.0
-  title: Execercise Generator API
+    version: 1.0.0
+    title: Execercise Generator API
 paths:
-  /test:
-    summary: Get test string
-    get:
-      tags:
-        - Test
-      summary: Get test string
-      operationId: getTest
-      responses:
-        '200':
-          description: Expected response to a valid request
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: pong
-  /test/book/{bookNumber}:
-    summary: Get test book
-    get:
-      tags:
-        - Test
-      summary: Get book json
-      operationId: getBook
-      parameters:
-        - in: path
-          name: bookNumber
-          schema:
-            type: integer
-          required: true
-          description: Number in the title of the book
-      responses:
-        '200':
-          description: Expected response to a valid request
-          content:
-            application/json:
-              schema:
-                type: Book
+    /test:
+        summary: Get test string
+        get:
+            tags:
+                - Test
+            summary: Get test string
+            operationId: getTest
+            responses:
+                '200':
+                    description: Expected response to a valid request
+                    content:
+                        text/plain:
+                            schema:
+                                type: string
+                                example: pong
+    /test/book/{bookNumber}:
+        summary: Get test book
+        get:
+            tags:
+                - Test
+            summary: Get book json
+            operationId: getBook
+            parameters:
+                -   in: path
+                    name: bookNumber
+                    schema:
+                        type: integer
+                    required: true
+                    description: Number in the title of the book
+            responses:
+                '200':
+                    description: Expected response to a valid request
+                    content:
+                        application/json:
+                            schema:
+                                type: Book
+    /login:
+        summary: Log in with credentials
+        post:
+            tags:
+                - Login
+            summary: Log in with credentials
+            operationId: logIn
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: LoginData
+                description: Data to log in
+            responses:
+                '200':
+                    description: Response if login was successful
+                '400':
+                    description: Response if login was not successful
 components:
-  schemas:
-    Book:
-      type: object
-      description: Literature work (novels, manuals, ...)
-      required:
-        - title
-        - language
-      properties:
-        title:
-          type: string
-        subtitle:
-          type: string
-        language:
-          type: string
+    schemas:
+        Book:
+            type: object
+            description: Literature work (novels, manuals, ...)
+            required:
+                - title
+                - language
+            properties:
+                title:
+                    type: string
+                subtitle:
+                    type: string
+                language:
+                    type: string
+        LoginData:
+            type: object
+            description: Data from Login-Form
+            required:
+                - name
+                - password
+            properties:
+                name:
+                    type: string
+                password:
+                    type: string
