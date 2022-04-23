@@ -1,0 +1,23 @@
+{"Object1":
+      {"id": "",
+        "title": "",
+        "text": "",
+        "shortText":"",
+        "Category": ["",""],
+        "creator":"",
+        "createdAt": "",
+        "updatedAt": "",
+        "images": ["",""],
+        "exercises": ["",""],
+        "solution": ["",""]
+      },
+  "Object2":
+      {"id": "",
+        "text": "",
+        "createdAt": "",
+        "updatedAt": "",
+        "images": ["",""],
+        "exercises": ["",""],
+        "solution": ["",""]
+      }
+}
