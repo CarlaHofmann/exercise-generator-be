@@ -1,0 +1,84 @@
+{"Object1":
+      {"id": "1",
+        "title": "Wahrscheinlichkeiten",
+        "text": "A, B, und C seien Ereignisse bei einem Zufallsexperiment mit:\n
+			\\begin{equation*}
+				\\begin{aligned}
+					P(A) = 0,2 P(B) = 0,4 P(C) = 0,3 \\\\
+					P(A \\cap B) = 0,1 p(A \\cap C) = 0,05 P (B \\cap C) = 0,15 \\\\
+					P(A \\cap B \\cap C) = 0,01
+				\\end{aligned}
+			\\end{equation*}
+ 
+	Drücke jedes der folgenden Ereignisse in Mengenschreibweise aus und berechne\n
+	seine Wahrscheinlichkeit!",
+        "shortText":"Drücke jedes der folgenden Ereignisse in Mengenschreibweise aus und berechne\n
+		seine Wahrscheinlichkeit!",
+        "Category": ["Wahrscheinlichkeiten"],
+        "creator":"Sebastian Bremm",
+        "createdAt": "25.04.2022",
+        "updatedAt": "25.04.2022",
+        "images": [],
+        "exercises": ["2","3", "4", "5"],
+        "solution": ["lastSlide.PNG"]
+      },
+  "Object2":
+      {"id": "2",
+        "text": "Mindestens eines der drei Ereignisse tritt ein.",
+        "createdAt": "25.04.2022",
+        "updatedAt": "25.04.2022",
+        "images": [],
+        "exercises": [],
+        "solution": ["Mindestens eines der drei Ereignisse tritt ein.\n
+			\\begin{equation*}
+			\\begin{aligned}
+			 |A \\cup B \\cup C| = |A| + |B| + |C| - |A \\cap B| - |A \\cap C| - |B \\cap C| + |A \\cap B \\cap C|
+			\}end{aligned}
+			\}end{equation*}\n
+			= 0,61", "solutionA.PNG"]
+	},
+  "Object3":
+      {"id": "3",
+        "text": "Keines der drei Ereignisse tritt ein.",
+        "createdAt": "25.04.2022",
+        "updatedAt": "25.04.2022",
+        "images": [],
+        "exercises": [],
+        "solution": ["Nicht a) → 1-a) = 1-0,61=0,39"]
+    },
+  "Object4":
+      {"id": "4",
+        "text": "Genau eines der drei Ereignisse tritt ein.",
+        "createdAt": "25.04.2022",
+        "updatedAt": "25.04.2022",
+        "images": [],
+        "exercises": [],
+        "solution": ["\\begin{equation*}
+			 \\begin{aligned}
+			     &P((A \\cap \\bar{B} \\cap \\bar{C})  \\cup (\\bar{A} \\cap B \\cap \\bar{C})  \\cup (\\bar{A} \\cap \\bar{B} \\cap C)) \\\\
+			     & = P(A) - P(A \\cap B) - P(A \\cap C) + P(A \\cap B \\cap C)\\\\
+			     & + P(B) - P(A \\cap B) - P(B \\cap C) + P(A \\cap B \\cap C)\\\\
+			     & + P(C) - P(A \\cap C) - P(B \\cap C) + P(A \\cap B \\cap C)\\\\
+			     & = 0,33
+			 \end{aligned}
+			 \end{equation*}"]
+    },
+  "Object5":
+      {"id": "5",
+        "text": " Genau zwei der drei Ereignisse treten ein.",
+        "createdAt": "25.04.2022",
+        "updatedAt": "25.04.2022",
+        "images": [],
+        "exercises": [],
+        "solution": ["\\begin{equation*}
+			\\begin{aligned}
+				P(A \\cap B) + P(A \\cap C) + P(B \\cap C) - 3*P(A \\cap B \\cap C) = 0,27
+			\\end{aligned}
+			\\end{equation*}\n
+			oder\n
+			Genau 2 = nicht keins $\\cap$ nicht 1 \\cap nicht 3\n
+			1-b)-c)-P(A \\cap B \\cap C)\\\n
+			=1-0,39-0,33-0,01\n
+			=0,27"]
+    },
+}

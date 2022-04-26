@@ -1,0 +1,61 @@
+{"Object6":
+      {"id": "6",
+        "title": "Diskrete Verteilungen",
+        "text": "Es wird mit 5 Würfeln gewürfelt. Die Würfel sind fair und ihre Würfelergebnisse sind\n
+			voneinander unabhängig.\n
+			Berechne die Wahrscheinlichkeit des Ereignisses!",
+        "shortText":"Berechne die Wahrscheinlichkeit des Ereignisses!",
+        "Category": ["Diskrete Verteilungen"],
+        "creator":"Sebastian Bremm",
+        "createdAt": "25.04.2022",
+        "updatedAt": "25.04.2022",
+        "images": [],
+        "exercises": ["7","8","9","10","11"],
+        "solution": []
+      },
+  "Object7":
+      {"id": "7",
+        "text": "Es fällt genau zweimal die Sechs.",
+        "createdAt": "25.04.2022",
+        "updatedAt": "25.04.2022",
+        "images": [],
+        "exercises": [],
+        "solution": ["B(5;1/6) f(2)=0,161"]
+	},
+  "Object8":
+  	  {"id": "8",
+	    "text": "Es fällt mindestens zweimal die Sechs.",
+	    "createdAt": "25.04.2022",
+	    "updatedAt": "25.04.2022",
+	    "images": [],
+	    "exercises": [],
+	    "solution": ["B(5;1/6) 1-F(1)=0,196"]
+    },
+  "Object9":
+  	  {"id": "9",
+	    "text": "Es fällt höchstens zweimal die Sechs.",
+	    "createdAt": "25.04.2022",
+	    "updatedAt": "25.04.2022",
+	    "images": [],
+	    "exercises": [],
+	    "solution": ["B(5;1/6) F(2)=0,964"]
+    },
+  "Object10":
+  	  {"id": "10",
+	    "text": "Bei genau drei Würfeln fällt die Augenzahl 4 oder größer.",
+	    "createdAt": "25.04.2022",
+	    "updatedAt": "25.04.2022",
+	    "images": [],
+	    "exercises": [],
+	    "solution": ["B(5;3/6) f(3)=0,312"]
+    },
+  "Object11":
+  	  {"id": "11",
+	    "text": "Bei mindestens drei Würfeln fällt die Augenzahl 4 oder größer.",
+	    "createdAt": "25.04.2022",
+	    "updatedAt": "25.04.2022",
+	    "images": [],
+	    "exercises": [],
+	    "solution": ["B(5;3/6) 1-F(2)=0,5"]
+    },
+}

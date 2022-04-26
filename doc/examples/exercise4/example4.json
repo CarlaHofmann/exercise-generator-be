@@ -1,0 +1,19 @@
+{"Object12":
+      {"id": "12",
+        "title": "Diskrete Verteilungen",
+        "text": "40% der Kaffeebesucher haben eine Kundenkarte.\n
+			60% der Kundenkartenbesitzer trinken einen großen Kaffee.\n
+			Bei den Personen ohne Kundenkarte sind es nur 30%.\n
+			Es werden zufällig 20 Kunden für eine Umfrage ausgewählt. Wie groß ist die\n
+			Wahrscheinlichkeit das mindestens 8 von ihnen eine Kundenkarte besitzen?\n
+			Nutzen Sie zur Lösung die Tabellen auf den nächsten beiden Seiten!",
+        "shortText":"",
+        "Category": ["Diskrete Verteilungen"],
+        "creator":"Sebastian Bremm",
+        "createdAt": "25.04.2022",
+        "updatedAt": "25.04.2022",
+        "images": ["table1","table2"],
+        "exercises": [],
+        "solution": ["B(20;0,4) 1-F(7) = 0,58\n B(20;0,6) F(12) = 0,58"]
+      },
+}
