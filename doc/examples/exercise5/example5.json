@@ -1,0 +1,32 @@
+{"Object13":
+      {"id": "13",
+        "title": "Boxplot",
+        "text": "",
+        "shortText":"",
+        "Category": ["Statistik"],
+        "creator":"Sebastian Bremm",
+        "createdAt": "25.04.2022",
+        "updatedAt": "25.04.2022",
+        "images": ["boxplot.PNG","table.PNG"],
+        "exercises": ["14","15"],
+        "solution": []
+      },
+  "Object14":
+      {"id": "14",
+        "text": "Zu welchem Datensatz (A,B,C oder D) gehört der gezeigte Boxplot?",
+        "createdAt": "25.04.2022",
+        "updatedAt": "25.04.2022",
+        "images": [],
+        "exercises": [],
+        "solution": ["A"]
+	  },
+  "Object15":
+      {"id": "15",
+        "text": "Ergänzen Sie den passenden Datensatz um die fehlenden Werte",
+        "createdAt": "25.04.2022",
+        "updatedAt": "25.04.2022",
+        "images": [],
+        "exercises": [],
+        "solution": ["solutionB.PNG"]
+	  },
+}

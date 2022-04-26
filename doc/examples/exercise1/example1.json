@@ -1,0 +1,14 @@
+{"Object0":
+      {"id": "0",
+        "title": "Daten",
+        "text": "Welche Datentypen liegen vor? (Nominal, Ordinal, Quantitativ)",
+        "shortText":"Welche Datentypen liegen vor? (Nominal, Ordinal, Quantitativ)",
+        "Category": ["Daten","Kennzahlen"],
+        "creator":"Sebastian Bremm",
+        "createdAt": "25.04.2022",
+        "updatedAt": "25.04.2022",
+        "images": ["table.PNG"],
+        "exercises": [],
+        "solution": ["solution.PNG"]
+      },
+}
