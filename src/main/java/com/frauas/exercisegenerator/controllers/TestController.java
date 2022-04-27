@@ -9,10 +9,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.openapitools.api.TestApi;
+import org.openapitools.model.Book;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class TestController {
+public class TestController implements TestApi {
     private TestService testService;
     private LatexGeneratorService latexGeneratorService;
 
@@ -39,8 +42,16 @@ public class TestController {
         return response;
     }
 
-    @GetMapping(value = "/test")
+    @GetMapping("beispiel")
     public String test() {
         return testService.test();
+    }
+
+    public ResponseEntity<String> getTest() {
+        return ResponseEntity.ok(testService.test());
+    }
+
+    public ResponseEntity<Book> getBook(@PathVariable("bookNumber") Integer bookNumber) {
+        return ResponseEntity.ok(testService.getBook(bookNumber));
     }
 }
