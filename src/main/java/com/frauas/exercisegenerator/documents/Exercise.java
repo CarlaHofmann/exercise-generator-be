@@ -31,8 +31,7 @@ public class Exercise {
 
     private List<String> images;
 
-    @DBRef
-    private List<Exercise> subExercises;
+    private List<String> subExercises;
 
     @DBRef
     private List<Solution> solutions;
