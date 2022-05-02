@@ -1,5 +1,8 @@
 package com.frauas.exercisegenerator.services;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.frauas.exercisegenerator.documents.Author;
 import com.frauas.exercisegenerator.documents.Exercise;
 import com.frauas.exercisegenerator.dtos.CreateExerciseDto;
@@ -21,6 +24,14 @@ public class ExerciseService {
 
     @Autowired
     AuthorRepository authorRepository;
+
+    public List<Exercise> getAllExercises() {
+        return this.exerciseRepository.findAll();
+    }
+
+    public Optional<Exercise> getExerciseById(String id) {
+        return this.exerciseRepository.findById(id);
+    }
 
     public Exercise createExerciseFromDto(CreateExerciseDto exerciseDto) {
         // TODO: Use actual author resolution via login credentials
