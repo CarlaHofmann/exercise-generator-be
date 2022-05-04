@@ -13,13 +13,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class LatexGeneratorService {
 
+    private String baseFolder = "./templates/";
+
     public byte[] renderLatexPdfContent(String contentString) throws Exception {
         this.writeContentFile(contentString);
 
         ProcBuilder builder = new ProcBuilder("latexmk")
+                .withWorkingDirectory(Paths.get(baseFolder).toFile())
                 .withArg("-interaction=nonstopmode")
                 .withArg("-pdf")
-                .withArg("base.tex")
+                .withArg("beamer.tex")
                 .withTimeoutMillis(10000);
 
         ProcResult result = builder.run();
@@ -28,7 +31,7 @@ public class LatexGeneratorService {
             throw new Exception("Command execution failed!");
         }
 
-        byte[] contents = Files.readAllBytes(Paths.get("base.pdf"));
+        byte[] contents = Files.readAllBytes(Paths.get(baseFolder, "beamer.pdf"));
 
         this.cleanupLatexFragments();
 
@@ -36,15 +39,19 @@ public class LatexGeneratorService {
     }
 
     public void writeContentFile(String contentString) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter("content.tex"));
+        BufferedWriter writer = new BufferedWriter(
+                new FileWriter(Paths.get(baseFolder, "content.tex").toAbsolutePath().toString()));
         writer.write(contentString);
         writer.close();
     }
 
     public ProcResult cleanupLatexFragments() {
         ProcBuilder builder = new ProcBuilder("latexmk")
-                .withArg("-c")
-                .withArg("base.tex");
+                .withWorkingDirectory(Paths.get(baseFolder).toFile())
+                .withArg("-C")
+                .withArg("-r")
+                .withArg("../.latexmkrc")
+                .withArg("beamer.tex");
 
         return builder.run();
 
