@@ -1,6 +1,6 @@
 package com.frauas.exercisegenerator.documents;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,8 +12,8 @@ public class SubExercise {
     private String text;
     private String shortText;
 
-    private ArrayList<String> images;
+    private List<String> images;
 
-    private ArrayList<Solution> solutions;
+    private List<Solution> solutions;
 
 }

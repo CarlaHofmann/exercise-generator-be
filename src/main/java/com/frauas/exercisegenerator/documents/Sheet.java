@@ -1,7 +1,7 @@
 package com.frauas.exercisegenerator.documents;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -30,8 +30,8 @@ public class Sheet {
     private Author author;
 
     @DBRef
-    private ArrayList<Category> categories;
+    private List<Category> categories;
 
     @DBRef
-    private ArrayList<Exercise> exercises;
+    private List<Exercise> exercises;
 }
