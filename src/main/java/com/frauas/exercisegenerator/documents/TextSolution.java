@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TextSolution extends Solution {
-    private final SolutionType type = SolutionType.TEXT;
+    private SolutionType type = SolutionType.TEXT;
 
     private String text;
 }

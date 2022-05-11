@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ImageSolution extends Solution {
-    private final SolutionType type = SolutionType.IMAGE;
+    private SolutionType type = SolutionType.IMAGE;
 
     private String url;
 }
