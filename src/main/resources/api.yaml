@@ -267,6 +267,12 @@ components:
             $ref: '#/components/schemas/SubExercise'
     Solution:
       type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - IMAGE
+          - TEXT
     SubExercise:
       type: object
       properties:

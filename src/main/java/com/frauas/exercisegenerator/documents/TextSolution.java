@@ -2,26 +2,28 @@ package com.frauas.exercisegenerator.documents;
 
 import com.frauas.exercisegenerator.enums.SolutionType;
 
-import lombok.AllArgsConstructor;
+import org.springframework.data.annotation.PersistenceConstructor;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.With;
 
 @Data
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class TextSolution extends Solution {
-    @With
-    private final SolutionType type;
-
     private String text;
 
     public TextSolution() {
-        this.type = SolutionType.TEXT;
+        super(SolutionType.TEXT);
     }
 
     public TextSolution(String text) {
-        this.type = SolutionType.IMAGE;
+        super(SolutionType.TEXT);
+        this.text = text;
+    }
+
+    @PersistenceConstructor
+    public TextSolution(SolutionType type, String text) {
+        super(SolutionType.TEXT);
         this.text = text;
     }
 }
