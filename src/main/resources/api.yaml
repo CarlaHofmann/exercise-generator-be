@@ -68,14 +68,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Category'
-  /test:
-    get:
-      tags:
-      - test-controller
-      operationId: test
-      responses:
-        "200":
-          description: OK
   /latex:
     get:
       tags:
