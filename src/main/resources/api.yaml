@@ -1,38 +1,293 @@
-openapi: '3.0.0'
-servers:
-    -   url: http://localhost:8080/
+openapi: 3.0.1
 info:
-    version: 1.0.0
-    title: Execercise Generator API
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8080
+  description: Generated server url
 paths:
-    /login:
-        summary: Log in with credentials
-        post:
-            tags:
-                - Login
-            summary: Log in with credentials
-            operationId: logIn
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: LoginRequest
-                description: Data to log in
-            responses:
-                '200':
-                    description: Response if login was successful
-                '400':
-                    description: Response if login was not successful
+  /exercise:
+    get:
+      tags:
+      - exercise-controller
+      operationId: getAllExercises
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Exercise'
+    post:
+      tags:
+      - exercise-controller
+      operationId: createExercise
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateExerciseDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exercise'
+  /categories:
+    get:
+      tags:
+      - category-controller
+      operationId: getAllCategories
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+    post:
+      tags:
+      - category-controller
+      operationId: createCategory
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCategoryDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+  /latex:
+    get:
+      tags:
+      - test-controller
+      operationId: getLatexPdf
+      parameters:
+      - name: content
+        in: query
+        required: false
+        schema:
+          type: string
+          default: Hello World!
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: byte
+  /latex/{exerciseId}:
+    get:
+      tags:
+      - test-controller
+      operationId: getExerciseLatex
+      parameters:
+      - name: exerciseId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: byte
+  /exercise/{id}:
+    get:
+      tags:
+      - exercise-controller
+      operationId: getExerciseById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exercise'
+  /categories/id:
+    get:
+      tags:
+      - category-controller
+      operationId: getCategoryById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
 components:
-    schemas:
-        LoginRequest:
-            type: object
-            description: Data from Login-Form
-            required:
-                - name
-                - password
-            properties:
-                name:
-                    type: string
-                password:
-                    type: string
+  schemas:
+    CreateExerciseDto:
+      required:
+      - categories
+      - solutions
+      - text
+      - title
+      type: object
+      properties:
+        title:
+          type: string
+        text:
+          type: string
+        shortText:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        solutions:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateSolutionDto'
+        categories:
+          type: array
+          items:
+            type: string
+        subExercises:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateSubExerciseDto'
+    CreateSolutionDto:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - IMAGE
+          - TEXT
+        content:
+          type: string
+    CreateSubExerciseDto:
+      required:
+      - solutions
+      - text
+      - title
+      type: object
+      properties:
+        title:
+          type: string
+        text:
+          type: string
+        shortText:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        solutions:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateSolutionDto'
+    Author:
+      type: object
+      properties:
+        id:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        name:
+          type: string
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    Exercise:
+      type: object
+      properties:
+        title:
+          type: string
+        text:
+          type: string
+        shortText:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        solutions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Solution'
+        id:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        author:
+          $ref: '#/components/schemas/Author'
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+        subExercises:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubExercise'
+    Solution:
+      type: object
+    SubExercise:
+      type: object
+      properties:
+        title:
+          type: string
+        text:
+          type: string
+        shortText:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        solutions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Solution'
+    CreateCategoryDto:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
