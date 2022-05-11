@@ -5,14 +5,23 @@ import com.frauas.exercisegenerator.enums.SolutionType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.With;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class TextSolution extends Solution {
-    private SolutionType type = SolutionType.TEXT;
+    @With
+    private final SolutionType type;
 
     private String text;
+
+    public TextSolution() {
+        this.type = SolutionType.TEXT;
+    }
+
+    public TextSolution(String text) {
+        this.type = SolutionType.IMAGE;
+        this.text = text;
+    }
 }
