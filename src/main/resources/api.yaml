@@ -265,6 +265,16 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SubExercise'
+    ImageSolution:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - IMAGE
+          - TEXT
+        url:
+          type: string
     Solution:
       type: object
       properties:
@@ -273,6 +283,9 @@ components:
           enum:
           - IMAGE
           - TEXT
+      oneOf:
+      - $ref: '#/components/schemas/TextSolution'
+      - $ref: '#/components/schemas/ImageSolution'
     SubExercise:
       type: object
       properties:
@@ -290,6 +303,16 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Solution'
+    TextSolution:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - IMAGE
+          - TEXT
+        text:
+          type: string
     CreateCategoryDto:
       required:
       - name

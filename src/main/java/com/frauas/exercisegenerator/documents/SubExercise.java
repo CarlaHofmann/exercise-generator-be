@@ -2,6 +2,7 @@ package com.frauas.exercisegenerator.documents;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ public class SubExercise {
 
     private List<String> images;
 
+    @Schema(oneOf = { TextSolution.class, ImageSolution.class }, discriminatorProperty = "type")
     private List<Solution> solutions;
 
 }
