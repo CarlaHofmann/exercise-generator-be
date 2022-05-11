@@ -102,12 +102,12 @@
 						<phase>test</phase>
 						<configuration>
 							<outputDirectory>${project.basedir}/doc</outputDirectory>
-							<outputFilename>diagram.plantuml</outputFilename>
+							<outputFilename>diagram.puml</outputFilename>
 							<scanPackages>
-								<scanPackage>
-								com.frauas.exercisegenerator.documents
-								</scanPackage>
+								<scanPackage>com.frauas.exercisegenerator.documents</scanPackage>
+								<scanPackage>com.frauas.exercisegenerator.enums</scanPackage>
 							</scanPackages>
+							<blacklistRegexp>.*Builder.*</blacklistRegexp>
 						</configuration>
 						<goals>
 							<goal>generate</goal>
