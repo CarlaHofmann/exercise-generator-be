@@ -6,7 +6,6 @@ import com.frauas.exercisegenerator.documents.Exercise;
 import com.frauas.exercisegenerator.repositories.ExerciseRepository;
 import com.frauas.exercisegenerator.services.LatexGeneratorService;
 
-import org.openapitools.api.TestApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class TestController implements TestApi {
+public class TestController {
     @Autowired
     private LatexGeneratorService latexGeneratorService;
 
