@@ -1,27 +1,20 @@
 package com.frauas.exercisegenerator.dtos;
 
-import java.util.List;
+import java.util.ArrayList;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class CreateExerciseDto {
-    @NotNull
-    private String title;
+@EqualsAndHashCode(callSuper = true)
+public class CreateExerciseDto extends CreateSubExerciseDto {
 
     @NotNull
-    private String text;
+    @NotEmpty
+    private ArrayList<String> categories;
 
-    private String shortText;
-
-    @NotNull
-    private List<String> categories;
-
-    private List<String> images;
-
-    private List<CreateExerciseDto> subExercises;
-
-    private List<CreateSolutionDto> solutions;
+    private ArrayList<CreateSubExerciseDto> subExercises;
 }

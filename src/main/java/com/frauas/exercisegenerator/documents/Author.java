@@ -17,7 +17,7 @@ import lombok.NonNull;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "authors")
+@Document
 public class Author {
 
     @Id
