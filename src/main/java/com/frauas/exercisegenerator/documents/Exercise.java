@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Document()
-public class Exercise extends SubExercise {
+public class Exercise extends AbstractExercise {
     @Id
     private String id;
 
