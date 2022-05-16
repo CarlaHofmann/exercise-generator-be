@@ -2,6 +2,7 @@ package com.frauas.exercisegenerator.documents;
 
 import com.frauas.exercisegenerator.enums.SolutionType;
 
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 import lombok.Data;

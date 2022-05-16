@@ -14,7 +14,7 @@ public class CreateSolutionDto {
 
     private SolutionType type;
 
-    private String content;
+    private String text;
 
     public static class SolutionConverter extends AbstractConverter<CreateSolutionDto, Solution> {
 
@@ -28,12 +28,12 @@ public class CreateSolutionDto {
 
             switch (source.getType()) {
                 case IMAGE:
-                    destination = new ImageSolution(source.getContent());
+                    destination = new ImageSolution(source.getText());
                     break;
 
                 case TEXT:
                 default:
-                    destination = new TextSolution(source.getContent());
+                    destination = new TextSolution(source.getText());
                     break;
             }
 
