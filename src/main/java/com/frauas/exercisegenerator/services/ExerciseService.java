@@ -1,8 +1,5 @@
 package com.frauas.exercisegenerator.services;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.frauas.exercisegenerator.documents.Author;
 import com.frauas.exercisegenerator.documents.Category;
 import com.frauas.exercisegenerator.documents.Exercise;
@@ -11,11 +8,14 @@ import com.frauas.exercisegenerator.dtos.CreateSolutionDto.SolutionConverter;
 import com.frauas.exercisegenerator.repositories.AuthorRepository;
 import com.frauas.exercisegenerator.repositories.CategoryRepository;
 import com.frauas.exercisegenerator.repositories.ExerciseRepository;
-
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ExerciseService {
@@ -58,9 +58,24 @@ public class ExerciseService {
             author = this.authorRepository.save(author);
         }
 
+
+        ArrayList<Category> categories = new ArrayList<>();
+        exerciseDto.getCategories().forEach(categoryDto -> {
+            Category category = this.categoryRepository.findByName(categoryDto.getName());
+
+            if(category == null){
+                category = Category.builder().name(categoryDto.getName()).build();
+                category = this.categoryRepository.save(category);
+            }
+
+            categories.add(category);
+        });
+
+
         Exercise exercise = this.modelMapper.map(exerciseDto, Exercise.class);
 
         exercise.setAuthor(author);
+        exercise.setCategories(categories);
 
         return this.exerciseRepository.save(exercise);
     }
