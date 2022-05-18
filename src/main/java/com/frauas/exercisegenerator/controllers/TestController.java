@@ -2,8 +2,10 @@ package com.frauas.exercisegenerator.controllers;
 
 import java.util.Optional;
 
+import com.frauas.exercisegenerator.converters.ImageBase64Converter;
 import com.frauas.exercisegenerator.documents.Exercise;
 import com.frauas.exercisegenerator.repositories.ExerciseRepository;
+import com.frauas.exercisegenerator.services.ImageService;
 import com.frauas.exercisegenerator.services.LatexGeneratorService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class TestController {
@@ -23,6 +22,9 @@ public class TestController {
 
     @Autowired
     private ExerciseRepository exerciseRepository;
+
+    @Autowired
+    private ImageService imageService;
 
     @GetMapping(value = "/latex")
     public ResponseEntity<byte[]> getLatexPdf(
@@ -67,5 +69,15 @@ public class TestController {
 
         ResponseEntity<byte[]> response = new ResponseEntity<>(contents, headers, HttpStatus.OK);
         return response;
+    }
+
+    @PostMapping("/image")
+    public ResponseEntity<String> saveImage(@RequestBody String imageString) throws Exception {
+        return ResponseEntity.ok(imageService.saveImage(imageString));
+    }
+
+    @GetMapping("/image")
+    public ResponseEntity<String> getImage() throws Exception {
+        return ResponseEntity.ok(imageService.getImage());
     }
 }
