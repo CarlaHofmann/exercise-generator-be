@@ -6,6 +6,66 @@ servers:
 - url: http://localhost:8080
   description: Generated server url
 paths:
+  /sheet:
+    get:
+      tags:
+      - sheet-controller
+      operationId: getAllSheets
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Sheet'
+    post:
+      tags:
+      - sheet-controller
+      operationId: createSheet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSheetDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sheet'
+  /image:
+    get:
+      tags:
+      - test-controller
+      operationId: getImage
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+    post:
+      tags:
+      - test-controller
+      operationId: saveImage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
   /exercise:
     get:
       tags:
@@ -68,6 +128,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Category'
+  /sheet/{id}:
+    get:
+      tags:
+      - sheet-controller
+      operationId: getSheetById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sheet'
+    delete:
+      tags:
+      - sheet-controller
+      operationId: deleteSheet
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
   /latex:
     get:
       tags:
@@ -129,6 +220,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exercise'
+    delete:
+      tags:
+      - exercise-controller
+      operationId: deleteExercise
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
   /categories/id:
     get:
       tags:
@@ -147,69 +251,48 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Category'
+  /categories/{id}:
+    delete:
+      tags:
+      - category-controller
+      operationId: deleteCategory
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
 components:
   schemas:
-    CreateExerciseDto:
+    CreateCategoryDto:
       required:
-      - categories
-      - solutions
-      - text
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+    CreateSheetDto:
+      required:
+      - exercises
       - title
       type: object
       properties:
         title:
           type: string
-        text:
+        publishedAt:
           type: string
-        shortText:
-          type: string
-        images:
+          format: date-time
+        exercises:
           type: array
           items:
             type: string
-        solutions:
-          type: array
-          items:
-            $ref: '#/components/schemas/CreateSolutionDto'
         categories:
           type: array
           items:
-            type: string
-        subExercises:
-          type: array
-          items:
-            $ref: '#/components/schemas/CreateSubExerciseDto'
-    CreateSolutionDto:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - IMAGE
-          - TEXT
-        content:
-          type: string
-    CreateSubExerciseDto:
-      required:
-      - solutions
-      - text
-      - title
-      type: object
-      properties:
-        title:
-          type: string
-        text:
-          type: string
-        shortText:
-          type: string
-        images:
-          type: array
-          items:
-            type: string
-        solutions:
-          type: array
-          items:
-            $ref: '#/components/schemas/CreateSolutionDto'
+            $ref: '#/components/schemas/CreateCategoryDto'
     Author:
       type: object
       properties:
@@ -275,6 +358,32 @@ components:
           - TEXT
         url:
           type: string
+    Sheet:
+      type: object
+      properties:
+        id:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        title:
+          type: string
+        publishedAt:
+          type: string
+          format: date-time
+        author:
+          $ref: '#/components/schemas/Author'
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+        exercises:
+          type: array
+          items:
+            $ref: '#/components/schemas/Exercise'
     Solution:
       type: object
       properties:
@@ -313,10 +422,64 @@ components:
           - TEXT
         text:
           type: string
-    CreateCategoryDto:
+    CreateExerciseDto:
       required:
-      - name
+      - categories
+      - solutions
+      - text
+      - title
       type: object
       properties:
-        name:
+        title:
           type: string
+        text:
+          type: string
+        shortText:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        solutions:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateSolutionDto'
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateCategoryDto'
+        subExercises:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateSubExerciseDto'
+    CreateSolutionDto:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - IMAGE
+          - TEXT
+        text:
+          type: string
+    CreateSubExerciseDto:
+      required:
+      - solutions
+      - text
+      - title
+      type: object
+      properties:
+        title:
+          type: string
+        text:
+          type: string
+        shortText:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+        solutions:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateSolutionDto'

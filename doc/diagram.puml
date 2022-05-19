@@ -28,6 +28,7 @@ class com.frauas.exercisegenerator.documents.Author {
 class com.frauas.exercisegenerator.documents.Category {
 	{field} +id : String
 	{field} +name : String
+	{method}  {static} +builder () : com.frauas.exercisegenerator.documents.Category$CategoryBuilder
 	{method} #canEqual ( paramObject1 : Object ) : boolean
 	{method} +equals ( paramObject1 : Object ) : boolean
 	{method} +hashCode () : int
@@ -58,6 +59,8 @@ class com.frauas.exercisegenerator.documents.ImageSolution {
 class com.frauas.exercisegenerator.documents.Sheet {
 	{field} +createdAt : java.time.LocalDateTime
 	{field} +id : String
+	{field} +publishedAt : java.time.LocalDateTime
+	{field} +title : String
 	{field} +updatedAt : java.time.LocalDateTime
 	{method} #canEqual ( paramObject1 : Object ) : boolean
 	{method} +equals ( paramObject1 : Object ) : boolean

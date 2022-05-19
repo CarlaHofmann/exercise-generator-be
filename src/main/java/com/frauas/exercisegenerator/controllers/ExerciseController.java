@@ -8,6 +8,7 @@ import com.frauas.exercisegenerator.dtos.CreateExerciseDto;
 import com.frauas.exercisegenerator.services.ExerciseService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,5 +36,10 @@ public class ExerciseController {
     @PostMapping
     public Exercise createExercise(@RequestBody CreateExerciseDto exerciseDto) {
         return this.exerciseService.createExerciseFromDto(exerciseDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteExercise(@PathVariable String id) {
+        exerciseService.deleteExerciseById(id);
     }
 }

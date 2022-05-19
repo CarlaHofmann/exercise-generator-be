@@ -1,21 +1,21 @@
 package com.frauas.exercisegenerator.services;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import com.frauas.exercisegenerator.documents.Author;
 import com.frauas.exercisegenerator.documents.Category;
 import com.frauas.exercisegenerator.documents.Exercise;
 import com.frauas.exercisegenerator.dtos.CreateExerciseDto;
-import com.frauas.exercisegenerator.dtos.CreateSolutionDto.SolutionConverter;
+import com.frauas.exercisegenerator.helpers.CategoryUpsertHelper;
 import com.frauas.exercisegenerator.repositories.AuthorRepository;
 import com.frauas.exercisegenerator.repositories.CategoryRepository;
 import com.frauas.exercisegenerator.repositories.ExerciseRepository;
-import org.modelmapper.AbstractConverter;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ExerciseService {
@@ -29,17 +29,11 @@ public class ExerciseService {
     @Autowired
     CategoryRepository categoryRepository;
 
+    @Autowired
     ModelMapper modelMapper;
 
-    public ExerciseService(ModelMapper modelMapper) {
-        this.modelMapper = modelMapper;
-
-        SolutionConverter solutionConverter = new SolutionConverter();
-        CategoryIdConverter categoryIdConverter = new CategoryIdConverter();
-
-        this.modelMapper.addConverter(solutionConverter);
-        this.modelMapper.addConverter(categoryIdConverter);
-    }
+    @Autowired
+    CategoryUpsertHelper categoryUpsertHelper;
 
     public List<Exercise> getAllExercises() {
         return this.exerciseRepository.findAll();
@@ -58,19 +52,7 @@ public class ExerciseService {
             author = this.authorRepository.save(author);
         }
 
-
-        ArrayList<Category> categories = new ArrayList<>();
-        exerciseDto.getCategories().forEach(categoryDto -> {
-            Category category = this.categoryRepository.findByName(categoryDto.getName());
-
-            if(category == null){
-                category = Category.builder().name(categoryDto.getName()).build();
-                category = this.categoryRepository.save(category);
-            }
-
-            categories.add(category);
-        });
-
+        ArrayList<Category> categories = categoryUpsertHelper.upsertCategoriesFromDto(exerciseDto.getCategories());
 
         Exercise exercise = this.modelMapper.map(exerciseDto, Exercise.class);
 
@@ -80,18 +62,7 @@ public class ExerciseService {
         return this.exerciseRepository.save(exercise);
     }
 
-    public class CategoryIdConverter extends AbstractConverter<String, Category> {
-        @Override
-        protected Category convert(String source) {
-            if (source != null) {
-                Optional<Category> optionalCategory = categoryRepository.findById(source);
-
-                if (optionalCategory.isPresent())
-                    return optionalCategory.get();
-            }
-
-            return null;
-        }
-
+    public void deleteExerciseById(String id) {
+        exerciseRepository.deleteById(id);
     }
 }

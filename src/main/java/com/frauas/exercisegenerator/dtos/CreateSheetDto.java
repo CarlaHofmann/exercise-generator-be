@@ -1,26 +1,25 @@
 package com.frauas.exercisegenerator.dtos;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-public abstract class AbstractCreateExerciseDto {
+@AllArgsConstructor
+public class CreateSheetDto {
     @NotNull
     private String title;
 
-    @NotNull
-    private String text;
-
-    private String shortText;
-
-    private ArrayList<String> images;
+    private LocalDateTime publishedAt;
 
     @NotNull
     @NotEmpty
-    private List<CreateSolutionDto> solutions;
+    private List<String> exercises;
+
+    private List<CreateCategoryDto> categories;
 }

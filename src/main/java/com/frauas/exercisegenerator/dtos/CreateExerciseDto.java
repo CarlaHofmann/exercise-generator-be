@@ -1,11 +1,10 @@
 package com.frauas.exercisegenerator.dtos;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import com.frauas.exercisegenerator.documents.Category;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,7 +14,7 @@ public class CreateExerciseDto extends AbstractCreateExerciseDto {
 
     @NotNull
     @NotEmpty
-    private ArrayList<CreateCategoryDto> categories;
+    private List<CreateCategoryDto> categories;
 
-    private ArrayList<CreateSubExerciseDto> subExercises;
+    private List<CreateSubExerciseDto> subExercises;
 }
