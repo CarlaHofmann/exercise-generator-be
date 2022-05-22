@@ -1,21 +1,21 @@
 package com.frauas.exercisegenerator.services;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.frauas.exercisegenerator.documents.Author;
 import com.frauas.exercisegenerator.documents.Category;
 import com.frauas.exercisegenerator.documents.Exercise;
 import com.frauas.exercisegenerator.dtos.CreateExerciseDto;
-import com.frauas.exercisegenerator.dtos.CreateSolutionDto.SolutionConverter;
 import com.frauas.exercisegenerator.repositories.AuthorRepository;
 import com.frauas.exercisegenerator.repositories.CategoryRepository;
 import com.frauas.exercisegenerator.repositories.ExerciseRepository;
-
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 public class ExerciseService {
@@ -34,10 +34,8 @@ public class ExerciseService {
     public ExerciseService(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
 
-        SolutionConverter solutionConverter = new SolutionConverter();
         CategoryIdConverter categoryIdConverter = new CategoryIdConverter();
 
-        this.modelMapper.addConverter(solutionConverter);
         this.modelMapper.addConverter(categoryIdConverter);
     }
 
@@ -58,9 +56,31 @@ public class ExerciseService {
             author = this.authorRepository.save(author);
         }
 
+
+        ArrayList<Category> categories = new ArrayList<>();
+        ArrayList<Category> hiddenCategories = new ArrayList<>();
+        Stream.concat(exerciseDto.getCategories().stream(), exerciseDto.getHiddenCategories().stream())
+                .forEach(categoryDto -> {
+                    Category category = this.categoryRepository.findByNameAndIsHidden(categoryDto.getName(), categoryDto.getIsHidden());
+
+                    if (category == null) {
+                        category = Category.builder().name(categoryDto.getName()).isHidden(categoryDto.getIsHidden()).build();
+                        category = this.categoryRepository.save(category);
+                    }
+
+                    if(category.getIsHidden()){
+                        hiddenCategories.add(category);
+                    }else{
+                        categories.add(category);
+                    }
+                });
+
+
         Exercise exercise = this.modelMapper.map(exerciseDto, Exercise.class);
 
         exercise.setAuthor(author);
+        exercise.setCategories(categories);
+        exercise.setHiddenCategories(hiddenCategories);
 
         return this.exerciseRepository.save(exercise);
     }
