@@ -60,7 +60,7 @@ public class TestController {
 
         String contentString = "\\section{" + exercise.getTitle() + "}\n\\begin{frame}[fragile]\n\\frametitle{"
                 + exercise.getTitle() + "}\n"
-                + exercise.getText() + "\n\\end{frame}";
+                + exercise.getTexts() + "\n\\end{frame}";
         byte[] contents = latexGeneratorService.renderLatexPdfContent(contentString);
 
         HttpHeaders headers = new HttpHeaders();

@@ -269,11 +269,14 @@ components:
   schemas:
     CreateCategoryDto:
       required:
+      - isHidden
       - name
       type: object
       properties:
         name:
           type: string
+        isHidden:
+          type: boolean
     CreateSheetDto:
       required:
       - exercises
@@ -313,23 +316,11 @@ components:
           type: string
         name:
           type: string
+        isHidden:
+          type: boolean
     Exercise:
       type: object
       properties:
-        title:
-          type: string
-        text:
-          type: string
-        shortText:
-          type: string
-        images:
-          type: array
-          items:
-            type: string
-        solutions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Solution'
         id:
           type: string
         createdAt:
@@ -340,24 +331,32 @@ components:
           format: date-time
         author:
           $ref: '#/components/schemas/Author'
+        title:
+          type: string
+        shortDescription:
+          type: string
+        note:
+          type: string
+        texts:
+          type: array
+          items:
+            type: string
+        solutions:
+          type: array
+          items:
+            type: string
+        images:
+          type: array
+          items:
+            type: string
         categories:
           type: array
           items:
             $ref: '#/components/schemas/Category'
-        subExercises:
+        hiddenCategories:
           type: array
           items:
-            $ref: '#/components/schemas/SubExercise'
-    ImageSolution:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - IMAGE
-          - TEXT
-        url:
-          type: string
+            $ref: '#/components/schemas/Category'
     Sheet:
       type: object
       properties:
@@ -384,102 +383,37 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Exercise'
-    Solution:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - IMAGE
-          - TEXT
-      oneOf:
-      - $ref: '#/components/schemas/TextSolution'
-      - $ref: '#/components/schemas/ImageSolution'
-    SubExercise:
-      type: object
-      properties:
-        title:
-          type: string
-        text:
-          type: string
-        shortText:
-          type: string
-        images:
-          type: array
-          items:
-            type: string
-        solutions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Solution'
-    TextSolution:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - IMAGE
-          - TEXT
-        text:
-          type: string
     CreateExerciseDto:
       required:
       - categories
       - solutions
-      - text
+      - texts
       - title
       type: object
       properties:
         title:
           type: string
-        text:
+        note:
           type: string
-        shortText:
+        shortDescription:
           type: string
-        images:
+        texts:
           type: array
           items:
             type: string
         solutions:
           type: array
           items:
-            $ref: '#/components/schemas/CreateSolutionDto'
+            type: string
+        images:
+          type: array
+          items:
+            type: string
         categories:
           type: array
           items:
             $ref: '#/components/schemas/CreateCategoryDto'
-        subExercises:
+        hiddenCategories:
           type: array
           items:
-            $ref: '#/components/schemas/CreateSubExerciseDto'
-    CreateSolutionDto:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - IMAGE
-          - TEXT
-        text:
-          type: string
-    CreateSubExerciseDto:
-      required:
-      - solutions
-      - text
-      - title
-      type: object
-      properties:
-        title:
-          type: string
-        text:
-          type: string
-        shortText:
-          type: string
-        images:
-          type: array
-          items:
-            type: string
-        solutions:
-          type: array
-          items:
-            $ref: '#/components/schemas/CreateSolutionDto'
+            $ref: '#/components/schemas/CreateCategoryDto'

@@ -1,23 +1,20 @@
 package com.frauas.exercisegenerator.documents;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Document()
-public class Exercise extends AbstractExercise {
+public class Exercise {
     @Id
     private String id;
 
@@ -30,8 +27,18 @@ public class Exercise extends AbstractExercise {
     @DBRef
     private Author author;
 
+    private String title;
+    private String shortDescription;
+    private String note;
+
+    private List<String> texts;
+
+    private List<String> solutions;
+
+    private List<String> images;
+
     @DBRef
     private List<Category> categories;
 
-    private List<SubExercise> subExercises;
+    private List<Category> hiddenCategories;
 }

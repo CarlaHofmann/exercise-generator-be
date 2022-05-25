@@ -6,15 +6,30 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class CreateExerciseDto extends AbstractCreateExerciseDto {
+public class CreateExerciseDto {
+
+    @NotNull
+    private String title;
+
+    private String note;
+
+    private String shortDescription;
+
+    @NotNull
+    @NotEmpty
+    private List<String> texts;
+
+    @NotNull
+    @NotEmpty
+    private List<String> solutions;
+
+    private List<String> images;
 
     @NotNull
     @NotEmpty
     private List<CreateCategoryDto> categories;
 
-    private List<CreateSubExerciseDto> subExercises;
+    private List<CreateCategoryDto> hiddenCategories;
 }

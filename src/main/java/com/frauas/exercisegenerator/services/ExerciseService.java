@@ -52,12 +52,16 @@ public class ExerciseService {
             author = this.authorRepository.save(author);
         }
 
-        ArrayList<Category> categories = categoryUpsertHelper.upsertCategoriesFromDto(exerciseDto.getCategories());
+        ArrayList<Category> categories = categoryUpsertHelper.upsertCategoriesFromDto(exerciseDto.getCategories(),
+                false);
+        ArrayList<Category> hiddenCategories = categoryUpsertHelper
+                .upsertCategoriesFromDto(exerciseDto.getHiddenCategories(), true);
 
         Exercise exercise = this.modelMapper.map(exerciseDto, Exercise.class);
 
         exercise.setAuthor(author);
         exercise.setCategories(categories);
+        exercise.setHiddenCategories(hiddenCategories);
 
         return this.exerciseRepository.save(exercise);
     }

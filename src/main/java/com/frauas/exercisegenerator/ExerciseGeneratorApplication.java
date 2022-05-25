@@ -1,7 +1,5 @@
 package com.frauas.exercisegenerator;
 
-import com.frauas.exercisegenerator.dtos.CreateSolutionDto.SolutionConverter;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -32,11 +30,6 @@ public class ExerciseGeneratorApplication {
 	@Bean
 	public ModelMapper modelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
-
-		// add converters
-		SolutionConverter solutionConverter = new SolutionConverter();
-
-		modelMapper.addConverter(solutionConverter);
 
 		return modelMapper;
 	}
