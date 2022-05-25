@@ -1,17 +1,18 @@
 package com.frauas.exercisegenerator.services;
 
-import com.frauas.exercisegenerator.converters.ImageBase64Converter;
-import org.apache.commons.io.FileUtils;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpServerErrorException;
-
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
+
+import com.frauas.exercisegenerator.converters.ImageBase64Converter;
+
+import org.apache.commons.io.FileUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 
 @Service
 public class ImageService {
@@ -42,7 +43,7 @@ public class ImageService {
     }
 
     public String getImage() throws IOException {
-        //T0D0 : durch richtige Implementierung ersetzen
+        // T0D0 : durch richtige Implementierung ersetzen
 
         File folder = new File(WORKING_IMAGE_DIR);
 
@@ -58,6 +59,7 @@ public class ImageService {
         String[] imageParts = randomImage.getName().split("\\.");
         String fileType = imageParts[imageParts.length - 1];
 
-        return "data:image/" + fileType + ";base64," + ImageBase64Converter.encodeToString(FileUtils.readFileToByteArray(randomImage));
+        return "data:image/" + fileType + ";base64,"
+                + ImageBase64Converter.encodeToString(FileUtils.readFileToByteArray(randomImage));
     }
 }

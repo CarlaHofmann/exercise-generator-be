@@ -26,6 +26,10 @@ public class Sheet {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    private String title;
+
+    private LocalDateTime publishedAt;
+
     @DBRef
     private Author author;
 

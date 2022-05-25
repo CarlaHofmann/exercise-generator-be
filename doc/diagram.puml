@@ -1,17 +1,5 @@
 @startuml
 
-abstract class com.frauas.exercisegenerator.documents.AbstractExercise {
-	{field} +images : java.util.List
-	{field} +shortText : String
-	{field} +text : String
-	{field} +title : String
-	{method} #canEqual ( paramObject1 : Object ) : boolean
-	{method} +equals ( paramObject1 : Object ) : boolean
-	{method} +hashCode () : int
-	{method} +toString () : String
-}
-
-
 class com.frauas.exercisegenerator.documents.Author {
 	{field} +createdAt : java.time.LocalDateTime
 	{field} +id : String
@@ -27,7 +15,9 @@ class com.frauas.exercisegenerator.documents.Author {
 
 class com.frauas.exercisegenerator.documents.Category {
 	{field} +id : String
+	{field} +isHidden : Boolean
 	{field} +name : String
+	{method}  {static} +builder () : com.frauas.exercisegenerator.documents.Category$CategoryBuilder
 	{method} #canEqual ( paramObject1 : Object ) : boolean
 	{method} +equals ( paramObject1 : Object ) : boolean
 	{method} +hashCode () : int
@@ -38,16 +28,13 @@ class com.frauas.exercisegenerator.documents.Category {
 class com.frauas.exercisegenerator.documents.Exercise {
 	{field} +createdAt : java.time.LocalDateTime
 	{field} +id : String
+	{field} +images : java.util.List
+	{field} +note : String
+	{field} +shortDescription : String
+	{field} +solutions : java.util.List
+	{field} +texts : java.util.List
+	{field} +title : String
 	{field} +updatedAt : java.time.LocalDateTime
-	{method} #canEqual ( paramObject1 : Object ) : boolean
-	{method} +equals ( paramObject1 : Object ) : boolean
-	{method} +hashCode () : int
-	{method} +toString () : String
-}
-
-
-class com.frauas.exercisegenerator.documents.ImageSolution {
-	{field} +url : String
 	{method} #canEqual ( paramObject1 : Object ) : boolean
 	{method} +equals ( paramObject1 : Object ) : boolean
 	{method} +hashCode () : int
@@ -58,28 +45,9 @@ class com.frauas.exercisegenerator.documents.ImageSolution {
 class com.frauas.exercisegenerator.documents.Sheet {
 	{field} +createdAt : java.time.LocalDateTime
 	{field} +id : String
+	{field} +publishedAt : java.time.LocalDateTime
+	{field} +title : String
 	{field} +updatedAt : java.time.LocalDateTime
-	{method} #canEqual ( paramObject1 : Object ) : boolean
-	{method} +equals ( paramObject1 : Object ) : boolean
-	{method} +hashCode () : int
-	{method} +toString () : String
-}
-
-
-abstract class com.frauas.exercisegenerator.documents.Solution {
-}
-
-
-class com.frauas.exercisegenerator.documents.SubExercise {
-	{method} #canEqual ( paramObject1 : Object ) : boolean
-	{method} +equals ( paramObject1 : Object ) : boolean
-	{method} +hashCode () : int
-	{method} +toString () : String
-}
-
-
-class com.frauas.exercisegenerator.documents.TextSolution {
-	{field} +text : String
 	{method} #canEqual ( paramObject1 : Object ) : boolean
 	{method} +equals ( paramObject1 : Object ) : boolean
 	{method} +hashCode () : int
@@ -99,26 +67,14 @@ class com.frauas.exercisegenerator.documents.User {
 }
 
 
-enum com.frauas.exercisegenerator.enums.SolutionType {
-	{field} +IMAGE
-	{field} +TEXT
-}
 
 
-
-
-com.frauas.exercisegenerator.documents.AbstractExercise "1" o-- "0..*"  com.frauas.exercisegenerator.documents.Solution : solutions
 com.frauas.exercisegenerator.documents.Exercise "1" o-- "0..*"  com.frauas.exercisegenerator.documents.Category : categories
-com.frauas.exercisegenerator.documents.Exercise "1" o-- "0..*"  com.frauas.exercisegenerator.documents.SubExercise : subExercises
+com.frauas.exercisegenerator.documents.Exercise "1" o-- "0..*"  com.frauas.exercisegenerator.documents.Category : hiddenCategories
 com.frauas.exercisegenerator.documents.Exercise -->  com.frauas.exercisegenerator.documents.Author : author
-com.frauas.exercisegenerator.documents.Exercise --|>  com.frauas.exercisegenerator.documents.AbstractExercise
-com.frauas.exercisegenerator.documents.ImageSolution --|>  com.frauas.exercisegenerator.documents.Solution
 com.frauas.exercisegenerator.documents.Sheet "1" o-- "0..*"  com.frauas.exercisegenerator.documents.Category : categories
 com.frauas.exercisegenerator.documents.Sheet "1" o-- "0..*"  com.frauas.exercisegenerator.documents.Exercise : exercises
 com.frauas.exercisegenerator.documents.Sheet -->  com.frauas.exercisegenerator.documents.Author : author
-com.frauas.exercisegenerator.documents.Solution -->  com.frauas.exercisegenerator.enums.SolutionType : type
-com.frauas.exercisegenerator.documents.SubExercise --|>  com.frauas.exercisegenerator.documents.AbstractExercise
-com.frauas.exercisegenerator.documents.TextSolution --|>  com.frauas.exercisegenerator.documents.Solution
 
 
 @enduml
