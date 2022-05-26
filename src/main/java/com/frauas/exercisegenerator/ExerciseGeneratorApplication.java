@@ -1,5 +1,10 @@
 package com.frauas.exercisegenerator;
 
+import com.github.jknack.handlebars.EscapingStrategy;
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -32,5 +37,17 @@ public class ExerciseGeneratorApplication {
 		ModelMapper modelMapper = new ModelMapper();
 
 		return modelMapper;
+	}
+
+	@Bean
+	public Handlebars handlebars() {
+		TemplateLoader loader = new ClassPathTemplateLoader();
+		loader.setPrefix("/templates");
+
+		Handlebars handlebars = new Handlebars(loader)
+				.prettyPrint(true)
+				.with(EscapingStrategy.NOOP);
+
+		return handlebars;
 	}
 }
