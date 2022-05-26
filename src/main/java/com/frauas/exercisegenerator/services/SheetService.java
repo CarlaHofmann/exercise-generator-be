@@ -9,6 +9,7 @@ import com.frauas.exercisegenerator.documents.Category;
 import com.frauas.exercisegenerator.documents.Exercise;
 import com.frauas.exercisegenerator.documents.Sheet;
 import com.frauas.exercisegenerator.dtos.CreateSheetDto;
+import com.frauas.exercisegenerator.exceptions.DocumentNotFoundException;
 import com.frauas.exercisegenerator.helpers.CategoryUpsertHelper;
 import com.frauas.exercisegenerator.repositories.AuthorRepository;
 import com.frauas.exercisegenerator.repositories.ExerciseRepository;
@@ -39,8 +40,13 @@ public class SheetService {
         return this.sheetRepository.findAll();
     }
 
-    public Optional<Sheet> getSheetById(String id) {
-        return this.sheetRepository.findById(id);
+    public Sheet getSheetById(String id) {
+        Optional<Sheet> optionalSheet = this.sheetRepository.findById(id);
+
+        if (optionalSheet.isEmpty())
+            throw new DocumentNotFoundException("Sheet with id '" + id + "' could not be found!");
+
+        return optionalSheet.get();
     }
 
     public Sheet createSheet(CreateSheetDto createSheetDto) {
@@ -54,13 +60,7 @@ public class SheetService {
 
         ArrayList<Category> categories = categoryUpsertHelper.upsertCategoriesFromDto(createSheetDto.getCategories());
         ArrayList<Exercise> exercises = new ArrayList<>();
-        createSheetDto.getExercises().forEach(exerciseId -> {
-            Optional<Exercise> optional = this.exerciseRepository.findById(exerciseId);
-
-            if (optional.isPresent()) {
-                exercises.add(optional.get());
-            }
-        });
+        this.exerciseRepository.findAllById(createSheetDto.getExercises()).forEach(exercises::add);
 
         Sheet sheet = modelMapper.map(createSheetDto, Sheet.class);
 
@@ -69,6 +69,27 @@ public class SheetService {
         sheet.setExercises(exercises);
 
         return sheetRepository.save(sheet);
+    }
+
+    public Sheet updateSheetById(String id, CreateSheetDto createSheetDto) {
+        Optional<Sheet> optionalSheet = this.sheetRepository.findById(id);
+
+        if (optionalSheet.isEmpty()) {
+            throw new DocumentNotFoundException("Sheet with id '" + id + "' could not be found!");
+        }
+
+        Sheet sheet = optionalSheet.get();
+
+        modelMapper.map(createSheetDto, sheet);
+
+        ArrayList<Category> categories = categoryUpsertHelper.upsertCategoriesFromDto(createSheetDto.getCategories());
+        ArrayList<Exercise> exercises = new ArrayList<>();
+        this.exerciseRepository.findAllById(createSheetDto.getExercises()).forEach(exercises::add);
+
+        sheet.setCategories(categories);
+        sheet.setExercises(exercises);
+
+        return sheet;
     }
 
     public void deleteSheetById(String id) {
