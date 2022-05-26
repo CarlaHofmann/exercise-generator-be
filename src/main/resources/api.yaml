@@ -6,6 +6,60 @@ servers:
 - url: http://localhost:8080
   description: Generated server url
 paths:
+  /sheet/{id}:
+    get:
+      tags:
+      - sheet-controller
+      operationId: getSheetById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sheet'
+    put:
+      tags:
+      - sheet-controller
+      operationId: updateSheet
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSheetDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sheet'
+    delete:
+      tags:
+      - sheet-controller
+      operationId: deleteSheet
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
   /sheet:
     get:
       tags:
@@ -128,37 +182,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Category'
-  /sheet/{id}:
-    get:
-      tags:
-      - sheet-controller
-      operationId: getSheetById
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Sheet'
-    delete:
-      tags:
-      - sheet-controller
-      operationId: deleteSheet
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
   /latex:
     get:
       tags:
