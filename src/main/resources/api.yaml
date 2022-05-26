@@ -269,14 +269,11 @@ components:
   schemas:
     CreateCategoryDto:
       required:
-      - isHidden
       - name
       type: object
       properties:
         name:
           type: string
-        isHidden:
-          type: boolean
     CreateSheetDto:
       required:
       - exercises
@@ -316,8 +313,13 @@ components:
           type: string
         name:
           type: string
-        isHidden:
-          type: boolean
+    Course:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
     Exercise:
       type: object
       properties:
@@ -353,10 +355,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Category'
-        hiddenCategories:
+        courses:
           type: array
           items:
-            $ref: '#/components/schemas/Category'
+            $ref: '#/components/schemas/Course'
     Sheet:
       type: object
       properties:
@@ -383,6 +385,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Exercise'
+    CreateCourseDto:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
     CreateExerciseDto:
       required:
       - categories
@@ -413,7 +422,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CreateCategoryDto'
-        hiddenCategories:
+        courses:
           type: array
           items:
-            $ref: '#/components/schemas/CreateCategoryDto'
+            $ref: '#/components/schemas/CreateCourseDto'

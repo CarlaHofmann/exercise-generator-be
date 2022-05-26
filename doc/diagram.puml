@@ -15,9 +15,19 @@ class com.frauas.exercisegenerator.documents.Author {
 
 class com.frauas.exercisegenerator.documents.Category {
 	{field} +id : String
-	{field} +isHidden : Boolean
 	{field} +name : String
 	{method}  {static} +builder () : com.frauas.exercisegenerator.documents.Category$CategoryBuilder
+	{method} #canEqual ( paramObject1 : Object ) : boolean
+	{method} +equals ( paramObject1 : Object ) : boolean
+	{method} +hashCode () : int
+	{method} +toString () : String
+}
+
+
+class com.frauas.exercisegenerator.documents.Course {
+	{field} +id : String
+	{field} +name : String
+	{method}  {static} +builder () : com.frauas.exercisegenerator.documents.Course$CourseBuilder
 	{method} #canEqual ( paramObject1 : Object ) : boolean
 	{method} +equals ( paramObject1 : Object ) : boolean
 	{method} +hashCode () : int
@@ -70,7 +80,7 @@ class com.frauas.exercisegenerator.documents.User {
 
 
 com.frauas.exercisegenerator.documents.Exercise "1" o-- "0..*"  com.frauas.exercisegenerator.documents.Category : categories
-com.frauas.exercisegenerator.documents.Exercise "1" o-- "0..*"  com.frauas.exercisegenerator.documents.Category : hiddenCategories
+com.frauas.exercisegenerator.documents.Exercise "1" o-- "0..*"  com.frauas.exercisegenerator.documents.Course : courses
 com.frauas.exercisegenerator.documents.Exercise -->  com.frauas.exercisegenerator.documents.Author : author
 com.frauas.exercisegenerator.documents.Sheet "1" o-- "0..*"  com.frauas.exercisegenerator.documents.Category : categories
 com.frauas.exercisegenerator.documents.Sheet "1" o-- "0..*"  com.frauas.exercisegenerator.documents.Exercise : exercises

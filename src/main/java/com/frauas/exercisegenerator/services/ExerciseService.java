@@ -6,9 +6,11 @@ import java.util.Optional;
 
 import com.frauas.exercisegenerator.documents.Author;
 import com.frauas.exercisegenerator.documents.Category;
+import com.frauas.exercisegenerator.documents.Course;
 import com.frauas.exercisegenerator.documents.Exercise;
 import com.frauas.exercisegenerator.dtos.CreateExerciseDto;
 import com.frauas.exercisegenerator.helpers.CategoryUpsertHelper;
+import com.frauas.exercisegenerator.helpers.CourseUpsertHelper;
 import com.frauas.exercisegenerator.repositories.AuthorRepository;
 import com.frauas.exercisegenerator.repositories.CategoryRepository;
 import com.frauas.exercisegenerator.repositories.ExerciseRepository;
@@ -35,6 +37,9 @@ public class ExerciseService {
     @Autowired
     CategoryUpsertHelper categoryUpsertHelper;
 
+    @Autowired
+    CourseUpsertHelper courseUpsertHelper;
+
     public List<Exercise> getAllExercises() {
         return this.exerciseRepository.findAll();
     }
@@ -52,16 +57,14 @@ public class ExerciseService {
             author = this.authorRepository.save(author);
         }
 
-        ArrayList<Category> categories = categoryUpsertHelper.upsertCategoriesFromDto(exerciseDto.getCategories(),
-                false);
-        ArrayList<Category> hiddenCategories = categoryUpsertHelper
-                .upsertCategoriesFromDto(exerciseDto.getHiddenCategories(), true);
+        ArrayList<Category> categories = categoryUpsertHelper.upsertCategoriesFromDto(exerciseDto.getCategories());
+        ArrayList<Course> courses = courseUpsertHelper.upsertCoursesFromDto(exerciseDto.getCourses());
 
         Exercise exercise = this.modelMapper.map(exerciseDto, Exercise.class);
 
         exercise.setAuthor(author);
         exercise.setCategories(categories);
-        exercise.setHiddenCategories(hiddenCategories);
+        exercise.setCourses(courses);
 
         return this.exerciseRepository.save(exercise);
     }

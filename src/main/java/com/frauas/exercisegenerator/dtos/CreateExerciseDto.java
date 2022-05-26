@@ -31,5 +31,5 @@ public class CreateExerciseDto {
     @NotEmpty
     private List<CreateCategoryDto> categories;
 
-    private List<CreateCategoryDto> hiddenCategories;
+    private List<CreateCourseDto> courses;
 }
