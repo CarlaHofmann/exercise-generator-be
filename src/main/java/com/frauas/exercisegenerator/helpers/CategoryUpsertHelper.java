@@ -16,20 +16,16 @@ public class CategoryUpsertHelper {
     CategoryRepository categoryRepository;
 
     public ArrayList<Category> upsertCategoriesFromDto(List<CreateCategoryDto> dtoCategories) {
-        return this.upsertCategoriesFromDto(dtoCategories, false);
-    }
-
-    public ArrayList<Category> upsertCategoriesFromDto(List<CreateCategoryDto> dtoCategories, boolean isHidden) {
         ArrayList<Category> categories = new ArrayList<>();
 
         dtoCategories.forEach(categoryDto -> {
-            Category category = this.categoryRepository.findByNameAndIsHidden(categoryDto.getName(), isHidden);
+            Category category = this.categoryRepository.findByName(categoryDto.getName());
 
             if (category == null) {
                 category = Category.builder()
                         .name(categoryDto.getName())
-                        .isHidden(isHidden)
                         .build();
+
                 category = this.categoryRepository.save(category);
             }
 
