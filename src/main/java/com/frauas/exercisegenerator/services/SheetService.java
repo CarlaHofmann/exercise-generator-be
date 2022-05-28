@@ -1,22 +1,20 @@
 package com.frauas.exercisegenerator.services;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import com.frauas.exercisegenerator.documents.Author;
-import com.frauas.exercisegenerator.documents.Category;
-import com.frauas.exercisegenerator.documents.Exercise;
-import com.frauas.exercisegenerator.documents.Sheet;
+import com.frauas.exercisegenerator.documents.*;
 import com.frauas.exercisegenerator.dtos.CreateSheetDto;
 import com.frauas.exercisegenerator.helpers.CategoryUpsertHelper;
+import com.frauas.exercisegenerator.helpers.CourseUpsertHelper;
 import com.frauas.exercisegenerator.repositories.AuthorRepository;
 import com.frauas.exercisegenerator.repositories.ExerciseRepository;
 import com.frauas.exercisegenerator.repositories.SheetRepository;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SheetService {
@@ -29,6 +27,9 @@ public class SheetService {
     @Autowired
     private SheetRepository sheetRepository;
 
+
+    @Autowired
+    private CourseUpsertHelper courseUpsertHelper;
     @Autowired
     private CategoryUpsertHelper categoryUpsertHelper;
 
@@ -52,19 +53,21 @@ public class SheetService {
             author = this.authorRepository.save(author);
         }
 
+        ArrayList<Course> courses = courseUpsertHelper.upsertCoursesFromDto(createSheetDto.getCourses());
         ArrayList<Category> categories = categoryUpsertHelper.upsertCategoriesFromDto(createSheetDto.getCategories());
+
         ArrayList<Exercise> exercises = new ArrayList<>();
         createSheetDto.getExercises().forEach(exerciseId -> {
             Optional<Exercise> optional = this.exerciseRepository.findById(exerciseId);
 
-            if (optional.isPresent()) {
-                exercises.add(optional.get());
-            }
+            optional.ifPresent(exercises::add);
         });
 
         Sheet sheet = modelMapper.map(createSheetDto, Sheet.class);
 
         sheet.setAuthor(author);
+        sheet.setPublishedAt(LocalDateTime.now());
+        sheet.setCourses(courses);
         sheet.setCategories(categories);
         sheet.setExercises(exercises);
 
