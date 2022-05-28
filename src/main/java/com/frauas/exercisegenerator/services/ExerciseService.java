@@ -12,11 +12,12 @@ import com.frauas.exercisegenerator.repositories.CategoryRepository;
 import com.frauas.exercisegenerator.repositories.ExerciseRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ExerciseService {
@@ -44,8 +45,9 @@ public class ExerciseService {
         return this.exerciseRepository.findAll();
     }
 
-    public Optional<Exercise> getExerciseById(String id) {
-        return this.exerciseRepository.findById(id);
+    public Exercise getExerciseById(String id) {
+        return this.exerciseRepository.findById(id)
+                .orElseThrow(() -> new HttpServerErrorException(HttpStatus.NOT_FOUND));
     }
 
     public Exercise createExerciseFromDto(CreateExerciseDto exerciseDto) {

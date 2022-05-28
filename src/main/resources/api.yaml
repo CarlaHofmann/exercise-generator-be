@@ -134,6 +134,70 @@ paths:
                 "200":
                     description: OK
 
+    /courses:
+        get:
+            tags:
+                - CourseApi
+            operationId: getAllCourses
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Course"
+        post:
+            tags:
+                - CourseApi
+            operationId: createCourse
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CreateCourseDto"
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Course"
+
+    /courses/{id}:
+        get:
+            tags:
+                - CourseApi
+            operationId: getCourseById
+            parameters:
+                -   name: id
+                    in: path
+                    required: true
+                    schema:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Course"
+        delete:
+            tags:
+                - CourseApi
+            operationId: deleteCourse
+            parameters:
+                -   name: id
+                    in: path
+                    required: true
+                    schema:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+
     /categories:
         get:
             tags:
@@ -337,9 +401,10 @@ components:
             type: object
             required:
                 - title
-                - texts
                 - categories
                 - solutions
+                - shortDescription
+                - texts
             properties:
                 id:
                     type: string

@@ -9,7 +9,9 @@ import com.frauas.exercisegenerator.repositories.ExerciseRepository;
 import com.frauas.exercisegenerator.repositories.SheetRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -40,8 +42,9 @@ public class SheetService {
         return this.sheetRepository.findAll();
     }
 
-    public Optional<Sheet> getSheetById(String id) {
-        return this.sheetRepository.findById(id);
+    public Sheet getSheetById(String id) {
+        return this.sheetRepository.findById(id)
+                .orElseThrow(() -> new HttpServerErrorException(HttpStatus.NOT_FOUND));
     }
 
     public Sheet createSheet(CreateSheetDto createSheetDto) {

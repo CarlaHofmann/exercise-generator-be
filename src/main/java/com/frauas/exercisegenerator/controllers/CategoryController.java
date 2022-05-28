@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/categories")
@@ -21,7 +20,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Category> getCategoryById(@PathVariable String id) {
+    public Category getCategoryById(@PathVariable String id) {
         return categoryService.getCategoryById(id);
     }
 
