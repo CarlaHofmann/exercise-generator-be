@@ -1,16 +1,15 @@
 package com.frauas.exercisegenerator.documents;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -26,12 +25,15 @@ public class Sheet {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    private String title;
-
     private LocalDateTime publishedAt;
+
+    private String title;
 
     @DBRef
     private Author author;
+
+    @DBRef
+    private List<Course> courses;
 
     @DBRef
     private List<Category> categories;

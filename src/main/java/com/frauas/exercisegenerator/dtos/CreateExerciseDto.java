@@ -1,11 +1,10 @@
 package com.frauas.exercisegenerator.dtos;
 
-import java.util.List;
+import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-
-import lombok.Data;
+import java.util.List;
 
 @Data
 public class CreateExerciseDto {
@@ -29,7 +28,9 @@ public class CreateExerciseDto {
 
     @NotNull
     @NotEmpty
-    private List<CreateCategoryDto> categories;
-
     private List<CreateCourseDto> courses;
+
+    @NotNull
+    @NotEmpty
+    private List<CreateCategoryDto> categories;
 }

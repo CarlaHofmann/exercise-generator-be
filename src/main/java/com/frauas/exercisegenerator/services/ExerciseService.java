@@ -1,9 +1,5 @@
 package com.frauas.exercisegenerator.services;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import com.frauas.exercisegenerator.documents.Author;
 import com.frauas.exercisegenerator.documents.Category;
 import com.frauas.exercisegenerator.documents.Course;
@@ -14,10 +10,13 @@ import com.frauas.exercisegenerator.helpers.CourseUpsertHelper;
 import com.frauas.exercisegenerator.repositories.AuthorRepository;
 import com.frauas.exercisegenerator.repositories.CategoryRepository;
 import com.frauas.exercisegenerator.repositories.ExerciseRepository;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ExerciseService {
@@ -35,10 +34,11 @@ public class ExerciseService {
     ModelMapper modelMapper;
 
     @Autowired
-    CategoryUpsertHelper categoryUpsertHelper;
+    CourseUpsertHelper courseUpsertHelper;
 
     @Autowired
-    CourseUpsertHelper courseUpsertHelper;
+    CategoryUpsertHelper categoryUpsertHelper;
+
 
     public List<Exercise> getAllExercises() {
         return this.exerciseRepository.findAll();
@@ -57,14 +57,14 @@ public class ExerciseService {
             author = this.authorRepository.save(author);
         }
 
-        ArrayList<Category> categories = categoryUpsertHelper.upsertCategoriesFromDto(exerciseDto.getCategories());
         ArrayList<Course> courses = courseUpsertHelper.upsertCoursesFromDto(exerciseDto.getCourses());
+        ArrayList<Category> categories = categoryUpsertHelper.upsertCategoriesFromDto(exerciseDto.getCategories());
 
         Exercise exercise = this.modelMapper.map(exerciseDto, Exercise.class);
 
         exercise.setAuthor(author);
-        exercise.setCategories(categories);
         exercise.setCourses(courses);
+        exercise.setCategories(categories);
 
         return this.exerciseRepository.save(exercise);
     }
