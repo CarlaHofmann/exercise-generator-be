@@ -1,4 +1,4 @@
-openapi: 3.0.1
+openapi: 3.0.0
 info:
     title: OpenAPI definition
     version: v0
@@ -9,7 +9,7 @@ paths:
     /sheet:
         get:
             tags:
-                - SheetAPI
+                - SheetApi
             operationId: getAllSheets
             responses:
                 "200":
@@ -22,7 +22,7 @@ paths:
                                     $ref: "#/components/schemas/Sheet"
         post:
             tags:
-                - SheetAPI
+                - SheetApi
             operationId: createSheet
             requestBody:
                 content:
@@ -41,7 +41,7 @@ paths:
     /sheet/{id}:
         get:
             tags:
-                - SheetAPI
+                - SheetApi
             operationId: getSheetById
             parameters:
                 -   name: id
@@ -58,7 +58,7 @@ paths:
                                 $ref: "#/components/schemas/Sheet"
         delete:
             tags:
-                - SheetAPI
+                - SheetApi
             operationId: deleteSheet
             parameters:
                 -   name: id
@@ -73,7 +73,7 @@ paths:
     /exercise:
         get:
             tags:
-                - ExerciseAPI
+                - ExerciseApi
             operationId: getAllExercises
             responses:
                 "200":
@@ -86,7 +86,7 @@ paths:
                                     $ref: "#/components/schemas/Exercise"
         post:
             tags:
-                - ExerciseAPI
+                - ExerciseApi
             operationId: createExercise
             requestBody:
                 content:
@@ -105,7 +105,7 @@ paths:
     /exercise/{id}:
         get:
             tags:
-                - ExerciseAPI
+                - ExerciseApi
             operationId: getExerciseById
             parameters:
                 -   name: id
@@ -122,7 +122,7 @@ paths:
                                 $ref: "#/components/schemas/Exercise"
         delete:
             tags:
-                - ExerciseAPI
+                - ExerciseApi
             operationId: deleteExercise
             parameters:
                 -   name: id
@@ -137,7 +137,7 @@ paths:
     /categories:
         get:
             tags:
-                - CategoryAPI
+                - CategoryApi
             operationId: getAllCategories
             responses:
                 "200":
@@ -150,7 +150,7 @@ paths:
                                     $ref: "#/components/schemas/Category"
         post:
             tags:
-                - CategoryAPI
+                - CategoryApi
             operationId: createCategory
             requestBody:
                 content:
@@ -169,7 +169,7 @@ paths:
     /categories/{id}:
         get:
             tags:
-                - CategoryAPI
+                - CategoryApi
             operationId: getCategoryById
             parameters:
                 -   name: id
@@ -186,7 +186,7 @@ paths:
                                 $ref: "#/components/schemas/Category"
         delete:
             tags:
-                - CategoryAPI
+                - CategoryApi
             operationId: deleteCategory
             parameters:
                 -   name: id
@@ -201,7 +201,7 @@ paths:
     /latex:
         get:
             tags:
-                - TestAPI
+                - TestApi
             operationId: getLatexPdf
             parameters:
                 -   name: content
@@ -224,7 +224,7 @@ paths:
     /latex/{exerciseId}:
         get:
             tags:
-                - TestAPI
+                - TestApi
             operationId: getExerciseLatex
             parameters:
                 -   name: exerciseId
@@ -246,7 +246,7 @@ paths:
     /image:
         get:
             tags:
-                - TestAPI
+                - TestApi
             operationId: getImage
             responses:
                 "200":
@@ -257,7 +257,7 @@ paths:
                                 type: string
         post:
             tags:
-                - TestAPI
+                - TestApi
             operationId: saveImage
             requestBody:
                 content:
@@ -322,7 +322,7 @@ components:
                     type: string
                 name:
                     type: string
-                    
+
         Category:
             type: object
             required:
