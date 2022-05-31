@@ -38,7 +38,8 @@ public class Exercise {
     private List<String> images;
 
     @DBRef
-    private List<Category> categories;
+    private List<Course> courses;
 
-    private List<Category> hiddenCategories;
+    @DBRef
+    private List<Category> categories;
 }

@@ -1,4 +1,4 @@
-openapi: 3.0.1
+openapi: 3.0.0
 info:
     title: OpenAPI definition
     version: v0
@@ -6,10 +6,74 @@ servers:
     -   url: http://localhost:8080
         description: Generated server url
 paths:
+    /sheet:
+        get:
+            tags:
+                - SheetApi
+            operationId: getAllSheets
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Sheet"
+        post:
+            tags:
+                - SheetApi
+            operationId: createSheet
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CreateSheetDto"
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Sheet"
+
+    /sheet/{id}:
+        get:
+            tags:
+                - SheetApi
+            operationId: getSheetById
+            parameters:
+                -   name: id
+                    in: path
+                    required: true
+                    schema:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Sheet"
+        delete:
+            tags:
+                - SheetApi
+            operationId: deleteSheet
+            parameters:
+                -   name: id
+                    in: path
+                    required: true
+                    schema:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+
     /exercise:
         get:
             tags:
-                - exercise-controller
+                - ExerciseApi
             operationId: getAllExercises
             responses:
                 "200":
@@ -19,16 +83,16 @@ paths:
                             schema:
                                 type: array
                                 items:
-                                    $ref: '#/components/schemas/Exercise'
+                                    $ref: "#/components/schemas/Exercise"
         post:
             tags:
-                - exercise-controller
+                - ExerciseApi
             operationId: createExercise
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/CreateExerciseDto'
+                            $ref: "#/components/schemas/CreateExerciseDto"
                 required: true
             responses:
                 "200":
@@ -36,11 +100,108 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/Exercise'
+                                $ref: "#/components/schemas/Exercise"
+
+    /exercise/{id}:
+        get:
+            tags:
+                - ExerciseApi
+            operationId: getExerciseById
+            parameters:
+                -   name: id
+                    in: path
+                    required: true
+                    schema:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Exercise"
+        delete:
+            tags:
+                - ExerciseApi
+            operationId: deleteExercise
+            parameters:
+                -   name: id
+                    in: path
+                    required: true
+                    schema:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+
+    /courses:
+        get:
+            tags:
+                - CourseApi
+            operationId: getAllCourses
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Course"
+        post:
+            tags:
+                - CourseApi
+            operationId: createCourse
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CreateCourseDto"
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Course"
+
+    /courses/{id}:
+        get:
+            tags:
+                - CourseApi
+            operationId: getCourseById
+            parameters:
+                -   name: id
+                    in: path
+                    required: true
+                    schema:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Course"
+        delete:
+            tags:
+                - CourseApi
+            operationId: deleteCourse
+            parameters:
+                -   name: id
+                    in: path
+                    required: true
+                    schema:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+
     /categories:
         get:
             tags:
-                - category-controller
+                - CategoryApi
             operationId: getAllCategories
             responses:
                 "200":
@@ -50,16 +211,16 @@ paths:
                             schema:
                                 type: array
                                 items:
-                                    $ref: '#/components/schemas/Category'
+                                    $ref: "#/components/schemas/Category"
         post:
             tags:
-                - category-controller
+                - CategoryApi
             operationId: createCategory
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/CreateCategoryDto'
+                            $ref: "#/components/schemas/CreateCategoryDto"
                 required: true
             responses:
                 "200":
@@ -67,11 +228,44 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/Category'
+                                $ref: "#/components/schemas/Category"
+
+    /categories/{id}:
+        get:
+            tags:
+                - CategoryApi
+            operationId: getCategoryById
+            parameters:
+                -   name: id
+                    in: path
+                    required: true
+                    schema:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Category"
+        delete:
+            tags:
+                - CategoryApi
+            operationId: deleteCategory
+            parameters:
+                -   name: id
+                    in: path
+                    required: true
+                    schema:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+
     /latex:
         get:
             tags:
-                - test-controller
+                - TestApi
             operationId: getLatexPdf
             parameters:
                 -   name: content
@@ -90,10 +284,11 @@ paths:
                                 items:
                                     type: string
                                     format: byte
+
     /latex/{exerciseId}:
         get:
             tags:
-                - test-controller
+                - TestApi
             operationId: getExerciseLatex
             parameters:
                 -   name: exerciseId
@@ -111,67 +306,120 @@ paths:
                                 items:
                                     type: string
                                     format: byte
-    /exercise/{id}:
+
+    /image:
         get:
             tags:
-                - exercise-controller
-            operationId: getExerciseById
-            parameters:
-                -   name: id
-                    in: path
-                    required: true
-                    schema:
-                        type: string
+                - TestApi
+            operationId: getImage
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/Exercise'
-    /categories/id:
-        get:
+                                type: string
+        post:
             tags:
-                - category-controller
-            operationId: getCategoryById
-            parameters:
-                -   name: id
-                    in: path
-                    required: true
-                    schema:
-                        type: string
+                - TestApi
+            operationId: saveImage
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: string
+                required: true
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/Category'
+                                type: string
+
 components:
     schemas:
-        Exercise:
+        Sheet:
             type: object
-            description: the exercise object
             required:
                 - title
-                - text
+                - author
+                - categories
+                - exercises
+            properties:
+                id:
+                    type: string
+                title:
+                    type: string
+                publishedAt:
+                    type: string
+                    format: date-time
+                author:
+                    $ref: "#/components/schemas/Author"
+                courses:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/Course"
+                categories:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/Category"
+                exercises:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/Exercise"
+
+        Author:
+            type: object
+            required:
+                - name
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+
+        Course:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+
+        Category:
+            type: object
+            required:
+                - name
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+
+        Exercise:
+            type: object
+            required:
+                - title
                 - categories
                 - solutions
+                - shortDescription
+                - texts
             properties:
                 id:
                     type: string
                 author:
-                    $ref: '#/components/schemas/Author'
-                title:
-                    type: string
+                    $ref: "#/components/schemas/Author"
+                courses:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/Course"
                 categories:
                     type: array
                     items:
-                        $ref: '#/components/schemas/Category'
-                hiddenCategories:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/Category'
+                        $ref: "#/components/schemas/Category"
+                title:
+                    type: string
                 shortDescription:
                     type: string
                 note:
@@ -180,39 +428,58 @@ components:
                     type: array
                     items:
                         type: string
+                solutions:
+                    type: array
+                    items:
+                        type: string
                 images:
                     type: array
                     items:
                         type: string
-                solutions:
+
+        CreateSheetDto:
+            required:
+                - title
+                - courses
+                - categories
+                - exercises
+            type: object
+            properties:
+                title:
+                    type: string
+                courses:
                     type: array
                     items:
-                        $ref: string
+                        $ref: "#/components/schemas/CreateCourseDto"
+                categories:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/CreateCategoryDto"
+                exercises:
+                    type: array
+                    items:
+                        type: string
 
-        Author:
-            type: object
-            description: the author object
-            properties:
-                name:
-                    type: string
-
-        Category:
-            type: object
-            description: the category object
+        CreateCourseDto:
             required:
                 - name
-                - isHidden
+            type: object
             properties:
-                id:
-                    type: string
                 name:
                     type: string
-                isHidden:
-                    type: boolean
+
+        CreateCategoryDto:
+            required:
+                - name
+            type: object
+            properties:
+                name:
+                    type: string
 
         CreateExerciseDto:
             required:
                 - title
+                - courses
                 - categories
                 - texts
                 - solutions
@@ -220,15 +487,19 @@ components:
             properties:
                 title:
                     type: string
-                shortDescription:
-                    type: string
-                note:
-                    type: string
-                texts:
+                courses:
                     type: array
                     items:
-                        type: string
-                images:
+                        $ref: "#/components/schemas/CreateCourseDto"
+                categories:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/CreateCategoryDto"
+                note:
+                    type: string
+                shortDescription:
+                    type: string
+                texts:
                     type: array
                     items:
                         type: string
@@ -236,24 +507,7 @@ components:
                     type: array
                     items:
                         type: string
-                categories:
+                images:
                     type: array
                     items:
-                        $ref: '#/components/schemas/CreateCategoryDto'
-                hiddenCategories:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/CreateCategoryDto'
-
-        CreateCategoryDto:
-            type: object
-            required:
-                - name
-                - isHidden
-            properties:
-                id:
-                    type: string
-                name:
-                    type: string
-                isHidden:
-                    type: boolean
+                        type: string

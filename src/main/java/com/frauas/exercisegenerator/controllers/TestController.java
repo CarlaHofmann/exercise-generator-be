@@ -1,17 +1,23 @@
 package com.frauas.exercisegenerator.controllers;
 
+import java.util.Optional;
+
 import com.frauas.exercisegenerator.documents.Exercise;
 import com.frauas.exercisegenerator.repositories.ExerciseRepository;
 import com.frauas.exercisegenerator.services.ImageService;
 import com.frauas.exercisegenerator.services.LatexGeneratorService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class TestController {
