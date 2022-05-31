@@ -3,7 +3,6 @@ package com.frauas.exercisegenerator.services;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import com.frauas.exercisegenerator.documents.Author;
 import com.frauas.exercisegenerator.documents.Category;
@@ -11,7 +10,6 @@ import com.frauas.exercisegenerator.documents.Course;
 import com.frauas.exercisegenerator.documents.Exercise;
 import com.frauas.exercisegenerator.documents.Sheet;
 import com.frauas.exercisegenerator.dtos.CreateSheetDto;
-import com.frauas.exercisegenerator.exceptions.DocumentNotFoundException;
 import com.frauas.exercisegenerator.helpers.CategoryUpsertHelper;
 import com.frauas.exercisegenerator.helpers.CourseUpsertHelper;
 import com.frauas.exercisegenerator.repositories.AuthorRepository;
@@ -80,13 +78,9 @@ public class SheetService {
     }
 
     public Sheet updateSheetById(String id, CreateSheetDto createSheetDto) {
-        Optional<Sheet> optionalSheet = this.sheetRepository.findById(id);
-
-        if (optionalSheet.isEmpty()) {
-            throw new DocumentNotFoundException("Sheet with id '" + id + "' could not be found!");
-        }
-
-        Sheet sheet = optionalSheet.get();
+        Sheet sheet = this.sheetRepository.findById(id)
+                .orElseThrow(() -> new HttpServerErrorException(HttpStatus.NOT_FOUND,
+                        "Sheet with id '" + id + "' could not be found!"));
 
         modelMapper.map(createSheetDto, sheet);
 
