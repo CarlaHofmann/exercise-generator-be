@@ -60,6 +60,60 @@ paths:
       responses:
         "200":
           description: OK
+  /exercise/{id}:
+    get:
+      tags:
+      - exercise-controller
+      operationId: getExerciseById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exercise'
+    put:
+      tags:
+      - exercise-controller
+      operationId: updatExercise
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateExerciseDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exercise'
+    delete:
+      tags:
+      - exercise-controller
+      operationId: deleteExercise
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
   /sheet:
     get:
       tags:
@@ -256,37 +310,6 @@ paths:
                 items:
                   type: string
                   format: byte
-  /exercise/{id}:
-    get:
-      tags:
-      - exercise-controller
-      operationId: getExerciseById
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Exercise'
-    delete:
-      tags:
-      - exercise-controller
-      operationId: deleteExercise
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
   /courses/{id}:
     get:
       tags:

@@ -20,7 +20,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class SheetService {
@@ -47,7 +47,7 @@ public class SheetService {
 
     public Sheet getSheetById(String id) {
         return this.sheetRepository.findById(id)
-                .orElseThrow(() -> new HttpServerErrorException(HttpStatus.NOT_FOUND,
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Sheet with id '" + id + "' could not be found!"));
     }
 
@@ -79,7 +79,7 @@ public class SheetService {
 
     public Sheet updateSheetById(String id, CreateSheetDto createSheetDto) {
         Sheet sheet = this.sheetRepository.findById(id)
-                .orElseThrow(() -> new HttpServerErrorException(HttpStatus.NOT_FOUND,
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Sheet with id '" + id + "' could not be found!"));
 
         modelMapper.map(createSheetDto, sheet);
