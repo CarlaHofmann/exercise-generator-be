@@ -78,20 +78,23 @@ public class SheetService {
     }
 
     public Sheet updateSheetById(String id, CreateSheetDto createSheetDto) {
-        Sheet sheet = this.sheetRepository.findById(id)
+        Sheet sheet = sheetRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Sheet with id '" + id + "' could not be found!"));
 
         modelMapper.map(createSheetDto, sheet);
 
+        ArrayList<Course> courses = courseUpsertHelper.upsertCoursesFromDto(createSheetDto.getCourses());
         ArrayList<Category> categories = categoryUpsertHelper.upsertCategoriesFromDto(createSheetDto.getCategories());
+
         ArrayList<Exercise> exercises = new ArrayList<>();
-        this.exerciseRepository.findAllById(createSheetDto.getExercises()).forEach(exercises::add);
+        exerciseRepository.findAllById(createSheetDto.getExercises()).forEach(exercises::add);
 
         sheet.setCategories(categories);
         sheet.setExercises(exercises);
+        sheet.setCourses(courses);
 
-        return sheet;
+        return sheetRepository.save(sheet);
     }
 
     public void deleteSheetById(String id) {

@@ -85,7 +85,7 @@ public class ExerciseService {
         exercise.setCourses(courses);
         exercise.setCategories(categories);
 
-        return this.exerciseRepository.save(exercise);
+        return exerciseRepository.save(exercise);
     }
 
     public void deleteExerciseById(String id) {
