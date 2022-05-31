@@ -6,6 +6,114 @@ servers:
 - url: http://localhost:8080
   description: Generated server url
 paths:
+  /sheet/{id}:
+    get:
+      tags:
+      - sheet-controller
+      operationId: getSheetById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sheet'
+    put:
+      tags:
+      - sheet-controller
+      operationId: updateSheet
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSheetDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sheet'
+    delete:
+      tags:
+      - sheet-controller
+      operationId: deleteSheet
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+  /exercise/{id}:
+    get:
+      tags:
+      - exercise-controller
+      operationId: getExerciseById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exercise'
+    put:
+      tags:
+      - exercise-controller
+      operationId: updatExercise
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateExerciseDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Exercise'
+    delete:
+      tags:
+      - exercise-controller
+      operationId: deleteExercise
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
   /sheet:
     get:
       tags:
@@ -97,6 +205,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exercise'
+  /courses:
+    get:
+      tags:
+      - course-controller
+      operationId: getAllCourses
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Course'
+    post:
+      tags:
+      - course-controller
+      operationId: createCourse
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCourseDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
   /categories:
     get:
       tags:
@@ -128,37 +267,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Category'
-  /sheet/{id}:
-    get:
-      tags:
-      - sheet-controller
-      operationId: getSheetById
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Sheet'
-    delete:
-      tags:
-      - sheet-controller
-      operationId: deleteSheet
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
   /latex:
     get:
       tags:
@@ -202,11 +310,11 @@ paths:
                 items:
                   type: string
                   format: byte
-  /exercise/{id}:
+  /courses/{id}:
     get:
       tags:
-      - exercise-controller
-      operationId: getExerciseById
+      - course-controller
+      operationId: getCourseById
       parameters:
       - name: id
         in: path
@@ -219,11 +327,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Exercise'
+                $ref: '#/components/schemas/Course'
     delete:
       tags:
-      - exercise-controller
-      operationId: deleteExercise
+      - course-controller
+      operationId: deleteCaourse
       parameters:
       - name: id
         in: path
@@ -233,7 +341,7 @@ paths:
       responses:
         "200":
           description: OK
-  /categories/id:
+  /categories/{id}:
     get:
       tags:
       - category-controller
@@ -251,7 +359,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Category'
-  /categories/{id}:
     delete:
       tags:
       - category-controller
@@ -269,29 +376,36 @@ components:
   schemas:
     CreateCategoryDto:
       required:
-      - isHidden
       - name
       type: object
       properties:
         name:
           type: string
-        isHidden:
-          type: boolean
+    CreateCourseDto:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
     CreateSheetDto:
       required:
+      - categories
+      - courses
       - exercises
       - title
       type: object
       properties:
         title:
           type: string
-        publishedAt:
-          type: string
-          format: date-time
         exercises:
           type: array
           items:
             type: string
+        courses:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateCourseDto'
         categories:
           type: array
           items:
@@ -316,8 +430,13 @@ components:
           type: string
         name:
           type: string
-        isHidden:
-          type: boolean
+    Course:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
     Exercise:
       type: object
       properties:
@@ -349,11 +468,11 @@ components:
           type: array
           items:
             type: string
-        categories:
+        courses:
           type: array
           items:
-            $ref: '#/components/schemas/Category'
-        hiddenCategories:
+            $ref: '#/components/schemas/Course'
+        categories:
           type: array
           items:
             $ref: '#/components/schemas/Category'
@@ -368,13 +487,17 @@ components:
         updatedAt:
           type: string
           format: date-time
-        title:
-          type: string
         publishedAt:
           type: string
           format: date-time
+        title:
+          type: string
         author:
           $ref: '#/components/schemas/Author'
+        courses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Course'
         categories:
           type: array
           items:
@@ -386,6 +509,7 @@ components:
     CreateExerciseDto:
       required:
       - categories
+      - courses
       - solutions
       - texts
       - title
@@ -409,11 +533,11 @@ components:
           type: array
           items:
             type: string
-        categories:
+        courses:
           type: array
           items:
-            $ref: '#/components/schemas/CreateCategoryDto'
-        hiddenCategories:
+            $ref: '#/components/schemas/CreateCourseDto'
+        categories:
           type: array
           items:
             $ref: '#/components/schemas/CreateCategoryDto'

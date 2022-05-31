@@ -1,22 +1,26 @@
 package com.frauas.exercisegenerator.services;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import com.frauas.exercisegenerator.documents.Author;
 import com.frauas.exercisegenerator.documents.Category;
+import com.frauas.exercisegenerator.documents.Course;
 import com.frauas.exercisegenerator.documents.Exercise;
 import com.frauas.exercisegenerator.documents.Sheet;
 import com.frauas.exercisegenerator.dtos.CreateSheetDto;
 import com.frauas.exercisegenerator.helpers.CategoryUpsertHelper;
+import com.frauas.exercisegenerator.helpers.CourseUpsertHelper;
 import com.frauas.exercisegenerator.repositories.AuthorRepository;
 import com.frauas.exercisegenerator.repositories.ExerciseRepository;
 import com.frauas.exercisegenerator.repositories.SheetRepository;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class SheetService {
@@ -30,6 +34,8 @@ public class SheetService {
     private SheetRepository sheetRepository;
 
     @Autowired
+    private CourseUpsertHelper courseUpsertHelper;
+    @Autowired
     private CategoryUpsertHelper categoryUpsertHelper;
 
     @Autowired
@@ -39,8 +45,10 @@ public class SheetService {
         return this.sheetRepository.findAll();
     }
 
-    public Optional<Sheet> getSheetById(String id) {
-        return this.sheetRepository.findById(id);
+    public Sheet getSheetById(String id) {
+        return this.sheetRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Sheet with id '" + id + "' could not be found!"));
     }
 
     public Sheet createSheet(CreateSheetDto createSheetDto) {
@@ -52,23 +60,38 @@ public class SheetService {
             author = this.authorRepository.save(author);
         }
 
+        ArrayList<Course> courses = courseUpsertHelper.upsertCoursesFromDto(createSheetDto.getCourses());
         ArrayList<Category> categories = categoryUpsertHelper.upsertCategoriesFromDto(createSheetDto.getCategories());
-        ArrayList<Exercise> exercises = new ArrayList<>();
-        createSheetDto.getExercises().forEach(exerciseId -> {
-            Optional<Exercise> optional = this.exerciseRepository.findById(exerciseId);
 
-            if (optional.isPresent()) {
-                exercises.add(optional.get());
-            }
-        });
+        ArrayList<Exercise> exercises = new ArrayList<>();
+        this.exerciseRepository.findAllById(createSheetDto.getExercises()).forEach(exercises::add);
 
         Sheet sheet = modelMapper.map(createSheetDto, Sheet.class);
 
         sheet.setAuthor(author);
+        sheet.setPublishedAt(LocalDateTime.now());
+        sheet.setCourses(courses);
         sheet.setCategories(categories);
         sheet.setExercises(exercises);
 
         return sheetRepository.save(sheet);
+    }
+
+    public Sheet updateSheetById(String id, CreateSheetDto createSheetDto) {
+        Sheet sheet = this.sheetRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Sheet with id '" + id + "' could not be found!"));
+
+        modelMapper.map(createSheetDto, sheet);
+
+        ArrayList<Category> categories = categoryUpsertHelper.upsertCategoriesFromDto(createSheetDto.getCategories());
+        ArrayList<Exercise> exercises = new ArrayList<>();
+        this.exerciseRepository.findAllById(createSheetDto.getExercises()).forEach(exercises::add);
+
+        sheet.setCategories(categories);
+        sheet.setExercises(exercises);
+
+        return sheet;
     }
 
     public void deleteSheetById(String id) {

@@ -2,20 +2,23 @@ package com.frauas.exercisegenerator.services;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import com.frauas.exercisegenerator.documents.Author;
 import com.frauas.exercisegenerator.documents.Category;
+import com.frauas.exercisegenerator.documents.Course;
 import com.frauas.exercisegenerator.documents.Exercise;
 import com.frauas.exercisegenerator.dtos.CreateExerciseDto;
 import com.frauas.exercisegenerator.helpers.CategoryUpsertHelper;
+import com.frauas.exercisegenerator.helpers.CourseUpsertHelper;
 import com.frauas.exercisegenerator.repositories.AuthorRepository;
 import com.frauas.exercisegenerator.repositories.CategoryRepository;
 import com.frauas.exercisegenerator.repositories.ExerciseRepository;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class ExerciseService {
@@ -33,14 +36,19 @@ public class ExerciseService {
     ModelMapper modelMapper;
 
     @Autowired
+    CourseUpsertHelper courseUpsertHelper;
+
+    @Autowired
     CategoryUpsertHelper categoryUpsertHelper;
 
     public List<Exercise> getAllExercises() {
         return this.exerciseRepository.findAll();
     }
 
-    public Optional<Exercise> getExerciseById(String id) {
-        return this.exerciseRepository.findById(id);
+    public Exercise getExerciseById(String id) {
+        return this.exerciseRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Exercise with id '" + id + "' could not be found!"));
     }
 
     public Exercise createExerciseFromDto(CreateExerciseDto exerciseDto) {
@@ -52,16 +60,30 @@ public class ExerciseService {
             author = this.authorRepository.save(author);
         }
 
-        ArrayList<Category> categories = categoryUpsertHelper.upsertCategoriesFromDto(exerciseDto.getCategories(),
-                false);
-        ArrayList<Category> hiddenCategories = categoryUpsertHelper
-                .upsertCategoriesFromDto(exerciseDto.getHiddenCategories(), true);
+        ArrayList<Course> courses = courseUpsertHelper.upsertCoursesFromDto(exerciseDto.getCourses());
+        ArrayList<Category> categories = categoryUpsertHelper.upsertCategoriesFromDto(exerciseDto.getCategories());
 
         Exercise exercise = this.modelMapper.map(exerciseDto, Exercise.class);
 
         exercise.setAuthor(author);
+        exercise.setCourses(courses);
         exercise.setCategories(categories);
-        exercise.setHiddenCategories(hiddenCategories);
+
+        return this.exerciseRepository.save(exercise);
+    }
+
+    public Exercise updateExerciseById(String id, CreateExerciseDto exerciseDto) {
+        Exercise exercise = exerciseRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Exercise with id '" + id + "' could not be found!"));
+
+        modelMapper.map(exerciseDto, exercise);
+
+        ArrayList<Course> courses = courseUpsertHelper.upsertCoursesFromDto(exerciseDto.getCourses());
+        ArrayList<Category> categories = categoryUpsertHelper.upsertCategoriesFromDto(exerciseDto.getCategories());
+
+        exercise.setCourses(courses);
+        exercise.setCategories(categories);
 
         return this.exerciseRepository.save(exercise);
     }

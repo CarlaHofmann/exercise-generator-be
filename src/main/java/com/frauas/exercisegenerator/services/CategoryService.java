@@ -1,15 +1,15 @@
 package com.frauas.exercisegenerator.services;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.frauas.exercisegenerator.documents.Category;
 import com.frauas.exercisegenerator.dtos.CreateCategoryDto;
 import com.frauas.exercisegenerator.repositories.CategoryRepository;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
+
+import java.util.List;
 
 @Service
 public class CategoryService {
@@ -23,8 +23,9 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
-    public Optional<Category> getCategoryById(String id) {
-        return categoryRepository.findById(id);
+    public Category getCategoryById(String id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new HttpServerErrorException(HttpStatus.NOT_FOUND));
     }
 
     public Category createCategory(CreateCategoryDto categoryDto) {

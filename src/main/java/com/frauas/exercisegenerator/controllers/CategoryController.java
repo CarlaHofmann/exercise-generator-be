@@ -1,7 +1,6 @@
 package com.frauas.exercisegenerator.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.frauas.exercisegenerator.documents.Category;
 import com.frauas.exercisegenerator.dtos.CreateCategoryDto;
@@ -27,8 +26,8 @@ public class CategoryController {
         return categoryService.getAllCategories();
     }
 
-    @GetMapping("/id")
-    public Optional<Category> getCategoryById(@PathVariable String id) {
+    @GetMapping("/{id}")
+    public Category getCategoryById(@PathVariable String id) {
         return categoryService.getCategoryById(id);
     }
 
