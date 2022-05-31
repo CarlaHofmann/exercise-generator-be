@@ -151,6 +151,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exercise'
+  /courses:
+    get:
+      tags:
+      - course-controller
+      operationId: getAllCourses
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Course'
+    post:
+      tags:
+      - course-controller
+      operationId: createCourse
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCourseDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
   /categories:
     get:
       tags:
@@ -256,7 +287,38 @@ paths:
       responses:
         "200":
           description: OK
-  /categories/id:
+  /courses/{id}:
+    get:
+      tags:
+      - course-controller
+      operationId: getCourseById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+    delete:
+      tags:
+      - course-controller
+      operationId: deleteCaourse
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+  /categories/{id}:
     get:
       tags:
       - category-controller
@@ -274,7 +336,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Category'
-  /categories/{id}:
     delete:
       tags:
       - category-controller
@@ -297,21 +358,31 @@ components:
       properties:
         name:
           type: string
+    CreateCourseDto:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
     CreateSheetDto:
       required:
+      - categories
+      - courses
       - exercises
       - title
       type: object
       properties:
         title:
           type: string
-        publishedAt:
-          type: string
-          format: date-time
         exercises:
           type: array
           items:
             type: string
+        courses:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateCourseDto'
         categories:
           type: array
           items:
@@ -374,14 +445,14 @@ components:
           type: array
           items:
             type: string
-        categories:
-          type: array
-          items:
-            $ref: '#/components/schemas/Category'
         courses:
           type: array
           items:
             $ref: '#/components/schemas/Course'
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
     Sheet:
       type: object
       properties:
@@ -393,13 +464,17 @@ components:
         updatedAt:
           type: string
           format: date-time
-        title:
-          type: string
         publishedAt:
           type: string
           format: date-time
+        title:
+          type: string
         author:
           $ref: '#/components/schemas/Author'
+        courses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Course'
         categories:
           type: array
           items:
@@ -408,16 +483,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Exercise'
-    CreateCourseDto:
-      required:
-      - name
-      type: object
-      properties:
-        name:
-          type: string
     CreateExerciseDto:
       required:
       - categories
+      - courses
       - solutions
       - texts
       - title
@@ -441,11 +510,11 @@ components:
           type: array
           items:
             type: string
-        categories:
-          type: array
-          items:
-            $ref: '#/components/schemas/CreateCategoryDto'
         courses:
           type: array
           items:
             $ref: '#/components/schemas/CreateCourseDto'
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateCategoryDto'
