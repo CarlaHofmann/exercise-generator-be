@@ -1,12 +1,12 @@
 package com.frauas.exercisegenerator.services;
 
-import com.frauas.exercisegenerator.documents.Author;
 import com.frauas.exercisegenerator.documents.Category;
 import com.frauas.exercisegenerator.documents.Exercise;
+import com.frauas.exercisegenerator.documents.User;
 import com.frauas.exercisegenerator.dtos.CreateExerciseDto;
-import com.frauas.exercisegenerator.repositories.AuthorRepository;
 import com.frauas.exercisegenerator.repositories.CategoryRepository;
 import com.frauas.exercisegenerator.repositories.ExerciseRepository;
+import com.frauas.exercisegenerator.repositories.UserRepository;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class ExerciseService {
     ExerciseRepository exerciseRepository;
 
     @Autowired
-    AuthorRepository authorRepository;
+    UserRepository userRepository;
 
     @Autowired
     CategoryRepository categoryRepository;
@@ -49,11 +49,15 @@ public class ExerciseService {
 
     public Exercise createExerciseFromDto(CreateExerciseDto exerciseDto) {
         // TODO: Use actual author resolution via login credentials
-        Author author = this.authorRepository.findByName("default");
+        Optional<User> authorOpt = this.userRepository.findByUsername("default");
+        User author;
 
-        if (author == null) {
-            author = Author.builder().name("default").build();
-            author = this.authorRepository.save(author);
+        if (authorOpt.isPresent() == false) {
+            author = User.builder().username("default").build();
+            author = this.userRepository.save(author);
+        }
+        else {
+            author = authorOpt.get();
         }
 
 

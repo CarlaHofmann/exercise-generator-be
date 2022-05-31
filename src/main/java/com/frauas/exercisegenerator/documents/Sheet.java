@@ -27,7 +27,7 @@ public class Sheet {
     private LocalDateTime updatedAt;
 
     @DBRef
-    private Author author;
+    private User author;
 
     @DBRef
     private List<Category> categories;

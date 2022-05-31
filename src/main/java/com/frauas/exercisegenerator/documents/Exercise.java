@@ -25,7 +25,7 @@ public class Exercise {
     private LocalDateTime updatedAt;
 
     @DBRef
-    private Author author;
+    private User author;
 
     private String title;
     private String shortDescription;
