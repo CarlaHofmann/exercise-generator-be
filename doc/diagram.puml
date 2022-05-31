@@ -83,6 +83,7 @@ com.frauas.exercisegenerator.documents.Exercise "1" o-- "0..*"  com.frauas.exerc
 com.frauas.exercisegenerator.documents.Exercise "1" o-- "0..*"  com.frauas.exercisegenerator.documents.Course : courses
 com.frauas.exercisegenerator.documents.Exercise -->  com.frauas.exercisegenerator.documents.Author : author
 com.frauas.exercisegenerator.documents.Sheet "1" o-- "0..*"  com.frauas.exercisegenerator.documents.Category : categories
+com.frauas.exercisegenerator.documents.Sheet "1" o-- "0..*"  com.frauas.exercisegenerator.documents.Course : courses
 com.frauas.exercisegenerator.documents.Sheet "1" o-- "0..*"  com.frauas.exercisegenerator.documents.Exercise : exercises
 com.frauas.exercisegenerator.documents.Sheet -->  com.frauas.exercisegenerator.documents.Author : author
 
