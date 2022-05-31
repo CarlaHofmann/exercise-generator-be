@@ -45,7 +45,7 @@ public class securityConfig extends WebSecurityConfigurerAdapter
 		http.authorizeRequests().antMatchers(GET, "/users").hasAnyAuthority("simpleUser");
 		//http.authorizeRequests().antMatchers(GET, "/*").hasAnyAuthority("simpleUser");
 		//http.authorizeRequests().anyRequest().permitAll();
-		http.authorizeRequests().antMatchers(GET, "/*").authenticated();
+		//http.authorizeRequests().antMatchers(GET, "/*").authenticated();
 		http.authorizeRequests().antMatchers(GET, "/v3/*").permitAll();
 		http.authorizeRequests().antMatchers(GET, "/swagger-ui/*").permitAll();
 		http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
