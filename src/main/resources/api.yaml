@@ -267,35 +267,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Category'
-  /latex:
+  /sheet/{id}/pdf:
     get:
       tags:
-      - test-controller
-      operationId: getLatexPdf
+      - sheet-controller
+      operationId: getSheetPdf
       parameters:
-      - name: content
-        in: query
-        required: false
-        schema:
-          type: string
-          default: Hello World!
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: string
-                  format: byte
-  /latex/{exerciseId}:
-    get:
-      tags:
-      - test-controller
-      operationId: getExerciseLatex
-      parameters:
-      - name: exerciseId
+      - name: id
         in: path
         required: true
         schema:
@@ -304,7 +282,7 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            application/pdf:
               schema:
                 type: array
                 items:
