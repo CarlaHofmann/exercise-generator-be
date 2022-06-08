@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 import org.buildobjects.process.ExternalProcessFailureException;
 import org.buildobjects.process.ProcBuilder;
@@ -35,8 +36,8 @@ public class LatexGeneratorService {
         try {
             Template sheetTemplate = handlebars.compile("sheet-template");
             String fileContent = sheetTemplate.apply(sheet);
-            writeContentFile(fileContent);
-            content = renderLatexPdfContent();
+            String filename = writeContentFile(fileContent);
+            content = renderLatexPdfContent(filename);
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         } catch (ExternalProcessFailureException e) {
@@ -57,8 +58,8 @@ public class LatexGeneratorService {
         try {
             Template exerciseTemplate = handlebars.compile("exercise-template");
             String fileContent = exerciseTemplate.apply(exercise);
-            writeContentFile(fileContent);
-            content = renderLatexPdfContent();
+            String filename = writeContentFile(fileContent);
+            content = renderLatexPdfContent(filename);
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         } catch (ExternalProcessFailureException e) {
@@ -73,45 +74,51 @@ public class LatexGeneratorService {
         return content;
     }
 
-    private byte[] renderLatexPdfContent()
+    private byte[] renderLatexPdfContent(String filename)
             throws IOException, StartupException, TimeoutException, ExternalProcessFailureException {
         ProcBuilder builder = new ProcBuilder("latexmk")
                 .withWorkingDirectory(Paths.get(TMP_FOLDER).toFile())
                 .withArg("-interaction=nonstopmode")
                 .withArg("-pdf")
-                .withArg("content.tex")
+                .withArg(filename)
                 .withTimeoutMillis(10000);
 
         // Execute latex compilation process
         builder.run();
 
         // Read contents of created pdf file
-        byte[] contents = Files.readAllBytes(Paths.get(TMP_FOLDER, "content.pdf"));
+        byte[] contents = Files.readAllBytes(Paths.get(TMP_FOLDER, filename.replace(".tex", ".pdf")));
 
         // cleanup fragments from latex compilation
-        cleanupLatexFragments();
+        cleanupLatexFragments(filename);
+
+        // Delete generated content file
+        Files.delete(Paths.get(TMP_FOLDER, filename));
 
         return contents;
     }
 
-    private void writeContentFile(String contentString) throws IOException {
-        BufferedWriter writer = new BufferedWriter(
-                new FileWriter(
-                        Paths.get(TMP_FOLDER, "content.tex")
-                                .toAbsolutePath()
-                                .toString()));
+    private String writeContentFile(String contentString) throws IOException {
+        UUID uuid = UUID.randomUUID();
+        String filename = uuid.toString() + ".tex";
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(Paths.get(TMP_FOLDER, filename)
+                .toAbsolutePath()
+                .toString()));
         writer.write(contentString);
         writer.close();
+
+        return filename;
     }
 
-    private ProcResult cleanupLatexFragments()
+    private ProcResult cleanupLatexFragments(String filename)
             throws StartupException, TimeoutException, ExternalProcessFailureException {
         ProcBuilder builder = new ProcBuilder("latexmk")
                 .withWorkingDirectory(Paths.get(TMP_FOLDER).toFile())
                 .withArg("-C")
                 .withArg("-r")
                 .withArg("../.latexmkrc")
-                .withArg("content.tex");
+                .withArg(filename);
 
         return builder.run();
 
