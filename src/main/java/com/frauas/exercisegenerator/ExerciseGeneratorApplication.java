@@ -1,16 +1,18 @@
 package com.frauas.exercisegenerator;
 
-import com.github.jknack.handlebars.EscapingStrategy;
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
-import com.github.jknack.handlebars.io.TemplateLoader;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.frauas.exercisegenerator.mongo.CascadeSaveMongoEventListener;
+import com.frauas.exercisegenerator.mongo.UpsertSaveMongoEventListener;
+import com.github.jknack.handlebars.EscapingStrategy;
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
 
 @SpringBootApplication
 public class ExerciseGeneratorApplication {
@@ -49,5 +51,15 @@ public class ExerciseGeneratorApplication {
 				.with(EscapingStrategy.NOOP);
 
 		return handlebars;
+	}
+
+	@Bean
+	public CascadeSaveMongoEventListener cascadeSaveMongoEventListener() {
+		return new CascadeSaveMongoEventListener();
+	}
+
+	@Bean
+	public UpsertSaveMongoEventListener upsertSaveMongoEventListener() {
+		return new UpsertSaveMongoEventListener();
 	}
 }
