@@ -6,10 +6,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import com.frauas.exercisegenerator.documents.Sheet;
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.Template;
-
 import org.buildobjects.process.ExternalProcessFailureException;
 import org.buildobjects.process.ProcBuilder;
 import org.buildobjects.process.ProcResult;
@@ -19,6 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import com.frauas.exercisegenerator.documents.Exercise;
+import com.frauas.exercisegenerator.documents.Sheet;
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
 
 @Service
 public class LatexGeneratorService {
@@ -34,6 +35,28 @@ public class LatexGeneratorService {
         try {
             Template sheetTemplate = handlebars.compile("sheet-template");
             String fileContent = sheetTemplate.apply(sheet);
+            writeContentFile(fileContent);
+            content = renderLatexPdfContent();
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        } catch (ExternalProcessFailureException e) {
+            System.err.println(e);
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Error during LaTeX compilation (Exit value: " + e.getExitValue() + ")");
+        } catch (TimeoutException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Timeout during LaTeX compilation!");
+        }
+
+        return content;
+    }
+
+    public byte[] createExercisePdf(Exercise exercise) {
+        byte[] content = null;
+
+        try {
+            Template exerciseTemplate = handlebars.compile("exercise-template");
+            String fileContent = exerciseTemplate.apply(exercise);
             writeContentFile(fileContent);
             content = renderLatexPdfContent();
         } catch (IOException e) {

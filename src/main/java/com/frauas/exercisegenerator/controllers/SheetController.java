@@ -2,12 +2,6 @@ package com.frauas.exercisegenerator.controllers;
 
 import java.util.List;
 
-import com.frauas.exercisegenerator.documents.Sheet;
-import com.frauas.exercisegenerator.dtos.CreateSheetDto;
-import com.frauas.exercisegenerator.helpers.StringHelper;
-import com.frauas.exercisegenerator.services.LatexGeneratorService;
-import com.frauas.exercisegenerator.services.SheetService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -23,6 +17,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.frauas.exercisegenerator.documents.Sheet;
+import com.frauas.exercisegenerator.dtos.CreateSheetDto;
+import com.frauas.exercisegenerator.helpers.StringHelper;
+import com.frauas.exercisegenerator.services.LatexGeneratorService;
+import com.frauas.exercisegenerator.services.SheetService;
+
 @RestController
 @RequestMapping("/sheet")
 public class SheetController {
@@ -36,6 +36,11 @@ public class SheetController {
     @GetMapping
     public List<Sheet> getAllSheets() {
         return sheetService.getSheets();
+    }
+
+    @GetMapping("/{id}")
+    public Sheet getSheetById(@PathVariable String id) {
+        return sheetService.getSheetById(id);
     }
 
     @GetMapping(path = "/{id}/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
@@ -56,11 +61,6 @@ public class SheetController {
 
         ResponseEntity<byte[]> response = new ResponseEntity<>(contents, headers, HttpStatus.OK);
         return response;
-    }
-
-    @GetMapping("/{id}")
-    public Sheet getSheetById(@PathVariable String id) {
-        return sheetService.getSheetById(id);
     }
 
     @PostMapping

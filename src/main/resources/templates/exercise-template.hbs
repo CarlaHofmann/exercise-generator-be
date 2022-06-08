@@ -1,0 +1,61 @@
+{{!-- Use erb style tags --}}
+{{=<% %>=}}
+
+%\documentclass[english]{beamer}
+\documentclass[english,hangout]{beamer}
+%\documentclass[aspectratio=169]{beamer}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{rotating}
+\usepackage{verbatim}
+\usepackage{latexsym}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{ragged2e}
+\usepackage{eurosym}   % Euro symbol: \euro
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage{colortbl}
+\usepackage{textcomp}  % many special symbols
+%\usepackage{lmodern}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{booktabs}
+
+%\usetheme[fb2]{FrankfurtUniversity}
+\usetheme[fb2,noslogan]{FrankfurtUniversity}
+%\slogan{\large\color{red}UNAUTHORIZED}
+
+\setbeamertemplate{frametitle continuation}[from second]
+
+\title{<% title %>}
+%\subtitle{\LaTeX\ beamer theme “FrankfurtUniversity”}
+\author{<% author.name %>}
+\institute{Frankfurt University of Applied Sciences\\
+           Faculty of Computer Science and Engineering\\
+           <%#if author.email %>\texttt{<% author.email %>}<%/if%>}
+\date{\today}
+
+
+\begin{document}
+
+\section{<% title %>}
+<%#each texts %>
+   \begin{frame}[allowframebreaks]
+      \frametitle{<% ../title %>}
+      <% this %>
+   \end{frame}
+<%/each %>
+<%#if solutions%>
+   \section{<% title %> - Lösung}
+   <%#each solutions %>
+      \begin{frame}[allowframebreaks]
+         \frametitle{<% ../title %> - Lösung}
+         <% this %>
+      \end{frame}
+   <%/each %>
+<%/if %>
+
+\end{document}
