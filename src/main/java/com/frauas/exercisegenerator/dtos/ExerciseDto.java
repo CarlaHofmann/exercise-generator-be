@@ -1,21 +1,31 @@
 package com.frauas.exercisegenerator.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+
+import lombok.Data;
 
 @Data
-@AllArgsConstructor
-public class CreateSheetDto {
+public class ExerciseDto {
+
     @NotNull
     private String title;
 
+    private String note;
+
+    private String shortDescription;
+
     @NotNull
     @NotEmpty
-    private List<String> exercises;
+    private List<String> texts;
+
+    @NotNull
+    @NotEmpty
+    private List<String> solutions;
+
+    private List<String> images;
 
     @NotNull
     @NotEmpty

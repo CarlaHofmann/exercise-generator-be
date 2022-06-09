@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.frauas.exercisegenerator.documents.Sheet;
-import com.frauas.exercisegenerator.dtos.CreateSheetDto;
+import com.frauas.exercisegenerator.dtos.SheetDto;
 import com.frauas.exercisegenerator.helpers.StringHelper;
 import com.frauas.exercisegenerator.services.LatexGeneratorService;
 import com.frauas.exercisegenerator.services.SheetService;
@@ -64,12 +64,12 @@ public class SheetController {
     }
 
     @PostMapping
-    public Sheet createSheet(@RequestBody CreateSheetDto createSheetDto) {
+    public Sheet createSheet(@RequestBody SheetDto createSheetDto) {
         return sheetService.createSheet(createSheetDto);
     }
 
     @PutMapping("/{id}")
-    public Sheet updateSheet(@PathVariable String id, @RequestBody CreateSheetDto createSheetDto) {
+    public Sheet updateSheet(@PathVariable String id, @RequestBody SheetDto createSheetDto) {
         return sheetService.updateSheetById(id, createSheetDto);
     }
 

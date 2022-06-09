@@ -3,22 +3,22 @@ package com.frauas.exercisegenerator.services;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.frauas.exercisegenerator.documents.Author;
-import com.frauas.exercisegenerator.documents.Category;
-import com.frauas.exercisegenerator.documents.Course;
-import com.frauas.exercisegenerator.documents.Exercise;
-import com.frauas.exercisegenerator.dtos.CreateExerciseDto;
-import com.frauas.exercisegenerator.helpers.CategoryUpsertHelper;
-import com.frauas.exercisegenerator.helpers.CourseUpsertHelper;
-import com.frauas.exercisegenerator.repositories.AuthorRepository;
-import com.frauas.exercisegenerator.repositories.CategoryRepository;
-import com.frauas.exercisegenerator.repositories.ExerciseRepository;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import com.frauas.exercisegenerator.documents.Author;
+import com.frauas.exercisegenerator.documents.Category;
+import com.frauas.exercisegenerator.documents.Course;
+import com.frauas.exercisegenerator.documents.Exercise;
+import com.frauas.exercisegenerator.dtos.ExerciseDto;
+import com.frauas.exercisegenerator.helpers.CategoryUpsertHelper;
+import com.frauas.exercisegenerator.helpers.CourseUpsertHelper;
+import com.frauas.exercisegenerator.repositories.AuthorRepository;
+import com.frauas.exercisegenerator.repositories.CategoryRepository;
+import com.frauas.exercisegenerator.repositories.ExerciseRepository;
 
 @Service
 public class ExerciseService {
@@ -51,7 +51,7 @@ public class ExerciseService {
                         "Exercise with id '" + id + "' could not be found!"));
     }
 
-    public Exercise createExerciseFromDto(CreateExerciseDto exerciseDto) {
+    public Exercise prepareExerciseFromDto(ExerciseDto exerciseDto) {
         // TODO: Use actual author resolution via login credentials
         Author author = this.authorRepository.findByName("default");
 
@@ -60,8 +60,21 @@ public class ExerciseService {
             author = this.authorRepository.save(author);
         }
 
-        ArrayList<Course> courses = courseUpsertHelper.upsertCoursesFromDto(exerciseDto.getCourses());
-        ArrayList<Category> categories = categoryUpsertHelper.upsertCategoriesFromDto(exerciseDto.getCategories());
+        ArrayList<Course> courses = new ArrayList<>();
+        exerciseDto.getCourses().forEach(courseDto -> {
+            Course course = Course.builder()
+                    .name(courseDto.getName())
+                    .build();
+            courses.add(course);
+        });
+
+        ArrayList<Category> categories = new ArrayList<>();
+        exerciseDto.getCategories().forEach(categorieDto -> {
+            Category category = Category.builder()
+                    .name(categorieDto.getName())
+                    .build();
+            categories.add(category);
+        });
 
         Exercise exercise = this.modelMapper.map(exerciseDto, Exercise.class);
 
@@ -69,18 +82,37 @@ public class ExerciseService {
         exercise.setCourses(courses);
         exercise.setCategories(categories);
 
+        return exercise;
+    }
+
+    public Exercise createExerciseFromDto(ExerciseDto exerciseDto) {
+        Exercise exercise = prepareExerciseFromDto(exerciseDto);
+
         return this.exerciseRepository.save(exercise);
     }
 
-    public Exercise updateExerciseById(String id, CreateExerciseDto exerciseDto) {
+    public Exercise updateExerciseById(String id, ExerciseDto exerciseDto) {
         Exercise exercise = exerciseRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Exercise with id '" + id + "' could not be found!"));
 
         modelMapper.map(exerciseDto, exercise);
 
-        ArrayList<Course> courses = courseUpsertHelper.upsertCoursesFromDto(exerciseDto.getCourses());
-        ArrayList<Category> categories = categoryUpsertHelper.upsertCategoriesFromDto(exerciseDto.getCategories());
+        ArrayList<Course> courses = new ArrayList<>();
+        exerciseDto.getCourses().forEach(courseDto -> {
+            Course course = Course.builder()
+                    .name(courseDto.getName())
+                    .build();
+            courses.add(course);
+        });
+
+        ArrayList<Category> categories = new ArrayList<>();
+        exerciseDto.getCategories().forEach(categorieDto -> {
+            Category category = Category.builder()
+                    .name(categorieDto.getName())
+                    .build();
+            categories.add(category);
+        });
 
         exercise.setCourses(courses);
         exercise.setCategories(categories);

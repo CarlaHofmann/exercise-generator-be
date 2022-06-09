@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.frauas.exercisegenerator.documents.Exercise;
-import com.frauas.exercisegenerator.dtos.CreateExerciseDto;
+import com.frauas.exercisegenerator.dtos.ExerciseDto;
 import com.frauas.exercisegenerator.helpers.StringHelper;
 import com.frauas.exercisegenerator.services.ExerciseService;
 import com.frauas.exercisegenerator.services.LatexGeneratorService;
@@ -64,12 +64,32 @@ public class ExerciseController {
     }
 
     @PostMapping
-    public Exercise createExercise(@RequestBody CreateExerciseDto exerciseDto) {
+    public Exercise createExercise(@RequestBody ExerciseDto exerciseDto) {
         return exerciseService.createExerciseFromDto(exerciseDto);
     }
 
+    @PostMapping(path = "/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> previewExerciseDto(@RequestBody ExerciseDto exerciseDto) {
+        Exercise exercise = exerciseService.prepareExerciseFromDto(exerciseDto);
+
+        byte[] contents = latexGeneratorService.createExercisePdf(exercise);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+
+        String filename = StringHelper.toSnakeCase(exercise.getTitle() + ".pdf");
+        headers.setContentDisposition(ContentDisposition
+                .attachment()
+                .filename(filename)
+                .build());
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+        ResponseEntity<byte[]> response = new ResponseEntity<>(contents, headers, HttpStatus.OK);
+        return response;
+    }
+
     @PutMapping("/{id}")
-    public Exercise updatExercise(@PathVariable String id, @RequestBody CreateExerciseDto exerciseDto) {
+    public Exercise updatExercise(@PathVariable String id, @RequestBody ExerciseDto exerciseDto) {
         return exerciseService.updateExerciseById(id, exerciseDto);
     }
 

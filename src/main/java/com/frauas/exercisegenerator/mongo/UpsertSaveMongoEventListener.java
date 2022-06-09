@@ -2,8 +2,8 @@ package com.frauas.exercisegenerator.mongo;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mapping.MappingException;
@@ -67,7 +67,7 @@ public class UpsertSaveMongoEventListener extends AbstractMongoEventListener<Obj
 
                 // Collections need to be handled seperately
                 if (fieldValue instanceof Collection<?>) {
-                    Collection<Object> resolved = Collections.emptyList();
+                    Collection<Object> resolved = new ArrayList<>();
                     Collection<?> fieldValueCollection = ((Collection<?>) fieldValue);
 
                     // Handle each value individually and fill resolved collection with resolved
