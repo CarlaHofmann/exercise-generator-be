@@ -13,7 +13,7 @@ For the template to work, additionally the LaTeX packages `collection-fontsrecom
 
 #### Installation
 
-We recommend installing the [TeXLive](https://www.tug.org/texlive/) package (or [MacTeX](https://www.tug.org/mactex/) for OSX users) on your system. For further instructions please follow the official instructions depending for your respective operating system.
+We recommend installing the [TeXLive](https://www.tug.org/texlive/) package (or [MacTeX](https://www.tug.org/mactex/) for OSX users) on your system. For further instructions please follow the official instructions for your respective operating system.
 
 After the TeXLive suite is installed, you may need, depending on if you've chosen a full installation of TeXLive or not, to install the required packages. To do so, the easiest way is to use the `tlmgr` utility which comes with every installation of TeXLive.  
 Running the following command will install all necessary packages on your system (including the `latexmk` compiler):
