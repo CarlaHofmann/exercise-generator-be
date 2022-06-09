@@ -1,8 +1,8 @@
 package com.frauas.exercisegenerator.services;
 
 import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.UUID;
@@ -102,9 +102,9 @@ public class LatexGeneratorService {
         UUID uuid = UUID.randomUUID();
         String filename = uuid.toString() + ".tex";
 
-        BufferedWriter writer = new BufferedWriter(new FileWriter(Paths.get(TMP_FOLDER, filename)
-                .toAbsolutePath()
-                .toString()));
+        BufferedWriter writer = Files.newBufferedWriter(
+                Paths.get(TMP_FOLDER, filename),
+                StandardCharsets.UTF_8);
         writer.write(contentString);
         writer.close();
 

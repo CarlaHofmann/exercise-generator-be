@@ -1,5 +1,7 @@
 package com.frauas.exercisegenerator;
 
+import java.nio.charset.StandardCharsets;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -47,6 +49,7 @@ public class ExerciseGeneratorApplication {
 		loader.setPrefix("/templates");
 
 		Handlebars handlebars = new Handlebars(loader)
+				.setCharset(StandardCharsets.UTF_8)
 				.prettyPrint(true)
 				.with(EscapingStrategy.NOOP);
 
