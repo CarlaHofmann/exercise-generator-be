@@ -84,7 +84,7 @@ public class SheetService {
     }
 
     public Sheet updateSheetById(String id, SheetDto sheetDto) {
-        Sheet sheet = this.sheetRepository.findById(id)
+        Sheet sheet = sheetRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Sheet with id '" + id + "' could not be found!"));
 
@@ -107,13 +107,13 @@ public class SheetService {
         });
 
         ArrayList<Exercise> exercises = new ArrayList<>();
-        this.exerciseRepository.findAllById(sheetDto.getExercises()).forEach(exercises::add);
+        exerciseRepository.findAllById(sheetDto.getExercises()).forEach(exercises::add);
 
         sheet.setCourses(courses);
         sheet.setCategories(categories);
         sheet.setExercises(exercises);
 
-        return sheet;
+        return sheetRepository.save(sheet);
     }
 
     public void deleteSheetById(String id) {
