@@ -4,23 +4,21 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.frauas.exercisegenerator.documents.Author;
-import com.frauas.exercisegenerator.documents.Category;
-import com.frauas.exercisegenerator.documents.Course;
-import com.frauas.exercisegenerator.documents.Exercise;
-import com.frauas.exercisegenerator.documents.Sheet;
-import com.frauas.exercisegenerator.dtos.CreateSheetDto;
-import com.frauas.exercisegenerator.helpers.CategoryUpsertHelper;
-import com.frauas.exercisegenerator.helpers.CourseUpsertHelper;
-import com.frauas.exercisegenerator.repositories.AuthorRepository;
-import com.frauas.exercisegenerator.repositories.ExerciseRepository;
-import com.frauas.exercisegenerator.repositories.SheetRepository;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import com.frauas.exercisegenerator.documents.Author;
+import com.frauas.exercisegenerator.documents.Category;
+import com.frauas.exercisegenerator.documents.Course;
+import com.frauas.exercisegenerator.documents.Exercise;
+import com.frauas.exercisegenerator.documents.Sheet;
+import com.frauas.exercisegenerator.dtos.SheetDto;
+import com.frauas.exercisegenerator.repositories.AuthorRepository;
+import com.frauas.exercisegenerator.repositories.ExerciseRepository;
+import com.frauas.exercisegenerator.repositories.SheetRepository;
 
 @Service
 public class SheetService {
@@ -32,11 +30,6 @@ public class SheetService {
 
     @Autowired
     private SheetRepository sheetRepository;
-
-    @Autowired
-    private CourseUpsertHelper courseUpsertHelper;
-    @Autowired
-    private CategoryUpsertHelper categoryUpsertHelper;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -51,7 +44,7 @@ public class SheetService {
                         "Sheet with id '" + id + "' could not be found!"));
     }
 
-    public Sheet createSheet(CreateSheetDto createSheetDto) {
+    public Sheet createSheet(SheetDto sheetDto) {
         // TODO: Use actual author resolution via login credentials
         Author author = this.authorRepository.findByName("default");
 
@@ -60,13 +53,26 @@ public class SheetService {
             author = this.authorRepository.save(author);
         }
 
-        ArrayList<Course> courses = courseUpsertHelper.upsertCoursesFromDto(createSheetDto.getCourses());
-        ArrayList<Category> categories = categoryUpsertHelper.upsertCategoriesFromDto(createSheetDto.getCategories());
+        ArrayList<Course> courses = new ArrayList<>();
+        sheetDto.getCourses().forEach(courseDto -> {
+            Course course = Course.builder()
+                    .name(courseDto.getName())
+                    .build();
+            courses.add(course);
+        });
+
+        ArrayList<Category> categories = new ArrayList<>();
+        sheetDto.getCategories().forEach(categorieDto -> {
+            Category category = Category.builder()
+                    .name(categorieDto.getName())
+                    .build();
+            categories.add(category);
+        });
 
         ArrayList<Exercise> exercises = new ArrayList<>();
-        this.exerciseRepository.findAllById(createSheetDto.getExercises()).forEach(exercises::add);
+        this.exerciseRepository.findAllById(sheetDto.getExercises()).forEach(exercises::add);
 
-        Sheet sheet = modelMapper.map(createSheetDto, Sheet.class);
+        Sheet sheet = modelMapper.map(sheetDto, Sheet.class);
 
         sheet.setAuthor(author);
         sheet.setPublishedAt(LocalDateTime.now());
@@ -77,22 +83,35 @@ public class SheetService {
         return sheetRepository.save(sheet);
     }
 
-    public Sheet updateSheetById(String id, CreateSheetDto createSheetDto) {
+    public Sheet updateSheetById(String id, SheetDto sheetDto) {
         Sheet sheet = sheetRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Sheet with id '" + id + "' could not be found!"));
 
-        modelMapper.map(createSheetDto, sheet);
+        modelMapper.map(sheetDto, sheet);
 
-        ArrayList<Course> courses = courseUpsertHelper.upsertCoursesFromDto(createSheetDto.getCourses());
-        ArrayList<Category> categories = categoryUpsertHelper.upsertCategoriesFromDto(createSheetDto.getCategories());
+        ArrayList<Course> courses = new ArrayList<>();
+        sheetDto.getCourses().forEach(courseDto -> {
+            Course course = Course.builder()
+                    .name(courseDto.getName())
+                    .build();
+            courses.add(course);
+        });
+
+        ArrayList<Category> categories = new ArrayList<>();
+        sheetDto.getCategories().forEach(categorieDto -> {
+            Category category = Category.builder()
+                    .name(categorieDto.getName())
+                    .build();
+            categories.add(category);
+        });
 
         ArrayList<Exercise> exercises = new ArrayList<>();
-        exerciseRepository.findAllById(createSheetDto.getExercises()).forEach(exercises::add);
+        exerciseRepository.findAllById(sheetDto.getExercises()).forEach(exercises::add);
 
+        sheet.setCourses(courses);
         sheet.setCategories(categories);
         sheet.setExercises(exercises);
-        sheet.setCourses(courses);
 
         return sheetRepository.save(sheet);
     }

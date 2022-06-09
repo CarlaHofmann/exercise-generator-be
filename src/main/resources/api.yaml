@@ -38,7 +38,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateSheetDto'
+              $ref: '#/components/schemas/SheetDto'
         required: true
       responses:
         "200":
@@ -92,7 +92,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateExerciseDto'
+              $ref: '#/components/schemas/ExerciseDto'
         required: true
       responses:
         "200":
@@ -136,7 +136,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateSheetDto'
+              $ref: '#/components/schemas/SheetDto'
         required: true
       responses:
         "200":
@@ -196,7 +196,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateExerciseDto'
+              $ref: '#/components/schemas/ExerciseDto'
         required: true
       responses:
         "200":
@@ -205,6 +205,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exercise'
+  /exercise/pdf:
+    post:
+      tags:
+      - exercise-controller
+      operationId: previewExerciseDto
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExerciseDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/pdf:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: byte
   /courses:
     get:
       tags:
@@ -267,35 +288,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Category'
-  /latex:
+  /sheet/{id}/pdf:
     get:
       tags:
-      - test-controller
-      operationId: getLatexPdf
+      - sheet-controller
+      operationId: getSheetPdf
       parameters:
-      - name: content
-        in: query
-        required: false
-        schema:
-          type: string
-          default: Hello World!
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: string
-                  format: byte
-  /latex/{exerciseId}:
-    get:
-      tags:
-      - test-controller
-      operationId: getExerciseLatex
-      parameters:
-      - name: exerciseId
+      - name: id
         in: path
         required: true
         schema:
@@ -304,7 +303,28 @@ paths:
         "200":
           description: OK
           content:
-            application/json:
+            application/pdf:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: byte
+  /exercise/{id}/pdf:
+    get:
+      tags:
+      - exercise-controller
+      operationId: getExercisePdf
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/pdf:
               schema:
                 type: array
                 items:
@@ -388,7 +408,7 @@ components:
       properties:
         name:
           type: string
-    CreateSheetDto:
+    SheetDto:
       required:
       - categories
       - courses
@@ -506,7 +526,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Exercise'
-    CreateExerciseDto:
+    ExerciseDto:
       required:
       - categories
       - courses
