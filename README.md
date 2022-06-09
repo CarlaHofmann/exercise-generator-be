@@ -4,8 +4,29 @@
 
 ### LaTeX compiler setup
 
-In order to use this backend service, the host needs to have the LaTeX compiler package [latexmk](https://mg.readthedocs.io/latexmk.html) installed on it's system and the executable available in its `PATH`.
+In order to use this backend service, the host needs to have the LaTeX compiler package [latexmk](https://ctan.org/pkg/latexmk) installed on it's system and the executable available in its `PATH`.
 
-For installation instructions for your specific environment please check out this [documentation](https://mg.readthedocs.io/latexmk.html#installation).
+> Further instructions regarding the latexmk compiler can be found in this [documentation](https://mg.readthedocs.io/latexmk.html).
 
-> **Note:** Depending on your LaTeX installation the packages `texlive-fonts-recommended` and `texlive-latex-extra` (or `collection-fontsrecommended` and `collection-latexextra` if you are using `tlmgr`) might already be installed or not. Please make sure these packages are installed on your system for the application to function.
+For the template to work, additionally the LaTeX packages `collection-fontsrecommended` and `collection-latexextra` need to be present in your LaTeX installation.
+
+
+#### Installation
+
+We recommend installing the [TeXLive](https://www.tug.org/texlive/) package (or [MacTeX](https://www.tug.org/mactex/) for OSX users) on your system. For further instructions please follow the official instructions depending for your respective operating system.
+
+After the TeXLive suite is installed, you may need, depending on if you've chosen a full installation of TeXLive or not, to install the required packages. To do so, the easiest way is to use the `tlmgr` utility which comes with every installation of TeXLive.  
+Running the following command will install all necessary packages on your system (including the `latexmk` compiler):
+
+```sh
+tlmgr install collection-fontsrecommended collection-latexextra latexmk
+```
+
+Wait for the installation of the packages to finish and you should be good to go.
+
+You can verify your installation by opening a command line and entering:
+
+```sh
+latexmk -v
+```
+
