@@ -1,22 +1,20 @@
 package com.frauas.exercisegenerator.documents;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
+import com.frauas.exercisegenerator.mongo.UpsertSave;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.frauas.exercisegenerator.mongo.UpsertSave;
-
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
-@Document(collection = "sheets")
+@Document()
 public class Sheet {
 
     @Id
@@ -29,6 +27,8 @@ public class Sheet {
     private LocalDateTime updatedAt;
 
     private LocalDateTime publishedAt;
+
+    private Boolean isPublished;
 
     private String title;
 

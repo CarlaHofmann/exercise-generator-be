@@ -416,6 +416,8 @@ components:
       - title
       type: object
       properties:
+        isPublished:
+          type: boolean
         title:
           type: string
         exercises:
@@ -468,6 +470,8 @@ components:
         updatedAt:
           type: string
           format: date-time
+        isUsed:
+          type: boolean
         author:
           $ref: '#/components/schemas/Author'
         title:
@@ -510,6 +514,8 @@ components:
         publishedAt:
           type: string
           format: date-time
+        isPublished:
+          type: boolean
         title:
           type: string
         author:
@@ -535,6 +541,8 @@ components:
       - title
       type: object
       properties:
+        isUsed:
+          type: boolean
         title:
           type: string
         note:
