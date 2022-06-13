@@ -39,6 +39,7 @@ class com.frauas.exercisegenerator.documents.Exercise {
 	{field} +createdAt : java.time.LocalDateTime
 	{field} +id : String
 	{field} +images : java.util.List
+	{field} +isUsed : Boolean
 	{field} +note : String
 	{field} +shortDescription : String
 	{field} +solutions : java.util.List
@@ -55,6 +56,7 @@ class com.frauas.exercisegenerator.documents.Exercise {
 class com.frauas.exercisegenerator.documents.Sheet {
 	{field} +createdAt : java.time.LocalDateTime
 	{field} +id : String
+	{field} +isPublished : Boolean
 	{field} +publishedAt : java.time.LocalDateTime
 	{field} +title : String
 	{field} +updatedAt : java.time.LocalDateTime

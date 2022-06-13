@@ -1,24 +1,19 @@
 package com.frauas.exercisegenerator.services;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.frauas.exercisegenerator.documents.*;
+import com.frauas.exercisegenerator.dtos.SheetDto;
+import com.frauas.exercisegenerator.repositories.AuthorRepository;
+import com.frauas.exercisegenerator.repositories.ExerciseRepository;
+import com.frauas.exercisegenerator.repositories.SheetRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.frauas.exercisegenerator.documents.Author;
-import com.frauas.exercisegenerator.documents.Category;
-import com.frauas.exercisegenerator.documents.Course;
-import com.frauas.exercisegenerator.documents.Exercise;
-import com.frauas.exercisegenerator.documents.Sheet;
-import com.frauas.exercisegenerator.dtos.SheetDto;
-import com.frauas.exercisegenerator.repositories.AuthorRepository;
-import com.frauas.exercisegenerator.repositories.ExerciseRepository;
-import com.frauas.exercisegenerator.repositories.SheetRepository;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class SheetService {
@@ -74,8 +69,11 @@ public class SheetService {
 
         Sheet sheet = modelMapper.map(sheetDto, Sheet.class);
 
+        if(sheetDto.getIsPublished()){
+            sheet.setPublishedAt(LocalDateTime.now());
+            sheet.setIsPublished(true);
+        }
         sheet.setAuthor(author);
-        sheet.setPublishedAt(LocalDateTime.now());
         sheet.setCourses(courses);
         sheet.setCategories(categories);
         sheet.setExercises(exercises);
@@ -108,6 +106,14 @@ public class SheetService {
 
         ArrayList<Exercise> exercises = new ArrayList<>();
         exerciseRepository.findAllById(sheetDto.getExercises()).forEach(exercises::add);
+
+        if(sheetDto.getIsPublished() && !sheet.getIsPublished()){
+            sheet.setPublishedAt(LocalDateTime.now());
+            sheet.setIsPublished(true);
+        } else if (!sheetDto.getIsPublished() && sheet.getIsPublished()) {
+            sheet.setPublishedAt(null);
+            sheet.setIsPublished(false);
+        }
 
         sheet.setCourses(courses);
         sheet.setCategories(categories);
