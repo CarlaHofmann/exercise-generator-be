@@ -7,16 +7,20 @@ import com.frauas.exercisegenerator.helpers.CourseUpsertHelper;
 import com.frauas.exercisegenerator.repositories.ExerciseRepository;
 import com.frauas.exercisegenerator.repositories.SheetRepository;
 import com.frauas.exercisegenerator.repositories.UserRepository;
+import com.frauas.exercisegenerator.util.TokenUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Service
 public class SheetService {
@@ -28,6 +32,9 @@ public class SheetService {
 
     @Autowired
     private SheetRepository sheetRepository;
+
+    @Autowired
+    private TokenUtil tokenUtil;
 
 
     @Autowired
@@ -47,14 +54,18 @@ public class SheetService {
                 .orElseThrow(() -> new HttpServerErrorException(HttpStatus.NOT_FOUND));
     }
 
-    public Sheet createSheet(CreateSheetDto createSheetDto) {
-        // TODO: Use actual author resolution via login credentials
-        Optional<User> user = this.userRepository.findByUsername("default");
+    public Sheet createSheet(HttpServletRequest request, CreateSheetDto createSheetDto) {
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        String token = authorizationHeader.substring("Bearer ".length());
 
-        if (user == null) {
-            user = Optional.of(User.builder().username("default").build());
-            user = Optional.of(this.userRepository.save(user.get()));
+        tokenUtil.validateToken(token);
+
+        Optional<User> user = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(token));
+        if(user.isPresent() == false)
+        {
+            throw new RuntimeException("username not valid");
         }
+
 
         ArrayList<Course> courses = courseUpsertHelper.upsertCoursesFromDto(createSheetDto.getCourses());
         ArrayList<Category> categories = categoryUpsertHelper.upsertCategoriesFromDto(createSheetDto.getCategories());

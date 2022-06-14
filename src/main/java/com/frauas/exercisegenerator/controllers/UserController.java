@@ -1,32 +1,23 @@
 package com.frauas.exercisegenerator.controllers;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.frauas.exercisegenerator.documents.Category;
 import com.frauas.exercisegenerator.documents.User;
-import com.frauas.exercisegenerator.dtos.CreateCategoryDto;
 import com.frauas.exercisegenerator.dtos.CreateUserDto;
-import com.frauas.exercisegenerator.services.CategoryService;
 import com.frauas.exercisegenerator.services.UserService;
+import com.frauas.exercisegenerator.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 @RestController
 @RequestMapping("/users")
@@ -35,18 +26,21 @@ public class UserController
 	@Autowired
 	UserService userService;
 
+	@Autowired
+	TokenUtil tokenUtil;
+
 	@GetMapping
 	public List<User> getAllUsers() {
 		return userService.getAllUsers();
 	}
 
-	@GetMapping("/id")
+	@GetMapping("/{id}")
 	public Optional<User> getUserById(@PathVariable String id) {
 		return userService.getUserById(id);
 	}
 
-	@GetMapping("/username")
-	public Optional<User> getUserByusername(@PathVariable String username) {
+	@GetMapping("/{username}")
+	public Optional<User> getUserByUsername(@PathVariable String username) {
 		return userService.getUserByUsername(username);
 	}
 
@@ -60,26 +54,28 @@ public class UserController
 			try
 			{
 				String refreshtoken = authorizationHeader.substring("Bearer ".length());
-				Algorithm algorithm = Algorithm.HMAC256("superDollesGeheimnis".getBytes());
-				JWTVerifier verifier = JWT.require(algorithm).build();
-				DecodedJWT decodedJWT = verifier.verify(refreshtoken);
-				String username = decodedJWT.getSubject();
-				User user = userService.getUserByUsername(username).get();
-				//user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-
-				//TO_DO: Manage roles
-				String accessToken = JWT.create()
-						.withSubject(user.getUsername())
-						.withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
-						.withIssuer(request.getRequestURI().toString())
-						.withClaim("roles", "simpleUser")
-						.sign(algorithm);
-
-				Map<String, String> tokens = new HashMap<>();
-				tokens.put("accessToken", accessToken);
-				tokens.put("refreshToken", refreshtoken);
-				response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-				new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+				System.out.println(refreshtoken);
+				if(tokenUtil.validateToken(refreshtoken))
+				{
+					User user = userService.getUserByUsername(tokenUtil.getUsernameFromToken(refreshtoken)).get();
+					Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+					if(user.isAdmin())
+					{
+						authorities.add(new SimpleGrantedAuthority("admin"));
+					}
+					authorities.add(new SimpleGrantedAuthority("simpleUser"));
+					org.springframework.security.core.userdetails.User secUser = new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
+					String accessToken = tokenUtil.genAccessToken(request.getRequestURI().toString(), secUser);
+					Map<String, String> tokens = new HashMap<>();
+					tokens.put("accessToken", accessToken);
+					tokens.put("refreshToken", refreshtoken);
+					response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+					new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+				}
+				else
+				{
+					response.sendError(FORBIDDEN.value());
+				}
 			}
 			catch (Exception e)
 			{
@@ -88,6 +84,7 @@ public class UserController
 				//response.sendError(FORBIDDEN.value());
 
 				Map<String, String> error = new HashMap<>();
+				error.put("Error in:", "UserController.refreshToken");
 				error.put("errorMessage", e.getMessage());
 				response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 				new ObjectMapper().writeValue(response.getOutputStream(), error);

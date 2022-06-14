@@ -2,6 +2,7 @@ package com.frauas.exercisegenerator.config;
 
 import com.frauas.exercisegenerator.filter.CustomAuthenticationFilter;
 import com.frauas.exercisegenerator.filter.CustomAuthorizationFilter;
+import com.frauas.exercisegenerator.util.TokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,23 +14,24 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.*;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class securityConfig extends WebSecurityConfigurerAdapter
+public class SecurityConfig extends WebSecurityConfigurerAdapter
 {
 	@Autowired
 	private UserDetailsService userDetailsService;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private TokenUtil tokenUtil;
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception
@@ -42,14 +44,21 @@ public class securityConfig extends WebSecurityConfigurerAdapter
 	{
 		http.csrf().disable();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		http.authorizeRequests().antMatchers(GET, "/users").hasAnyAuthority("simpleUser");
+		http.authorizeRequests().antMatchers(GET, "/users").hasAnyAuthority("admin");
+		http.authorizeRequests().antMatchers(POST, "/users").hasAnyAuthority("admin");
+		http.authorizeRequests().antMatchers(GET, "/users/refreshToken").permitAll();
+		http.authorizeRequests().antMatchers(POST, "/sheet").hasAnyAuthority("simpleUser");
+		http.authorizeRequests().antMatchers(DELETE, "/sheet").hasAnyAuthority("simpleUser");
+		http.authorizeRequests().antMatchers(POST, "/exercise").hasAnyAuthority("simpleUser");
+		http.authorizeRequests().antMatchers(DELETE, "/exercise").hasAnyAuthority("simpleUser");
 		//http.authorizeRequests().antMatchers(GET, "/*").hasAnyAuthority("simpleUser");
 		//http.authorizeRequests().anyRequest().permitAll();
 		//http.authorizeRequests().antMatchers(GET, "/*").authenticated();
 		http.authorizeRequests().antMatchers(GET, "/v3/*").permitAll();
 		http.authorizeRequests().antMatchers(GET, "/swagger-ui/*").permitAll();
-		http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
-		http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+		http.cors();
+		http.addFilter(new CustomAuthenticationFilter(tokenUtil, authenticationManagerBean()));
+		http.addFilterBefore(new CustomAuthorizationFilter(tokenUtil), UsernamePasswordAuthenticationFilter.class);
 	}
 
 	@Bean

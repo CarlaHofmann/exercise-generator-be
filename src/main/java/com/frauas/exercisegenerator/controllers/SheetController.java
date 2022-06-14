@@ -6,6 +6,7 @@ import com.frauas.exercisegenerator.services.SheetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -26,8 +27,8 @@ public class SheetController {
     }
 
     @PostMapping
-    public Sheet createSheet(@RequestBody CreateSheetDto createSheetDto) {
-        return sheetService.createSheet(createSheetDto);
+    public Sheet createSheet(HttpServletRequest request, @RequestBody CreateSheetDto createSheetDto) {
+        return sheetService.createSheet(request, createSheetDto);
     }
 
     @DeleteMapping("/{id}")

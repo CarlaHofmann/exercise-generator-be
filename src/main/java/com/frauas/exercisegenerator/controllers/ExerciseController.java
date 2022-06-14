@@ -6,6 +6,7 @@ import com.frauas.exercisegenerator.services.ExerciseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -26,8 +27,8 @@ public class ExerciseController {
     }
 
     @PostMapping
-    public Exercise createExercise(@RequestBody CreateExerciseDto exerciseDto) {
-        return this.exerciseService.createExerciseFromDto(exerciseDto);
+    public Exercise createExercise(HttpServletRequest request, @RequestBody CreateExerciseDto exerciseDto) {
+        return this.exerciseService.createExerciseFromDto(request, exerciseDto);
     }
 
     @DeleteMapping("/{id}")

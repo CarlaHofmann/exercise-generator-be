@@ -1,5 +1,6 @@
 package com.frauas.exercisegenerator;
 
+import com.frauas.exercisegenerator.util.TokenUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -37,8 +38,14 @@ public class ExerciseGeneratorApplication {
 	}
 
 	@Bean
-	PasswordEncoder passwordEncoder()
+	public PasswordEncoder passwordEncoder()
 	{
 		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	public TokenUtil tokenUtil() {
+		TokenUtil tokenUtil = new TokenUtil();
+		return tokenUtil;
 	}
 }

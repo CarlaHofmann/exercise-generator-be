@@ -12,6 +12,7 @@ import com.frauas.exercisegenerator.repositories.ExerciseRepository;
 import com.frauas.exercisegenerator.repositories.CategoryRepository;
 import com.frauas.exercisegenerator.repositories.ExerciseRepository;
 import com.frauas.exercisegenerator.repositories.UserRepository;
+import com.frauas.exercisegenerator.util.TokenUtil;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Service
 public class ExerciseService {
@@ -44,6 +48,8 @@ public class ExerciseService {
     @Autowired
     CategoryUpsertHelper categoryUpsertHelper;
 
+    @Autowired
+    private TokenUtil tokenUtil;
 
     public List<Exercise> getAllExercises() {
         return this.exerciseRepository.findAll();
@@ -54,17 +60,17 @@ public class ExerciseService {
                 .orElseThrow(() -> new HttpServerErrorException(HttpStatus.NOT_FOUND));
     }
 
-    public Exercise createExerciseFromDto(CreateExerciseDto exerciseDto) {
-        // TODO: Use actual author resolution via login credentials
-        Optional<User> authorOpt = this.userRepository.findByUsername("default");
-        User author;
+    public Exercise createExerciseFromDto(HttpServletRequest request, CreateExerciseDto exerciseDto) {
 
-        if (authorOpt.isPresent() == false) {
-            author = User.builder().username("default").build();
-            author = this.userRepository.save(author);
-        }
-        else {
-            author = authorOpt.get();
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        String token = authorizationHeader.substring("Bearer ".length());
+
+        tokenUtil.validateToken(token);
+
+        Optional<User> user = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(token));
+        if(user.isPresent() == false)
+        {
+            throw new RuntimeException("username not valid");
         }
 
         ArrayList<Course> courses = courseUpsertHelper.upsertCoursesFromDto(exerciseDto.getCourses());
@@ -72,7 +78,7 @@ public class ExerciseService {
 
         Exercise exercise = this.modelMapper.map(exerciseDto, Exercise.class);
 
-        exercise.setAuthor(author);
+        exercise.setAuthor(user.get());
         exercise.setCourses(courses);
         exercise.setCategories(categories);
 
