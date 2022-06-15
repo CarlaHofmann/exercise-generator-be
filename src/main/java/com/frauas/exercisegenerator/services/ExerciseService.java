@@ -1,14 +1,5 @@
 package com.frauas.exercisegenerator.services;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
 import com.frauas.exercisegenerator.documents.Author;
 import com.frauas.exercisegenerator.documents.Category;
 import com.frauas.exercisegenerator.documents.Course;
@@ -19,6 +10,15 @@ import com.frauas.exercisegenerator.helpers.CourseUpsertHelper;
 import com.frauas.exercisegenerator.repositories.AuthorRepository;
 import com.frauas.exercisegenerator.repositories.CategoryRepository;
 import com.frauas.exercisegenerator.repositories.ExerciseRepository;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ExerciseService {
@@ -78,6 +78,11 @@ public class ExerciseService {
 
         Exercise exercise = this.modelMapper.map(exerciseDto, Exercise.class);
 
+        if(exerciseDto.getIsPublished()){
+            exercise.setPublishedAt(LocalDateTime.now());
+            exercise.setIsPublished(true);
+        }
+
         exercise.setAuthor(author);
         exercise.setCourses(courses);
         exercise.setCategories(categories);
@@ -113,6 +118,14 @@ public class ExerciseService {
                     .build();
             categories.add(category);
         });
+
+        if(exerciseDto.getIsPublished() && !exercise.getIsPublished()){
+            exercise.setPublishedAt(LocalDateTime.now());
+            exercise.setIsPublished(true);
+        } else if (!exerciseDto.getIsPublished() && exercise.getIsPublished()) {
+            exercise.setPublishedAt(null);
+            exercise.setIsPublished(false);
+        }
 
         exercise.setCourses(courses);
         exercise.setCategories(categories);
