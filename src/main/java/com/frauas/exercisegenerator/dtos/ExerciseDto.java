@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 public class ExerciseDto {
 
+    private Boolean isPublished;
     private Boolean isUsed;
 
     @NotNull
