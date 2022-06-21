@@ -1,16 +1,18 @@
 package com.frauas.exercisegenerator.documents;
 
-import com.frauas.exercisegenerator.mongo.UpsertSave;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import com.frauas.exercisegenerator.mongo.UpsertSave;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -39,7 +41,7 @@ public class Exercise {
 
     private List<String> solutions;
 
-    private List<String> images;
+    private List<Image> images;
 
     @DBRef
     @UpsertSave(filters = "name")
