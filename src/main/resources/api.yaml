@@ -145,35 +145,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Sheet'
-  /image:
-    get:
-      tags:
-      - test-controller
-      operationId: getImage
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: string
-    post:
-      tags:
-      - test-controller
-      operationId: saveImage
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: string
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: string
   /exercise:
     get:
       tags:
@@ -491,7 +462,7 @@ components:
         images:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/Image'
         courses:
           type: array
           items:
@@ -500,6 +471,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Category'
+    Image:
+      type: object
+      properties:
+        filepath:
+          type: string
+        reference:
+          type: string
     Sheet:
       type: object
       properties:
@@ -549,15 +527,15 @@ components:
           type: string
         shortDescription:
           type: string
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImageDto'
         texts:
           type: array
           items:
             type: string
         solutions:
-          type: array
-          items:
-            type: string
-        images:
           type: array
           items:
             type: string
@@ -569,3 +547,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CreateCategoryDto'
+    ImageDto:
+      type: object
+      properties:
+        reference:
+          type: string
+        content:
+          type: string
