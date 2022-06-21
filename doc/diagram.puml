@@ -38,8 +38,10 @@ class com.frauas.exercisegenerator.documents.Course {
 class com.frauas.exercisegenerator.documents.Exercise {
 	{field} +createdAt : java.time.LocalDateTime
 	{field} +id : String
+	{field} +isPublished : Boolean
 	{field} +isUsed : Boolean
 	{field} +note : String
+	{field} +publishedAt : java.time.LocalDateTime
 	{field} +shortDescription : String
 	{field} +solutions : java.util.List
 	{field} +texts : java.util.List
