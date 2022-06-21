@@ -13,6 +13,7 @@ import com.frauas.exercisegenerator.documents.Author;
 import com.frauas.exercisegenerator.documents.Category;
 import com.frauas.exercisegenerator.documents.Course;
 import com.frauas.exercisegenerator.documents.Exercise;
+import com.frauas.exercisegenerator.documents.Image;
 import com.frauas.exercisegenerator.dtos.ExerciseDto;
 import com.frauas.exercisegenerator.helpers.CategoryUpsertHelper;
 import com.frauas.exercisegenerator.helpers.CourseUpsertHelper;
@@ -22,7 +23,6 @@ import com.frauas.exercisegenerator.repositories.ExerciseRepository;
 
 @Service
 public class ExerciseService {
-
     @Autowired
     ExerciseRepository exerciseRepository;
 
@@ -40,6 +40,9 @@ public class ExerciseService {
 
     @Autowired
     CategoryUpsertHelper categoryUpsertHelper;
+
+    @Autowired
+    ImageService imageService;
 
     public List<Exercise> getAllExercises() {
         return this.exerciseRepository.findAll();
@@ -69,11 +72,23 @@ public class ExerciseService {
         });
 
         ArrayList<Category> categories = new ArrayList<>();
-        exerciseDto.getCategories().forEach(categorieDto -> {
+        exerciseDto.getCategories().forEach(categoryDto -> {
             Category category = Category.builder()
-                    .name(categorieDto.getName())
+                    .name(categoryDto.getName())
                     .build();
             categories.add(category);
+        });
+
+        ArrayList<Image> images = new ArrayList<>();
+        exerciseDto.getImages().forEach(imageDto -> {
+            try {
+                Image image = imageService.saveImage(imageDto);
+                images.add(image);
+            } catch (Exception e) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                        "Error during save process of image with reference '" + imageDto.getReference() + "':\n"
+                                + e.getMessage());
+            }
         });
 
         Exercise exercise = this.modelMapper.map(exerciseDto, Exercise.class);
@@ -81,6 +96,7 @@ public class ExerciseService {
         exercise.setAuthor(author);
         exercise.setCourses(courses);
         exercise.setCategories(categories);
+        exercise.setImages(images);
 
         return exercise;
     }
@@ -114,8 +130,21 @@ public class ExerciseService {
             categories.add(category);
         });
 
+        ArrayList<Image> images = new ArrayList<>();
+        exerciseDto.getImages().forEach(imageDto -> {
+            try {
+                Image image = imageService.saveImage(imageDto);
+                images.add(image);
+            } catch (Exception e) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                        "Error during save process of image with reference '" + imageDto.getReference() + "':\n"
+                                + e.getMessage());
+            }
+        });
+
         exercise.setCourses(courses);
         exercise.setCategories(categories);
+        exercise.setImages(images);
 
         return exerciseRepository.save(exercise);
     }

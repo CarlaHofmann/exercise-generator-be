@@ -1,10 +1,11 @@
 package com.frauas.exercisegenerator.dtos;
 
-import lombok.Data;
+import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+
+import lombok.Data;
 
 @Data
 public class ExerciseDto {
@@ -18,6 +19,8 @@ public class ExerciseDto {
 
     private String shortDescription;
 
+    private List<ImageDto> images;
+
     @NotNull
     @NotEmpty
     private List<String> texts;
@@ -25,8 +28,6 @@ public class ExerciseDto {
     @NotNull
     @NotEmpty
     private List<String> solutions;
-
-    private List<String> images;
 
     @NotNull
     @NotEmpty

@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.frauas.exercisegenerator.converters.ImageBase64Converter;
 import com.frauas.exercisegenerator.documents.Image;
+import com.frauas.exercisegenerator.dtos.ImageDto;
 import com.frauas.exercisegenerator.repositories.ImageRepository;
 
 @Service
@@ -23,13 +24,13 @@ public class ImageService {
 
     private final String WORKING_IMAGE_DIR = System.getProperty("user.dir") + "/images/";
 
-    public Image saveImage(String imageString, String reference) throws IOException {
+    public Image saveImage(ImageDto imageDto) throws IOException {
         LocalDateTime time = LocalDateTime.now();
         String formattedTime = time.format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm"));
 
         String uuid = UUID.randomUUID().toString();
 
-        String imageType = getImageType(imageString);
+        String imageType = getImageType(imageDto.getContent());
 
         if (!(imageType.equals("png") || imageType.equals("jpeg") || imageType.equals("jpg"))) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
@@ -38,10 +39,10 @@ public class ImageService {
         String imagePath = WORKING_IMAGE_DIR + formattedTime + "_" + uuid + "." + imageType;
         File imageFile = new File(imagePath);
 
-        FileUtils.writeByteArrayToFile(imageFile, ImageBase64Converter.decodeToImage(imageString));
+        FileUtils.writeByteArrayToFile(imageFile, ImageBase64Converter.decodeToImage(imageDto.getContent()));
 
         Image image = Image.builder()
-                .reference(reference)
+                .reference(imageDto.getReference())
                 .filepath(imageFile.getAbsolutePath())
                 .build();
 

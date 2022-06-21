@@ -1,10 +1,14 @@
 package com.frauas.exercisegenerator.documents;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Image {
     /**
      * Absolute path to the image file on the system disk.
