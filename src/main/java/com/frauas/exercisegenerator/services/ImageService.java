@@ -7,7 +7,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -15,12 +14,9 @@ import org.springframework.web.server.ResponseStatusException;
 import com.frauas.exercisegenerator.converters.ImageBase64Converter;
 import com.frauas.exercisegenerator.documents.Image;
 import com.frauas.exercisegenerator.dtos.ImageDto;
-import com.frauas.exercisegenerator.repositories.ImageRepository;
 
 @Service
 public class ImageService {
-    @Autowired
-    private ImageRepository imageRepository;
 
     private final String WORKING_IMAGE_DIR = System.getProperty("user.dir") + "/images/";
 
@@ -46,7 +42,7 @@ public class ImageService {
                 .filepath(imageFile.getAbsolutePath())
                 .build();
 
-        return imageRepository.save(image);
+        return image;
     }
 
     public static String getImageType(String imageString) {
