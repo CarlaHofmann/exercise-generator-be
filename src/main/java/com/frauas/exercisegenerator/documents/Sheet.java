@@ -25,7 +25,6 @@ public class Sheet {
     @CreatedDate
     private LocalDateTime createdAt;
 
-    @JsonIgnore
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
