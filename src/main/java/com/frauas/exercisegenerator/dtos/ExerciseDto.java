@@ -10,6 +10,7 @@ import lombok.Data;
 @Data
 public class ExerciseDto {
 
+    private Boolean isPublished;
     private Boolean isUsed;
 
     @NotNull

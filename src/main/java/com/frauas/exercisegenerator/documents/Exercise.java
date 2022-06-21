@@ -9,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.frauas.exercisegenerator.mongo.UpsertSave;
 
 import lombok.Data;
@@ -22,12 +23,17 @@ public class Exercise {
     @Id
     private String id;
 
+    @JsonIgnore
     @CreatedDate
     private LocalDateTime createdAt;
 
+    @JsonIgnore
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    private LocalDateTime publishedAt;
+
+    private Boolean isPublished;
     private Boolean isUsed;
 
     @DBRef

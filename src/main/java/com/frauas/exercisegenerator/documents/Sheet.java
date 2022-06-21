@@ -1,5 +1,6 @@
 package com.frauas.exercisegenerator.documents;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.frauas.exercisegenerator.mongo.UpsertSave;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ public class Sheet {
     @Id
     private String id;
 
+    @JsonIgnore
     @CreatedDate
     private LocalDateTime createdAt;
 

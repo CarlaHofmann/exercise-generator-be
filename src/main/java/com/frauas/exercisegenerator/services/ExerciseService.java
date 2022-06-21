@@ -1,5 +1,6 @@
 package com.frauas.exercisegenerator.services;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,6 +94,11 @@ public class ExerciseService {
 
         Exercise exercise = this.modelMapper.map(exerciseDto, Exercise.class);
 
+        if (exerciseDto.getIsPublished()) {
+            exercise.setPublishedAt(LocalDateTime.now());
+            exercise.setIsPublished(true);
+        }
+
         exercise.setAuthor(author);
         exercise.setCourses(courses);
         exercise.setCategories(categories);
@@ -141,6 +147,14 @@ public class ExerciseService {
                                 + e.getMessage());
             }
         });
+
+        if (exerciseDto.getIsPublished() && !exercise.getIsPublished()) {
+            exercise.setPublishedAt(LocalDateTime.now());
+            exercise.setIsPublished(true);
+        } else if (!exerciseDto.getIsPublished() && exercise.getIsPublished()) {
+            exercise.setPublishedAt(null);
+            exercise.setIsPublished(false);
+        }
 
         exercise.setCourses(courses);
         exercise.setCategories(categories);
