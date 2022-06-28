@@ -178,6 +178,12 @@ public class ExerciseService {
     }
 
     public void deleteExerciseById(String id) {
-        exerciseRepository.deleteById(id);
+        Exercise exercise = this.exerciseRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Exercise with id '" + id + "' could not be found!"));
+
+        exercise.getImages().forEach(image -> imageService.deleteImageFile(image));
+
+        exerciseRepository.delete(exercise);
     }
 }
