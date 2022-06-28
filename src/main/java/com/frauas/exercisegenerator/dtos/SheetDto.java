@@ -1,21 +1,14 @@
 package com.frauas.exercisegenerator.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+
+import lombok.Data;
 
 @Data
-@AllArgsConstructor
 public class SheetDto {
-
-    private Boolean isPublished;
-
-    private Boolean useNumericTitles;
-
-    private Boolean showSolutions;
 
     @NotNull
     private String title;
@@ -31,4 +24,10 @@ public class SheetDto {
     @NotNull
     @NotEmpty
     private List<CreateCategoryDto> categories;
+
+    private Boolean isPublished = false;
+
+    private Boolean useNumericTitles = false;
+
+    private Boolean showSolutions = false;
 }
