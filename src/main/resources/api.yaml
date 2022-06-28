@@ -416,12 +416,6 @@ components:
       - title
       type: object
       properties:
-        isPublished:
-          type: boolean
-        useNumericTitles:
-          type: boolean
-        showSolutions:
-          type: boolean
         title:
           type: string
         exercises:
@@ -436,6 +430,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CreateCategoryDto'
+        isPublished:
+          type: boolean
+        useNumericTitles:
+          type: boolean
+        showSolutions:
+          type: boolean
     Author:
       type: object
       properties:
@@ -545,16 +545,14 @@ components:
       - title
       type: object
       properties:
-        isPublished:
-          type: boolean
-        isUsed:
-          type: boolean
         title:
           type: string
         note:
           type: string
         shortDescription:
           type: string
+        isPublished:
+          type: boolean
         texts:
           type: array
           items:
