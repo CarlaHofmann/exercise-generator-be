@@ -1,16 +1,17 @@
 package com.frauas.exercisegenerator.dtos;
 
-import lombok.Data;
+import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+
+import lombok.Data;
 
 @Data
 public class ExerciseDto {
 
-    private Boolean isPublished;
-    private Boolean isUsed;
+    private Boolean isPublished = false;
+    private Boolean isUsed = false;
 
     @NotNull
     private String title;
