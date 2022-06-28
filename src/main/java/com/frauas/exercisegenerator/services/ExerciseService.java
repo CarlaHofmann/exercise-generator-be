@@ -46,13 +46,21 @@ public class ExerciseService {
     ImageService imageService;
 
     public List<Exercise> getAllExercises() {
-        return this.exerciseRepository.findAll();
+        List<Exercise> exercises = this.exerciseRepository.findAll();
+
+        exercises.forEach(exercise -> imageService.hydrateExerciseImageContent(exercise));
+
+        return exercises;
     }
 
     public Exercise getExerciseById(String id) {
-        return this.exerciseRepository.findById(id)
+        Exercise exercise = this.exerciseRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Exercise with id '" + id + "' could not be found!"));
+
+        imageService.hydrateExerciseImageContent(exercise);
+
+        return exercise;
     }
 
     public Exercise prepareExerciseFromDto(ExerciseDto exerciseDto) {
@@ -118,8 +126,6 @@ public class ExerciseService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Exercise with id '" + id + "' could not be found!"));
 
-        modelMapper.map(exerciseDto, exercise);
-
         ArrayList<Course> courses = new ArrayList<>();
         exerciseDto.getCourses().forEach(courseDto -> {
             Course course = Course.builder()
@@ -147,6 +153,8 @@ public class ExerciseService {
                                 + e.getMessage());
             }
         });
+
+        modelMapper.map(exerciseDto, exercise);
 
         if (exerciseDto.getIsPublished() && !exercise.getIsPublished()) {
             exercise.setPublishedAt(LocalDateTime.now());

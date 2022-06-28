@@ -1,5 +1,9 @@
 package com.frauas.exercisegenerator.documents;
 
+import org.springframework.data.annotation.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +16,9 @@ import lombok.NoArgsConstructor;
 public class Image {
     /**
      * Absolute path to the image file on the system disk.
+     * Property will not be serialized in JSON responses.
      */
+    @JsonIgnore
     private String filepath;
 
     /**
@@ -20,4 +26,11 @@ public class Image {
      * generation.
      */
     private String reference;
+
+    /**
+     * Image content as base64 encoded string.
+     * Property will not be persisted to the database.
+     */
+    @Transient
+    private String content;
 }

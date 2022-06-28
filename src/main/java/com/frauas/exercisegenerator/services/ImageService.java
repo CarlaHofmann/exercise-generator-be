@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.frauas.exercisegenerator.converters.ImageBase64Converter;
+import com.frauas.exercisegenerator.documents.Exercise;
 import com.frauas.exercisegenerator.documents.Image;
 import com.frauas.exercisegenerator.dtos.ImageDto;
 
@@ -40,6 +42,7 @@ public class ImageService {
         Image image = Image.builder()
                 .reference(imageDto.getReference())
                 .filepath(imageFile.getAbsolutePath())
+                .content(imageDto.getContent())
                 .build();
 
         return image;
@@ -48,5 +51,29 @@ public class ImageService {
     public static String getImageType(String imageString) {
         return imageString.split("image/")[1]
                 .split(";")[0];
+    }
+
+    public String getImageContent(Image image) throws IOException {
+        File imageFile = new File(image.getFilepath());
+
+        String[] imageParts = imageFile.getName().split("\\.");
+        String fileType = imageParts[imageParts.length - 1];
+
+        return "data:image/" + fileType + ";base64,"
+                + ImageBase64Converter.encodeToString(FileUtils.readFileToByteArray(imageFile));
+    }
+
+    public void hydrateExerciseImageContent(Exercise exercise) {
+        List<Image> images = exercise.getImages();
+
+        if (images != null) {
+            images.forEach(image -> {
+                try {
+                    image.setContent(getImageContent(image));
+                } catch (IOException e) {
+                    System.err.println("Error during image content hydration for exercise:\n" + e);
+                }
+            });
+        }
     }
 }
