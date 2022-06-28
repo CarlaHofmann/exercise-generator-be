@@ -73,6 +73,13 @@ public class SheetService {
             sheet.setPublishedAt(LocalDateTime.now());
             sheet.setIsPublished(true);
         }
+        if(sheetDto.getUseNumericTitles()){
+            sheet.setUseNumericTitles(true);
+        }
+        if(sheetDto.getShowSolution()){
+            sheet.setShowSolution(true);
+        }
+
         sheet.setAuthor(author);
         sheet.setCourses(courses);
         sheet.setCategories(categories);
@@ -113,6 +120,18 @@ public class SheetService {
         } else if (!sheetDto.getIsPublished() && sheet.getIsPublished()) {
             sheet.setPublishedAt(null);
             sheet.setIsPublished(false);
+        }
+
+        if(sheetDto.getUseNumericTitles() && !sheet.getUseNumericTitles()){
+            sheet.setUseNumericTitles(true);
+        } else if (!sheetDto.getUseNumericTitles() && sheet.getUseNumericTitles()) {
+            sheet.setUseNumericTitles(false);
+        }
+
+        if(sheetDto.getShowSolution() && !sheet.getShowSolution()){
+            sheet.setShowSolution(true);
+        } else if (!sheetDto.getShowSolution() && sheet.getShowSolution()) {
+            sheet.setShowSolution(false);
         }
 
         sheet.setCourses(courses);

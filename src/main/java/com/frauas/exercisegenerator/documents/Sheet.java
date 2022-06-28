@@ -32,6 +32,10 @@ public class Sheet {
 
     private Boolean isPublished;
 
+    private Boolean useNumericTitles;
+
+    private Boolean showSolution;
+
     private String title;
 
     @DBRef
