@@ -10,8 +10,8 @@ import lombok.Data;
 @Data
 public class ExerciseDto {
 
-    private Boolean isPublished;
-    private Boolean isUsed;
+    private Boolean isPublished = false;
+    private Boolean isUsed = false;
 
     @NotNull
     private String title;

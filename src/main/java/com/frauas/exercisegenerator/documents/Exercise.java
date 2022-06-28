@@ -33,8 +33,8 @@ public class Exercise {
 
     private LocalDateTime publishedAt;
 
-    private Boolean isPublished;
-    private Boolean isUsed;
+    private Boolean isPublished = false;
+    private Boolean isUsed = false;
 
     @DBRef
     private Author author;
