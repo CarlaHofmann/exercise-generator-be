@@ -522,7 +522,7 @@ components:
           type: boolean
         useNumericTitles:
           type: boolean
-        showSolution:
+        showSolutions:
           type: boolean
         title:
           type: string
