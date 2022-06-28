@@ -15,7 +15,7 @@ public class SheetDto {
 
     private Boolean useNumericTitles;
 
-    private Boolean showSolution;
+    private Boolean showSolutions;
 
     @NotNull
     private String title;

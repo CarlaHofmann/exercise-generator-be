@@ -34,7 +34,7 @@ public class Sheet {
 
     private Boolean useNumericTitles;
 
-    private Boolean showSolution;
+    private Boolean showSolutions;
 
     private String title;
 

@@ -76,8 +76,8 @@ public class SheetService {
         if(sheetDto.getUseNumericTitles()){
             sheet.setUseNumericTitles(true);
         }
-        if(sheetDto.getShowSolution()){
-            sheet.setShowSolution(true);
+        if(sheetDto.getShowSolutions()){
+            sheet.setShowSolutions(true);
         }
 
         sheet.setAuthor(author);
@@ -128,10 +128,10 @@ public class SheetService {
             sheet.setUseNumericTitles(false);
         }
 
-        if(sheetDto.getShowSolution() && !sheet.getShowSolution()){
-            sheet.setShowSolution(true);
-        } else if (!sheetDto.getShowSolution() && sheet.getShowSolution()) {
-            sheet.setShowSolution(false);
+        if(sheetDto.getShowSolutions() && !sheet.getShowSolutions()){
+            sheet.setShowSolutions(true);
+        } else if (!sheetDto.getShowSolutions() && sheet.getShowSolutions()) {
+            sheet.setShowSolutions(false);
         }
 
         sheet.setCourses(courses);
