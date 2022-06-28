@@ -142,6 +142,12 @@ public class ExerciseService {
             categories.add(category);
         });
 
+        // Delete all images first
+        // * Note: This is kind of a "rambo" method, but the safest and least complex
+        // * way to prevent duplicate or dangling image files
+        exercise.getImages().forEach(image -> imageService.deleteImageFile(image));
+
+        // Create new images from dto
         ArrayList<Image> images = new ArrayList<>();
         exerciseDto.getImages().forEach(imageDto -> {
             try {

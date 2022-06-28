@@ -48,9 +48,10 @@ public class ImageService {
         return image;
     }
 
-    public static String getImageType(String imageString) {
-        return imageString.split("image/")[1]
-                .split(";")[0];
+    public void deleteImageFile(Image image) {
+        File imageFile = new File(image.getFilepath());
+
+        imageFile.delete();
     }
 
     public String getImageContent(Image image) throws IOException {
@@ -75,5 +76,10 @@ public class ImageService {
                 }
             });
         }
+    }
+
+    public static String getImageType(String imageString) {
+        return imageString.split("image/")[1]
+                .split(";")[0];
     }
 }
