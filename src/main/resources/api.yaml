@@ -473,9 +473,9 @@ components:
     Image:
       type: object
       properties:
-        filepath:
-          type: string
         reference:
+          type: string
+        content:
           type: string
     Sheet:
       type: object

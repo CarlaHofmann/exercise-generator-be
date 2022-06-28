@@ -55,6 +55,7 @@ class com.frauas.exercisegenerator.documents.Exercise {
 
 
 class com.frauas.exercisegenerator.documents.Image {
+	{field} +content : String
 	{field} +filepath : String
 	{field} +reference : String
 	{method}  {static} +builder () : com.frauas.exercisegenerator.documents.Image$ImageBuilder
