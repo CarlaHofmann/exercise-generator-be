@@ -10,6 +10,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.frauas.exercisegenerator.mongo.CascadeSaveMongoEventListener;
+import com.frauas.exercisegenerator.mongo.ExerciseVirtualFieldListener;
 import com.frauas.exercisegenerator.mongo.UpsertSaveMongoEventListener;
 import com.github.jknack.handlebars.EscapingStrategy;
 import com.github.jknack.handlebars.Handlebars;
@@ -64,5 +65,10 @@ public class ExerciseGeneratorApplication {
 	@Bean
 	public UpsertSaveMongoEventListener upsertSaveMongoEventListener() {
 		return new UpsertSaveMongoEventListener();
+	}
+
+	@Bean
+	public ExerciseVirtualFieldListener exerciseVirtualFieldListener() {
+		return new ExerciseVirtualFieldListener();
 	}
 }

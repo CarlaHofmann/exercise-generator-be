@@ -51,6 +51,6 @@ public class Sheet {
     @UpsertSave(filters = "name")
     private List<Category> categories;
 
-    @DBRef
+    @DBRef(lazy = true)
     private List<Exercise> exercises;
 }

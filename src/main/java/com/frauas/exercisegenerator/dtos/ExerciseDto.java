@@ -9,16 +9,14 @@ import lombok.Data;
 
 @Data
 public class ExerciseDto {
-
-    private Boolean isPublished = false;
-    private Boolean isUsed = false;
-
     @NotNull
     private String title;
 
     private String note;
 
     private String shortDescription;
+
+    private Boolean isPublished = false;
 
     @NotNull
     @NotEmpty
