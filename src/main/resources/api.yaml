@@ -468,12 +468,11 @@ components:
       properties:
         id:
           type: string
-        createdAt:
+        publishedAt:
           type: string
           format: date-time
-        updatedAt:
-          type: string
-          format: date-time
+        isPublished:
+          type: boolean
         isUsed:
           type: boolean
         author:
@@ -509,9 +508,6 @@ components:
       properties:
         id:
           type: string
-        createdAt:
-          type: string
-          format: date-time
         updatedAt:
           type: string
           format: date-time
@@ -549,6 +545,8 @@ components:
       - title
       type: object
       properties:
+        isPublished:
+          type: boolean
         isUsed:
           type: boolean
         title:

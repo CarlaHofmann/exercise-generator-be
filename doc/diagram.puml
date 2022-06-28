@@ -39,8 +39,10 @@ class com.frauas.exercisegenerator.documents.Exercise {
 	{field} +createdAt : java.time.LocalDateTime
 	{field} +id : String
 	{field} +images : java.util.List
+	{field} +isPublished : Boolean
 	{field} +isUsed : Boolean
 	{field} +note : String
+	{field} +publishedAt : java.time.LocalDateTime
 	{field} +shortDescription : String
 	{field} +solutions : java.util.List
 	{field} +texts : java.util.List
@@ -58,8 +60,10 @@ class com.frauas.exercisegenerator.documents.Sheet {
 	{field} +id : String
 	{field} +isPublished : Boolean
 	{field} +publishedAt : java.time.LocalDateTime
+	{field} +showSolutions : Boolean
 	{field} +title : String
 	{field} +updatedAt : java.time.LocalDateTime
+	{field} +useNumericTitles : Boolean
 	{method} #canEqual ( paramObject1 : Object ) : boolean
 	{method} +equals ( paramObject1 : Object ) : boolean
 	{method} +hashCode () : int
