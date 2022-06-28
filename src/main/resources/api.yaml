@@ -418,6 +418,10 @@ components:
       properties:
         isPublished:
           type: boolean
+        useNumericTitles:
+          type: boolean
+        showSolutions:
+          type: boolean
         title:
           type: string
         exercises:
@@ -515,6 +519,10 @@ components:
           type: string
           format: date-time
         isPublished:
+          type: boolean
+        useNumericTitles:
+          type: boolean
+        showSolutions:
           type: boolean
         title:
           type: string

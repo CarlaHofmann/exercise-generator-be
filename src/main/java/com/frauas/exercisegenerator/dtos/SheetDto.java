@@ -13,6 +13,10 @@ public class SheetDto {
 
     private Boolean isPublished;
 
+    private Boolean useNumericTitles;
+
+    private Boolean showSolutions;
+
     @NotNull
     private String title;
 
