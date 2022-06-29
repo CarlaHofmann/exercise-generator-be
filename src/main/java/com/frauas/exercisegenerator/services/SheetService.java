@@ -1,19 +1,24 @@
 package com.frauas.exercisegenerator.services;
 
-import com.frauas.exercisegenerator.documents.*;
-import com.frauas.exercisegenerator.dtos.SheetDto;
-import com.frauas.exercisegenerator.repositories.AuthorRepository;
-import com.frauas.exercisegenerator.repositories.ExerciseRepository;
-import com.frauas.exercisegenerator.repositories.SheetRepository;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import com.frauas.exercisegenerator.documents.Author;
+import com.frauas.exercisegenerator.documents.Category;
+import com.frauas.exercisegenerator.documents.Course;
+import com.frauas.exercisegenerator.documents.Exercise;
+import com.frauas.exercisegenerator.documents.Sheet;
+import com.frauas.exercisegenerator.dtos.SheetDto;
+import com.frauas.exercisegenerator.repositories.AuthorRepository;
+import com.frauas.exercisegenerator.repositories.ExerciseRepository;
+import com.frauas.exercisegenerator.repositories.SheetRepository;
 
 @Service
 public class SheetService {
@@ -69,10 +74,17 @@ public class SheetService {
 
         Sheet sheet = modelMapper.map(sheetDto, Sheet.class);
 
-        if(sheetDto.getIsPublished()){
+        if (sheetDto.getIsPublished()) {
             sheet.setPublishedAt(LocalDateTime.now());
             sheet.setIsPublished(true);
         }
+        if (sheetDto.getUseNumericTitles()) {
+            sheet.setUseNumericTitles(true);
+        }
+        if (sheetDto.getShowSolutions()) {
+            sheet.setShowSolutions(true);
+        }
+
         sheet.setAuthor(author);
         sheet.setCourses(courses);
         sheet.setCategories(categories);
@@ -107,12 +119,24 @@ public class SheetService {
         ArrayList<Exercise> exercises = new ArrayList<>();
         exerciseRepository.findAllById(sheetDto.getExercises()).forEach(exercises::add);
 
-        if(sheetDto.getIsPublished() && !sheet.getIsPublished()){
+        if (sheetDto.getIsPublished() && !sheet.getIsPublished()) {
             sheet.setPublishedAt(LocalDateTime.now());
             sheet.setIsPublished(true);
         } else if (!sheetDto.getIsPublished() && sheet.getIsPublished()) {
             sheet.setPublishedAt(null);
             sheet.setIsPublished(false);
+        }
+
+        if (sheetDto.getUseNumericTitles() && !sheet.getUseNumericTitles()) {
+            sheet.setUseNumericTitles(true);
+        } else if (!sheetDto.getUseNumericTitles() && sheet.getUseNumericTitles()) {
+            sheet.setUseNumericTitles(false);
+        }
+
+        if (sheetDto.getShowSolutions() && !sheet.getShowSolutions()) {
+            sheet.setShowSolutions(true);
+        } else if (!sheetDto.getShowSolutions() && sheet.getShowSolutions()) {
+            sheet.setShowSolutions(false);
         }
 
         sheet.setCourses(courses);

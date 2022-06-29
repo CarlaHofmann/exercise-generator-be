@@ -71,8 +71,10 @@ class com.frauas.exercisegenerator.documents.Sheet {
 	{field} +id : String
 	{field} +isPublished : Boolean
 	{field} +publishedAt : java.time.LocalDateTime
+	{field} +showSolutions : Boolean
 	{field} +title : String
 	{field} +updatedAt : java.time.LocalDateTime
+	{field} +useNumericTitles : Boolean
 	{method} #canEqual ( paramObject1 : Object ) : boolean
 	{method} +equals ( paramObject1 : Object ) : boolean
 	{method} +hashCode () : int

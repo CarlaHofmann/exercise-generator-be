@@ -387,8 +387,6 @@ components:
       - title
       type: object
       properties:
-        isPublished:
-          type: boolean
         title:
           type: string
         exercises:
@@ -403,6 +401,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CreateCategoryDto'
+        isPublished:
+          type: boolean
+        useNumericTitles:
+          type: boolean
+        showSolutions:
+          type: boolean
     Author:
       type: object
       properties:
@@ -489,6 +493,10 @@ components:
           type: string
           format: date-time
         isPublished:
+          type: boolean
+        useNumericTitles:
+          type: boolean
+        showSolutions:
           type: boolean
         title:
           type: string
