@@ -9,9 +9,14 @@ import lombok.Data;
 
 @Data
 public class SheetDto {
-
     @NotNull
     private String title;
+
+    private Boolean isPublished = false;
+
+    private Boolean useNumericTitles = false;
+
+    private Boolean showSolutions = false;
 
     @NotNull
     @NotEmpty
@@ -24,10 +29,4 @@ public class SheetDto {
     @NotNull
     @NotEmpty
     private List<CreateCategoryDto> categories;
-
-    private Boolean isPublished = false;
-
-    private Boolean useNumericTitles = false;
-
-    private Boolean showSolutions = false;
 }

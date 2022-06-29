@@ -3,6 +3,9 @@ package com.frauas.exercisegenerator.documents;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -38,19 +41,26 @@ public class Sheet {
 
     private Boolean showSolutions = false;
 
+    @NotNull
     private String title;
 
     @DBRef
     private Author author;
 
+    @NotNull
+    @NotEmpty
     @DBRef
     @UpsertSave(filters = "name")
     private List<Course> courses;
 
+    @NotNull
+    @NotEmpty
     @DBRef
     @UpsertSave(filters = "name")
     private List<Category> categories;
 
+    @NotNull
+    @NotEmpty
     @DBRef
     private List<Exercise> exercises;
 }

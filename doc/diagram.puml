@@ -38,7 +38,6 @@ class com.frauas.exercisegenerator.documents.Course {
 class com.frauas.exercisegenerator.documents.Exercise {
 	{field} +createdAt : java.time.LocalDateTime
 	{field} +id : String
-	{field} +images : java.util.List
 	{field} +isPublished : Boolean
 	{field} +isUsed : Boolean
 	{field} +note : String
@@ -48,6 +47,18 @@ class com.frauas.exercisegenerator.documents.Exercise {
 	{field} +texts : java.util.List
 	{field} +title : String
 	{field} +updatedAt : java.time.LocalDateTime
+	{method} #canEqual ( paramObject1 : Object ) : boolean
+	{method} +equals ( paramObject1 : Object ) : boolean
+	{method} +hashCode () : int
+	{method} +toString () : String
+}
+
+
+class com.frauas.exercisegenerator.documents.Image {
+	{field} +content : String
+	{field} +filepath : String
+	{field} +reference : String
+	{method}  {static} +builder () : com.frauas.exercisegenerator.documents.Image$ImageBuilder
 	{method} #canEqual ( paramObject1 : Object ) : boolean
 	{method} +equals ( paramObject1 : Object ) : boolean
 	{method} +hashCode () : int
@@ -87,6 +98,7 @@ class com.frauas.exercisegenerator.documents.User {
 
 com.frauas.exercisegenerator.documents.Exercise "1" o-- "0..*"  com.frauas.exercisegenerator.documents.Category : categories
 com.frauas.exercisegenerator.documents.Exercise "1" o-- "0..*"  com.frauas.exercisegenerator.documents.Course : courses
+com.frauas.exercisegenerator.documents.Exercise "1" o-- "0..*"  com.frauas.exercisegenerator.documents.Image : images
 com.frauas.exercisegenerator.documents.Exercise -->  com.frauas.exercisegenerator.documents.Author : author
 com.frauas.exercisegenerator.documents.Sheet "1" o-- "0..*"  com.frauas.exercisegenerator.documents.Category : categories
 com.frauas.exercisegenerator.documents.Sheet "1" o-- "0..*"  com.frauas.exercisegenerator.documents.Course : courses

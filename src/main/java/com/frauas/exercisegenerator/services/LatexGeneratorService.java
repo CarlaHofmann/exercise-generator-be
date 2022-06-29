@@ -1,9 +1,14 @@
 package com.frauas.exercisegenerator.services;
 
-import com.frauas.exercisegenerator.documents.Exercise;
-import com.frauas.exercisegenerator.documents.Sheet;
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.Template;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.UUID;
+
 import org.buildobjects.process.ExternalProcessFailureException;
 import org.buildobjects.process.ProcBuilder;
 import org.buildobjects.process.StartupException;
@@ -13,13 +18,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.UUID;
+import com.frauas.exercisegenerator.documents.Exercise;
+import com.frauas.exercisegenerator.documents.Image;
+import com.frauas.exercisegenerator.documents.Sheet;
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
 
 @Service
 public class LatexGeneratorService {
@@ -35,6 +38,8 @@ public class LatexGeneratorService {
         try {
             Template sheetTemplate = handlebars.compile("sheet-template");
             String fileContent = sheetTemplate.apply(sheet);
+            fileContent = replaceImageReferences(fileContent, sheet);
+
             String filename = writeContentFile(fileContent);
             content = renderLatexPdfContent(filename);
         } catch (IOException e) {
@@ -52,6 +57,8 @@ public class LatexGeneratorService {
         try {
             Template exerciseTemplate = handlebars.compile("exercise-template");
             String fileContent = exerciseTemplate.apply(exercise);
+            fileContent = replaceImageReferences(fileContent, exercise);
+
             String filename = writeContentFile(fileContent);
             content = renderLatexPdfContent(filename);
         } catch (IOException e) {
@@ -76,7 +83,7 @@ public class LatexGeneratorService {
         // Execute latex compilation process
         try {
             command.run();
-        }catch (ExternalProcessFailureException e){
+        } catch (ExternalProcessFailureException e) {
             System.out.println("Error during LaTeX compilation, but can probably be ignored.");
             System.out.println(e.getMessage());
         }
@@ -116,5 +123,25 @@ public class LatexGeneratorService {
                 .withArg(filename);
 
         command.run();
+    }
+
+    private String replaceImageReferences(String latexContent, Sheet sheet) {
+        List<Exercise> exercises = sheet.getExercises();
+
+        for (Exercise exercise : exercises) {
+            latexContent = replaceImageReferences(latexContent, exercise);
+        }
+
+        return latexContent;
+    }
+
+    private String replaceImageReferences(String latexContent, Exercise exercise) {
+        List<Image> images = exercise.getImages();
+
+        for (Image image : images) {
+            latexContent = latexContent.replaceAll(image.getReference(), image.getFilepath());
+        }
+
+        return latexContent;
     }
 }
