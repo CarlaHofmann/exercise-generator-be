@@ -44,7 +44,7 @@ public class SheetService {
                         "Sheet with id '" + id + "' could not be found!"));
     }
 
-    public Sheet createSheet(SheetDto sheetDto) {
+    public Sheet prepareSheet(SheetDto sheetDto) {
         // TODO: Use actual author resolution via login credentials
         Author author = this.authorRepository.findByName("default");
 
@@ -78,9 +78,11 @@ public class SheetService {
             sheet.setPublishedAt(LocalDateTime.now());
             sheet.setIsPublished(true);
         }
+
         if (sheetDto.getUseNumericTitles()) {
             sheet.setUseNumericTitles(true);
         }
+
         if (sheetDto.getShowSolutions()) {
             sheet.setShowSolutions(true);
         }
@@ -89,6 +91,12 @@ public class SheetService {
         sheet.setCourses(courses);
         sheet.setCategories(categories);
         sheet.setExercises(exercises);
+
+        return sheet;
+    }
+
+    public Sheet createSheet(SheetDto sheetDto) {
+        Sheet sheet = prepareSheet(sheetDto);
 
         return sheetRepository.save(sheet);
     }

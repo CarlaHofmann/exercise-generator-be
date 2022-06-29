@@ -64,8 +64,28 @@ public class SheetController {
     }
 
     @PostMapping
-    public Sheet createSheet(@RequestBody SheetDto createSheetDto) {
-        return sheetService.createSheet(createSheetDto);
+    public Sheet createSheet(@RequestBody SheetDto sheetDto) {
+        return sheetService.createSheet(sheetDto);
+    }
+
+    @PostMapping(path = "/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getSheetPdf(@RequestBody SheetDto sheetDto) {
+        Sheet sheet = sheetService.prepareSheet(sheetDto);
+
+        byte[] contents = latexGeneratorService.createSheetPdf(sheet);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+
+        String filename = StringHelper.toSnakeCase(sheet.getTitle() + ".pdf");
+        headers.setContentDisposition(ContentDisposition
+                .attachment()
+                .filename(filename)
+                .build());
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+        ResponseEntity<byte[]> response = new ResponseEntity<>(contents, headers, HttpStatus.OK);
+        return response;
     }
 
     @PutMapping("/{id}")
