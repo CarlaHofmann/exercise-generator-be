@@ -1,5 +1,6 @@
 package com.frauas.exercisegenerator.dtos;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
@@ -9,18 +10,18 @@ import lombok.Data;
 
 @Data
 public class ExerciseDto {
-
-    private Boolean isPublished = false;
-    private Boolean isUsed = false;
-
     @NotNull
     private String title;
 
-    private String note;
+    private String note = "";
 
-    private String shortDescription;
+    private String shortDescription = "";
 
-    private List<ImageDto> images;
+    private Boolean isPublished = false;
+
+    private Boolean isUsed = false;
+
+    private List<ImageDto> images = new ArrayList<>();
 
     @NotNull
     @NotEmpty
