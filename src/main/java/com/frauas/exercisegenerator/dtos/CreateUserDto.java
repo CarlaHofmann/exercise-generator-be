@@ -11,4 +11,6 @@ public class CreateUserDto
 
 	@NotNull
 	private String password;
+
+	private boolean admin;
 }
