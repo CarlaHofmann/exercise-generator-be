@@ -17,12 +17,10 @@ public class TokenUtil {
     UserService userService;
 
     //Aktuell 5 Minuten
-//	private final int accessTokenDuration = 5 * 60 * 1000;
-    private final int accessTokenDuration = 5 * 1000;
+	private final int accessTokenDuration = 5 * 60 * 1000;
 
     //Aktuell 10 Stunden
-//	private final int refreshTokenDuration = 10 * 60 * 60 * 1000;
-    private final int refreshTokenDuration = 10 * 1000;
+	private final int refreshTokenDuration = 10 * 60 * 60 * 1000;
 
     private final String secret = "superDollesGeheimnis";
 
