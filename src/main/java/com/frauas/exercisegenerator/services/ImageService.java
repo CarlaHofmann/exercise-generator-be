@@ -1,21 +1,20 @@
 package com.frauas.exercisegenerator.services;
 
+import com.frauas.exercisegenerator.converters.ImageBase64Converter;
+import com.frauas.exercisegenerator.documents.Exercise;
+import com.frauas.exercisegenerator.documents.Image;
+import com.frauas.exercisegenerator.dtos.ImageDto;
+import org.apache.commons.io.FileUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
-
-import org.apache.commons.io.FileUtils;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
-import com.frauas.exercisegenerator.converters.ImageBase64Converter;
-import com.frauas.exercisegenerator.documents.Exercise;
-import com.frauas.exercisegenerator.documents.Image;
-import com.frauas.exercisegenerator.dtos.ImageDto;
 
 @Service
 public class ImageService {

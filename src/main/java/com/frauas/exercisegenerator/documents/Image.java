@@ -1,13 +1,11 @@
 package com.frauas.exercisegenerator.documents;
 
-import org.springframework.data.annotation.Transient;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Transient;
 
 @Data
 @Builder

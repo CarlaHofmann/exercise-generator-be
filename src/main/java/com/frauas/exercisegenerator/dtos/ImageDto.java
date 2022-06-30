@@ -12,7 +12,7 @@ public class ImageDto {
 
     /**
      * Base64 encoded image content.
-     * 
+     * <p>
      * Needs to include filetype information (allowed types: .jpg, .jpeg, .png).
      */
     private String content;

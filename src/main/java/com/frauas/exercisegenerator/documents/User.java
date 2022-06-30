@@ -1,22 +1,19 @@
 package com.frauas.exercisegenerator.documents;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import lombok.Builder;
-import lombok.Data;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Document()
+@Document
 public class User {
 
     @Id
@@ -25,6 +22,7 @@ public class User {
     @Indexed(unique = true)
     private String username;
 
+    @JsonIgnore
     private String password;
 
     private boolean admin;

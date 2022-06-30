@@ -18,40 +18,36 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter
-{
-	private TokenUtil tokenUtil;
-	private final AuthenticationManager authenticationManager;
+public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+    private TokenUtil tokenUtil;
+    private final AuthenticationManager authenticationManager;
 
-	public CustomAuthenticationFilter(TokenUtil tokenUtil, AuthenticationManager authenticationManager)
-	{
-		this.authenticationManager = authenticationManager;
-		this.tokenUtil = tokenUtil;
-	}
+    public CustomAuthenticationFilter(TokenUtil tokenUtil, AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+        this.tokenUtil = tokenUtil;
+    }
 
-	@Override
-	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException
-	{
-		String username = request.getParameter("username");
-		String password = request.getParameter("password");
-		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
-		return authenticationManager.authenticate(authenticationToken);
-	}
+    @Override
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+        return authenticationManager.authenticate(authenticationToken);
+    }
 
-	@Override
-	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException
-	{
-		org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) authResult.getPrincipal();
+    @Override
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) authResult.getPrincipal();
 
-		String accessToken = tokenUtil.genAccessToken(request.getRequestURI().toString(), user);
-		String refreshToken = tokenUtil.genRefreshToken("request", user.getUsername());
+        String accessToken = tokenUtil.genAccessToken(request.getRequestURI().toString(), user);
+        String refreshToken = tokenUtil.genRefreshToken("request", user.getUsername());
 
-		Map<String, String> tokens = new HashMap<>();
-		tokens.put("accessToken", accessToken);
-		tokens.put("refreshToken", refreshToken);
-		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-		new ObjectMapper().writeValue(response.getOutputStream(), tokens);
-	}
+        Map<String, String> tokens = new HashMap<>();
+        tokens.put("accessToken", accessToken);
+        tokens.put("refreshToken", refreshToken);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+    }
 
 	/*@Override
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException

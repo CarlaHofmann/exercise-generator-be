@@ -9,101 +9,90 @@ import com.frauas.exercisegenerator.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.stream.Collectors;
 
-public class TokenUtil
-{
-	@Autowired
-	UserService userService;
+public class TokenUtil {
+    @Autowired
+    UserService userService;
 
-	//Aktuell 5 Minuten
-	private final int accessTokenDuration = 5 * 60 * 1000;
+    //Aktuell 5 Minuten
+//	private final int accessTokenDuration = 5 * 60 * 1000;
+    private final int accessTokenDuration = 5 * 1000;
 
-	//Aktuell 10 Stunden
-	private final int refreshTokenDuration = 10 * 60 * 60 * 1000;
+    //Aktuell 10 Stunden
+//	private final int refreshTokenDuration = 10 * 60 * 60 * 1000;
+    private final int refreshTokenDuration = 10 * 1000;
 
-	private final String secret = "superDollesGeheimnis";
+    private final String secret = "superDollesGeheimnis";
 
-	private Algorithm algorithm = Algorithm.HMAC256(secret.getBytes());
+    private Algorithm algorithm = Algorithm.HMAC256(secret.getBytes());
 
-	public TokenUtil()
-	{
+    public TokenUtil() {
 
-	}
+    }
 
-	public String genRefreshToken(String requestedURI, User user)
-	{
-		String token = JWT.create()
-				.withSubject(user.getUsername())
-				.withExpiresAt(new Date(System.currentTimeMillis() + refreshTokenDuration))
-				.withIssuer(requestedURI)
-				.sign(algorithm);
+    public String genRefreshToken(String requestedURI, User user) {
+        String token = JWT.create()
+                .withSubject(user.getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis() + refreshTokenDuration))
+                .withIssuer(requestedURI)
+                .sign(algorithm);
 
-		return token;
-	}
+        return token;
+    }
 
-	public String genRefreshToken(String requestedURI, String username)
-	{
-		String token = JWT.create()
-				.withSubject(username)
-				.withExpiresAt(new Date(System.currentTimeMillis() + refreshTokenDuration))
-				.withIssuer(requestedURI)
-				.sign(algorithm);
+    public String genRefreshToken(String requestedURI, String username) {
+        String token = JWT.create()
+                .withSubject(username)
+                .withExpiresAt(new Date(System.currentTimeMillis() + refreshTokenDuration))
+                .withIssuer(requestedURI)
+                .sign(algorithm);
 
-		return token;
-	}
+        return token;
+    }
 
-	public String genAccessToken(String requestedURI, org.springframework.security.core.userdetails.User user)
-	{
-		String token = JWT.create()
-				.withSubject(user.getUsername())
-				.withExpiresAt(new Date(System.currentTimeMillis() + accessTokenDuration))
-				.withIssuer(requestedURI)
-				.withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining()))
-				.sign(algorithm);
+    public String genAccessToken(String requestedURI, org.springframework.security.core.userdetails.User user) {
+        String token = JWT.create()
+                .withSubject(user.getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis() + accessTokenDuration))
+                .withIssuer(requestedURI)
+                .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining()))
+                .sign(algorithm);
 
-		return token;
-	}
+        return token;
+    }
 
-	public boolean validateToken(String token)
-	{
-		JWTVerifier verifier = JWT.require(algorithm).build();
+    public boolean validateToken(String token) {
+        JWTVerifier verifier = JWT.require(algorithm).build();
 
-		try
-		{
-			DecodedJWT decodedJWT = verifier.verify(token);
-		}
-		catch(Exception e)
-		{
-			return false;
-		}
-		return true;
-	}
+        try {
+            verifier.verify(token);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
 
-	public String getUsernameFromToken(String token)
-	{
-		JWTVerifier verifier = JWT.require(algorithm).build();
+    public String getUsernameFromToken(String token) {
+        JWTVerifier verifier = JWT.require(algorithm).build();
 
-		DecodedJWT decodedJWT = verifier.verify(token);
-		return decodedJWT.getSubject();
-	}
+        DecodedJWT decodedJWT = verifier.verify(token);
+        return decodedJWT.getSubject();
+    }
 
-	public String[] getRolesFromToken(String token)
-	{
-		JWTVerifier verifier = JWT.require(algorithm).build();
-		DecodedJWT decodedJWT = verifier.verify(token);
+    public String[] getRolesFromToken(String token) {
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        DecodedJWT decodedJWT = verifier.verify(token);
 
-		String[] array = decodedJWT.getClaim("roles").asArray(String.class);
+        String[] array = decodedJWT.getClaim("roles").asArray(String.class);
 
-		//Only 1 role
-		if(array == null)
-		{
-			String[] single = new String[1];
-			single[0] = decodedJWT.getClaim("roles").asString();
-			return single;
-		}
-		return array;
-	}
+        //Only 1 role
+        if (array == null) {
+            String[] single = new String[1];
+            single[0] = decodedJWT.getClaim("roles").asString();
+            return single;
+        }
+        return array;
+    }
 }
