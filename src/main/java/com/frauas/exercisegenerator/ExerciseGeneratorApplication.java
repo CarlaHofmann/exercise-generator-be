@@ -57,7 +57,8 @@ public class ExerciseGeneratorApplication {
 		return tokenUtil;
   }
   
-	public Handlebars handlebars() {
+  @Bean
+  public Handlebars handlebars() {
 		TemplateLoader loader = new ClassPathTemplateLoader();
 		loader.setPrefix("/templates");
 

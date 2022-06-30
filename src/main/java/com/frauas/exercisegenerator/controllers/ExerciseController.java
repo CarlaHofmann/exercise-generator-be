@@ -71,8 +71,8 @@ public class ExerciseController {
     }
 
     @PostMapping(path = "/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> previewExerciseDto(@RequestBody ExerciseDto exerciseDto) {
-        Exercise exercise = exerciseService.prepareExerciseFromDto(exerciseDto);
+    public ResponseEntity<byte[]> previewExerciseDto(HttpServletRequest request, @RequestBody ExerciseDto exerciseDto) {
+        Exercise exercise = exerciseService.prepareExerciseFromDto(request, exerciseDto);
 
         byte[] contents = latexGeneratorService.createExercisePdf(exercise);
 

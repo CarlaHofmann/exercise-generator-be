@@ -39,12 +39,6 @@ public class SheetService {
     @Autowired
     private TokenUtil tokenUtil;
 
-
-    @Autowired
-    private CourseUpsertHelper courseUpsertHelper;
-    @Autowired
-    private CategoryUpsertHelper categoryUpsertHelper;
-
     @Autowired
     private ModelMapper modelMapper;
 
@@ -106,7 +100,6 @@ public class SheetService {
         }
 
         sheet.setAuthor(user.get());
-        sheet.setPublishedAt(LocalDateTime.now());
         sheet.setCourses(courses);
         sheet.setCategories(categories);
         sheet.setExercises(exercises);
@@ -114,8 +107,8 @@ public class SheetService {
         return sheet;
     }
 
-    public Sheet createSheet(SheetDto sheetDto) {
-        Sheet sheet = prepareSheet(sheetDto);
+    public Sheet createSheet(HttpServletRequest request, SheetDto sheetDto) {
+        Sheet sheet = prepareSheet(request, sheetDto);
 
         return sheetRepository.save(sheet);
     }

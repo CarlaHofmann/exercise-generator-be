@@ -66,13 +66,13 @@ public class SheetController {
     }
 
     @PostMapping
-    public Sheet createSheet(HttpServletRequest request, @RequestBody CreateSheetDto createSheetDto) {
+    public Sheet createSheet(HttpServletRequest request, @RequestBody SheetDto createSheetDto) {
         return sheetService.createSheet(request, createSheetDto);
     }
 
     @PostMapping(path = "/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> getSheetPdf(@RequestBody SheetDto sheetDto) {
-        Sheet sheet = sheetService.prepareSheet(sheetDto);
+    public ResponseEntity<byte[]> getSheetPdf(HttpServletRequest request, @RequestBody SheetDto sheetDto) {
+        Sheet sheet = sheetService.prepareSheet(request, sheetDto);
 
         byte[] contents = latexGeneratorService.createSheetPdf(sheet);
 

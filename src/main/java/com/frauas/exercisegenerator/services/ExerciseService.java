@@ -52,12 +52,6 @@ public class ExerciseService {
     ModelMapper modelMapper;
 
     @Autowired
-    CourseUpsertHelper courseUpsertHelper;
-
-    @Autowired
-    CategoryUpsertHelper categoryUpsertHelper;
-
-    @Autowired
     private TokenUtil tokenUtil;
 
     @Autowired
@@ -137,8 +131,8 @@ public class ExerciseService {
         return exercise;
     }
 
-    public Exercise createExerciseFromDto(ExerciseDto exerciseDto) {
-        Exercise exercise = prepareExerciseFromDto(exerciseDto);
+    public Exercise createExerciseFromDto(HttpServletRequest request, ExerciseDto exerciseDto) {
+        Exercise exercise = prepareExerciseFromDto(request, exerciseDto);
 
         return this.exerciseRepository.save(exercise);
     }
