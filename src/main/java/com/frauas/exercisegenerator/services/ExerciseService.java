@@ -1,35 +1,19 @@
 package com.frauas.exercisegenerator.services;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.frauas.exercisegenerator.documents.*;
+import com.frauas.exercisegenerator.dtos.ExerciseDto;
+import com.frauas.exercisegenerator.repositories.CategoryRepository;
+import com.frauas.exercisegenerator.repositories.ExerciseRepository;
+import com.frauas.exercisegenerator.repositories.UserRepository;
+import com.frauas.exercisegenerator.util.TokenUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.frauas.exercisegenerator.documents.User;
-import com.frauas.exercisegenerator.documents.Category;
-import com.frauas.exercisegenerator.documents.Course;
-import com.frauas.exercisegenerator.documents.Exercise;
-import com.frauas.exercisegenerator.documents.Image;
-import com.frauas.exercisegenerator.dtos.ExerciseDto;
-import com.frauas.exercisegenerator.helpers.CategoryUpsertHelper;
-import com.frauas.exercisegenerator.helpers.CourseUpsertHelper;
-import com.frauas.exercisegenerator.repositories.CategoryRepository;
-import com.frauas.exercisegenerator.repositories.ExerciseRepository;
-import com.frauas.exercisegenerator.repositories.UserRepository;
-import com.frauas.exercisegenerator.util.TokenUtil;
-import org.modelmapper.AbstractConverter;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpServerErrorException;
-
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -83,8 +67,7 @@ public class ExerciseService {
         tokenUtil.validateToken(token);
 
         Optional<User> user = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(token));
-        if(user.isPresent() == false)
-        {
+        if (user.isPresent() == false) {
             throw new RuntimeException("username not valid");
         }
 

@@ -1,12 +1,11 @@
 package com.frauas.exercisegenerator.dtos;
 
-import java.util.ArrayList;
-import java.util.List;
+import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-
-import lombok.Data;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class ExerciseDto {
