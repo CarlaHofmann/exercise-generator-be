@@ -45,7 +45,7 @@ public class Sheet {
     private String title;
 
     @DBRef
-    private Author author;
+    private User author;
 
     @NotNull
     @NotEmpty

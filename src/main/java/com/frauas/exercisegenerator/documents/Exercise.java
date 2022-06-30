@@ -42,7 +42,7 @@ public class Exercise {
     private Boolean isUsed = false;
 
     @DBRef
-    private Author author;
+    private User author;
 
     @NotNull
     private String title;

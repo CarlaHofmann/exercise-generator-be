@@ -6,5 +6,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface SheetRepository extends MongoRepository<Sheet, String> {
 
-    Sheet findByAuthor_Name(String name);
+    Sheet findByAuthor_username(String name);
 }

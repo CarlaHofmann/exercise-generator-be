@@ -1,11 +1,13 @@
 package com.frauas.exercisegenerator;
 
+import com.frauas.exercisegenerator.util.TokenUtil;
 import java.nio.charset.StandardCharsets;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -44,7 +46,19 @@ public class ExerciseGeneratorApplication {
 	}
 
 	@Bean
-	public Handlebars handlebars() {
+	public PasswordEncoder passwordEncoder()
+	{
+		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	public TokenUtil tokenUtil() {
+		TokenUtil tokenUtil = new TokenUtil();
+		return tokenUtil;
+  }
+  
+  @Bean
+  public Handlebars handlebars() {
 		TemplateLoader loader = new ClassPathTemplateLoader();
 		loader.setPrefix("/templates");
 

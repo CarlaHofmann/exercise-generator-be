@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.frauas.exercisegenerator.documents.Author;
+import com.frauas.exercisegenerator.documents.User;
 import com.frauas.exercisegenerator.documents.Category;
 import com.frauas.exercisegenerator.documents.Course;
 import com.frauas.exercisegenerator.documents.Exercise;
@@ -18,9 +18,24 @@ import com.frauas.exercisegenerator.documents.Image;
 import com.frauas.exercisegenerator.dtos.ExerciseDto;
 import com.frauas.exercisegenerator.helpers.CategoryUpsertHelper;
 import com.frauas.exercisegenerator.helpers.CourseUpsertHelper;
-import com.frauas.exercisegenerator.repositories.AuthorRepository;
 import com.frauas.exercisegenerator.repositories.CategoryRepository;
 import com.frauas.exercisegenerator.repositories.ExerciseRepository;
+import com.frauas.exercisegenerator.repositories.UserRepository;
+import com.frauas.exercisegenerator.util.TokenUtil;
+import org.modelmapper.AbstractConverter;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 
 @Service
 public class ExerciseService {
@@ -28,7 +43,7 @@ public class ExerciseService {
     ExerciseRepository exerciseRepository;
 
     @Autowired
-    AuthorRepository authorRepository;
+    UserRepository userRepository;
 
     @Autowired
     CategoryRepository categoryRepository;
@@ -37,10 +52,7 @@ public class ExerciseService {
     ModelMapper modelMapper;
 
     @Autowired
-    CourseUpsertHelper courseUpsertHelper;
-
-    @Autowired
-    CategoryUpsertHelper categoryUpsertHelper;
+    private TokenUtil tokenUtil;
 
     @Autowired
     ImageService imageService;
@@ -63,13 +75,17 @@ public class ExerciseService {
         return exercise;
     }
 
-    public Exercise prepareExerciseFromDto(ExerciseDto exerciseDto) {
-        // TODO: Use actual author resolution via login credentials
-        Author author = this.authorRepository.findByName("default");
+    public Exercise prepareExerciseFromDto(HttpServletRequest request, ExerciseDto exerciseDto) {
 
-        if (author == null) {
-            author = Author.builder().name("default").build();
-            author = this.authorRepository.save(author);
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        String token = authorizationHeader.substring("Bearer ".length());
+
+        tokenUtil.validateToken(token);
+
+        Optional<User> user = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(token));
+        if(user.isPresent() == false)
+        {
+            throw new RuntimeException("username not valid");
         }
 
         ArrayList<Course> courses = new ArrayList<>();
@@ -107,7 +123,7 @@ public class ExerciseService {
             exercise.setIsPublished(true);
         }
 
-        exercise.setAuthor(author);
+        exercise.setAuthor(user.get());
         exercise.setCourses(courses);
         exercise.setCategories(categories);
         exercise.setImages(images);
@@ -115,8 +131,8 @@ public class ExerciseService {
         return exercise;
     }
 
-    public Exercise createExerciseFromDto(ExerciseDto exerciseDto) {
-        Exercise exercise = prepareExerciseFromDto(exerciseDto);
+    public Exercise createExerciseFromDto(HttpServletRequest request, ExerciseDto exerciseDto) {
+        Exercise exercise = prepareExerciseFromDto(request, exerciseDto);
 
         return this.exerciseRepository.save(exercise);
     }
