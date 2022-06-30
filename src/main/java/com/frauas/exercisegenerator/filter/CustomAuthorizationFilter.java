@@ -18,6 +18,7 @@ import java.util.*;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 public class CustomAuthorizationFilter extends OncePerRequestFilter
 {
@@ -52,7 +53,15 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter
 						Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
 						for (String role : roles)
 						{
-							authorities.add(new SimpleGrantedAuthority(role));
+							System.out.println(role);
+							if(role.contains("admin"))
+							{
+								authorities.add(new SimpleGrantedAuthority("admin"));
+							}
+							if(role.contains("simpleUser"))
+							{
+								authorities.add(new SimpleGrantedAuthority("simpleUser"));
+							}
 						}
 
 					/*Arrays.stream(roles).forEach(role -> {
@@ -65,7 +74,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter
 						filterChain.doFilter(request, response);
 					}
 					else {
-						response.sendError(FORBIDDEN.value());
+						response.sendError(UNAUTHORIZED.value());
 					}
 				}
 				catch (Exception e)
