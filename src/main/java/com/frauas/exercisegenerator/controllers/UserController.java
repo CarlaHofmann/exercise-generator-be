@@ -39,6 +39,11 @@ public class UserController
 		return userService.getUserByUsername(username);
 	}
 
+	@DeleteMapping("/{username}")
+	public void deleteExercise(@PathVariable String username) {
+		userService.deleteUserByUsername(username);
+	}
+
 	@GetMapping("/refreshtoken")
 	public ResponseEntity refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException
 	{
