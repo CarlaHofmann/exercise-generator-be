@@ -307,4 +307,4 @@ TSWLatexianTemp*
 !FRA-UAS_Logo.pdf
 
 # Generated content file
-content.tex
+*.tex

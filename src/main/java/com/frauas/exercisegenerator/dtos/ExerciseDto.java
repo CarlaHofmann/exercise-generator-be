@@ -1,20 +1,27 @@
 package com.frauas.exercisegenerator.dtos;
 
-import lombok.Data;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+
+import lombok.Data;
 
 @Data
-public class CreateExerciseDto {
-
+public class ExerciseDto {
     @NotNull
     private String title;
 
-    private String note;
+    private String note = "";
 
-    private String shortDescription;
+    private String shortDescription = "";
+
+    private Boolean isPublished = false;
+
+    private Boolean isUsed = false;
+
+    private List<ImageDto> images = new ArrayList<>();
 
     @NotNull
     @NotEmpty
@@ -23,8 +30,6 @@ public class CreateExerciseDto {
     @NotNull
     @NotEmpty
     private List<String> solutions;
-
-    private List<String> images;
 
     @NotNull
     @NotEmpty
