@@ -1,7 +1,11 @@
 package com.frauas.exercisegenerator.documents;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -18,7 +22,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@Document()
+@Document
 public class Exercise {
 
     @Id
@@ -40,17 +44,23 @@ public class Exercise {
     private Boolean isUsed;
 
     @DBRef
-    private Author author;
+    private User author;
 
+    @NotNull
     private String title;
-    private String shortDescription;
-    private String note;
 
+    private String shortDescription = "";
+    private String note = "";
+
+    @NotNull
+    @NotEmpty
     private List<String> texts;
 
+    @NotNull
+    @NotEmpty
     private List<String> solutions;
 
-    private List<String> images;
+    private List<Image> images = new ArrayList<>();
 
     @DBRef
     @UpsertSave(filters = "name")

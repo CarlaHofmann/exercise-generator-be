@@ -2,6 +2,8 @@ package com.frauas.exercisegenerator.controllers;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -64,13 +66,13 @@ public class ExerciseController {
     }
 
     @PostMapping
-    public Exercise createExercise(@RequestBody ExerciseDto exerciseDto) {
-        return exerciseService.createExerciseFromDto(exerciseDto);
+    public Exercise createExercise(HttpServletRequest request, @RequestBody ExerciseDto exerciseDto) {
+        return exerciseService.createExerciseFromDto(request, exerciseDto);
     }
 
     @PostMapping(path = "/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> previewExerciseDto(@RequestBody ExerciseDto exerciseDto) {
-        Exercise exercise = exerciseService.prepareExerciseFromDto(exerciseDto);
+    public ResponseEntity<byte[]> previewExerciseDto(HttpServletRequest request, @RequestBody ExerciseDto exerciseDto) {
+        Exercise exercise = exerciseService.prepareExerciseFromDto(request, exerciseDto);
 
         byte[] contents = latexGeneratorService.createExercisePdf(exercise);
 

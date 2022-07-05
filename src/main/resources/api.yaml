@@ -114,6 +114,37 @@ paths:
       responses:
         "200":
           description: OK
+  /users:
+    get:
+      tags:
+      - user-controller
+      operationId: getAllUsers
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      tags:
+      - user-controller
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
   /sheet:
     get:
       tags:
@@ -145,35 +176,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Sheet'
-  /image:
-    get:
-      tags:
-      - test-controller
-      operationId: getImage
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: string
+  /sheet/pdf:
     post:
       tags:
-      - test-controller
-      operationId: saveImage
+      - sheet-controller
+      operationId: previewSheetDto
       requestBody:
         content:
           application/json:
             schema:
-              type: string
+              $ref: '#/components/schemas/SheetDto'
         required: true
       responses:
         "200":
           description: OK
           content:
-            application/json:
+            application/pdf:
               schema:
-                type: string
+                type: array
+                items:
+                  type: string
+                  format: byte
   /exercise:
     get:
       tags:
@@ -288,6 +311,49 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Category'
+  /users/{username}:
+    get:
+      tags:
+      - user-controller
+      operationId: getUserByUsername
+      parameters:
+      - name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    delete:
+      tags:
+      - user-controller
+      operationId: deleteUser
+      parameters:
+      - name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+  /users/refreshtoken:
+    get:
+      tags:
+      - user-controller
+      operationId: refreshToken
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
   /sheet/{id}/pdf:
     get:
       tags:
@@ -418,6 +484,12 @@ components:
       properties:
         title:
           type: string
+        isPublished:
+          type: boolean
+        useNumericTitles:
+          type: boolean
+        showSolutions:
+          type: boolean
         exercises:
           type: array
           items:
@@ -430,25 +502,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CreateCategoryDto'
-        isPublished:
-          type: boolean
-        useNumericTitles:
-          type: boolean
-        showSolutions:
-          type: boolean
-    Author:
-      type: object
-      properties:
-        id:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-        name:
-          type: string
     Category:
       type: object
       properties:
@@ -464,6 +517,10 @@ components:
         name:
           type: string
     Exercise:
+      required:
+      - solutions
+      - texts
+      - title
       type: object
       properties:
         id:
@@ -476,7 +533,7 @@ components:
         isUsed:
           type: boolean
         author:
-          $ref: '#/components/schemas/Author'
+          $ref: '#/components/schemas/User'
         title:
           type: string
         shortDescription:
@@ -494,7 +551,7 @@ components:
         images:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/Image'
         courses:
           type: array
           items:
@@ -503,7 +560,19 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Category'
+    Image:
+      type: object
+      properties:
+        reference:
+          type: string
+        content:
+          type: string
     Sheet:
+      required:
+      - categories
+      - courses
+      - exercises
+      - title
       type: object
       properties:
         id:
@@ -523,7 +592,7 @@ components:
         title:
           type: string
         author:
-          $ref: '#/components/schemas/Author'
+          $ref: '#/components/schemas/User'
         courses:
           type: array
           items:
@@ -536,6 +605,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Exercise'
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        admin:
+          type: boolean
     ExerciseDto:
       required:
       - categories
@@ -553,15 +631,17 @@ components:
           type: string
         isPublished:
           type: boolean
+        isUsed:
+          type: boolean
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImageDto'
         texts:
           type: array
           items:
             type: string
         solutions:
-          type: array
-          items:
-            type: string
-        images:
           type: array
           items:
             type: string
@@ -573,3 +653,22 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CreateCategoryDto'
+    ImageDto:
+      type: object
+      properties:
+        reference:
+          type: string
+        content:
+          type: string
+    CreateUserDto:
+      required:
+      - password
+      - username
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        admin:
+          type: boolean

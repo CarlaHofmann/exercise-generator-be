@@ -5,8 +5,12 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class CreateCategoryDto {
+public class CreateUserDto {
+    @NotNull
+    private String username;
 
     @NotNull
-    private String name;
+    private String password;
+
+    private boolean admin;
 }
