@@ -13,6 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.frauas.exercisegenerator.helpers.handlebars.IncrementHelper;
 import com.frauas.exercisegenerator.mongo.CascadeSaveMongoEventListener;
+import com.frauas.exercisegenerator.mongo.ExerciseVirtualFieldListener;
 import com.frauas.exercisegenerator.mongo.UpsertSaveMongoEventListener;
 import com.frauas.exercisegenerator.util.TokenUtil;
 import com.github.jknack.handlebars.EscapingStrategy;
@@ -70,6 +71,11 @@ public class ExerciseGeneratorApplication {
                 .registerHelper(IncrementHelper.NAME, new IncrementHelper());
 
         return handlebars;
+    }
+
+    @Bean
+    public ExerciseVirtualFieldListener exerciseVirtualFieldListener() {
+        return new ExerciseVirtualFieldListener();
     }
 
     @Bean
