@@ -32,6 +32,9 @@ import com.frauas.exercisegenerator.dtos.CreateUserDto;
 import com.frauas.exercisegenerator.services.UserService;
 import com.frauas.exercisegenerator.util.TokenUtil;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -42,21 +45,25 @@ public class UserController {
     TokenUtil tokenUtil;
 
     @GetMapping
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @GetMapping("/{username}")
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
     public Optional<User> getUserByUsername(@PathVariable String username) {
         return userService.getUserByUsername(username);
     }
 
     @DeleteMapping("/{username}")
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
     public void deleteUser(@PathVariable String username) {
         userService.deleteUserByUsername(username);
     }
 
     @GetMapping("/refreshtoken")
+    @Operation(security = @SecurityRequirement(name = "refreshToken"))
     public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
 
@@ -99,6 +106,7 @@ public class UserController {
     }
 
     @PostMapping
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
     public User createUser(@RequestBody CreateUserDto userDto) {
         return userService.createUser(userDto);
     }
