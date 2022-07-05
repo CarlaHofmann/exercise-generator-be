@@ -1,12 +1,7 @@
 package com.frauas.exercisegenerator;
 
-import com.frauas.exercisegenerator.mongo.CascadeSaveMongoEventListener;
-import com.frauas.exercisegenerator.mongo.UpsertSaveMongoEventListener;
-import com.frauas.exercisegenerator.util.TokenUtil;
-import com.github.jknack.handlebars.EscapingStrategy;
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
-import com.github.jknack.handlebars.io.TemplateLoader;
+import java.nio.charset.StandardCharsets;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,7 +11,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.nio.charset.StandardCharsets;
+import com.frauas.exercisegenerator.helpers.handlebars.IncrementHelper;
+import com.frauas.exercisegenerator.mongo.CascadeSaveMongoEventListener;
+import com.frauas.exercisegenerator.mongo.UpsertSaveMongoEventListener;
+import com.frauas.exercisegenerator.util.TokenUtil;
+import com.github.jknack.handlebars.EscapingStrategy;
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
 
 @SpringBootApplication
 public class ExerciseGeneratorApplication {
@@ -64,7 +66,8 @@ public class ExerciseGeneratorApplication {
         Handlebars handlebars = new Handlebars(loader)
                 .setCharset(StandardCharsets.UTF_8)
                 .prettyPrint(true)
-                .with(EscapingStrategy.NOOP);
+                .with(EscapingStrategy.NOOP)
+                .registerHelper(IncrementHelper.NAME, new IncrementHelper());
 
         return handlebars;
     }

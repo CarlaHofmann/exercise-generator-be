@@ -1,16 +1,29 @@
 package com.frauas.exercisegenerator.controllers;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.frauas.exercisegenerator.documents.Sheet;
 import com.frauas.exercisegenerator.dtos.SheetDto;
 import com.frauas.exercisegenerator.helpers.StringHelper;
 import com.frauas.exercisegenerator.services.LatexGeneratorService;
 import com.frauas.exercisegenerator.services.SheetService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @RestController
 @RequestMapping("/sheet")
@@ -58,8 +71,8 @@ public class SheetController {
     }
 
     @PostMapping(path = "/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> getSheetPdf(HttpServletRequest request, @RequestBody SheetDto sheetDto) {
-        Sheet sheet = sheetService.prepareSheet(request, sheetDto);
+    public ResponseEntity<byte[]> previewSheetDto(@RequestBody SheetDto sheetDto) {
+        Sheet sheet = sheetService.prepareSheet(sheetDto);
 
         byte[] contents = latexGeneratorService.createSheetPdf(sheet);
 
