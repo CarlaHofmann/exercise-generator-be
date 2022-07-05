@@ -104,6 +104,7 @@ public class SheetController {
     }
 
     @PutMapping("/{id}")
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
     public Sheet updateSheet(HttpServletRequest request, HttpServletResponse response, @PathVariable String id,
             @RequestBody SheetDto createSheetDto) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
