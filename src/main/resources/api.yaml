@@ -60,6 +60,8 @@ paths:
       responses:
         "200":
           description: OK
+      security:
+      - bearerAuth: []
   /exercise/{id}:
     get:
       tags:
@@ -81,7 +83,7 @@ paths:
     put:
       tags:
       - exercise-controller
-      operationId: updatExercise
+      operationId: updateExercise
       parameters:
       - name: id
         in: path
@@ -101,6 +103,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exercise'
+      security:
+      - bearerAuth: []
     delete:
       tags:
       - exercise-controller
@@ -114,6 +118,8 @@ paths:
       responses:
         "200":
           description: OK
+      security:
+      - bearerAuth: []
   /users:
     get:
       tags:
@@ -128,6 +134,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
+      security:
+      - bearerAuth: []
     post:
       tags:
       - user-controller
@@ -145,6 +153,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+      security:
+      - bearerAuth: []
   /sheet:
     get:
       tags:
@@ -176,6 +186,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Sheet'
+      security:
+      - bearerAuth: []
   /sheet/pdf:
     post:
       tags:
@@ -228,6 +240,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exercise'
+      security:
+      - bearerAuth: []
   /exercise/pdf:
     post:
       tags:
@@ -329,6 +343,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+      security:
+      - bearerAuth: []
     delete:
       tags:
       - user-controller
@@ -342,6 +358,8 @@ paths:
       responses:
         "200":
           description: OK
+      security:
+      - bearerAuth: []
   /users/refreshtoken:
     get:
       tags:
@@ -354,6 +372,8 @@ paths:
             application/json:
               schema:
                 type: object
+      security:
+      - refreshToken: []
   /sheet/{id}/pdf:
     get:
       tags:
@@ -631,8 +651,6 @@ components:
           type: string
         isPublished:
           type: boolean
-        isUsed:
-          type: boolean
         images:
           type: array
           items:
@@ -672,3 +690,10 @@ components:
           type: string
         admin:
           type: boolean
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+    refreshToken:
+      type: http
+      scheme: bearer
