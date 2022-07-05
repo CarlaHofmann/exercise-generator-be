@@ -25,6 +25,9 @@ import com.frauas.exercisegenerator.helpers.StringHelper;
 import com.frauas.exercisegenerator.services.ExerciseService;
 import com.frauas.exercisegenerator.services.LatexGeneratorService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping("/exercise")
 public class ExerciseController {
@@ -66,6 +69,7 @@ public class ExerciseController {
     }
 
     @PostMapping
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
     public Exercise createExercise(HttpServletRequest request, @RequestBody ExerciseDto exerciseDto) {
         return exerciseService.createExerciseFromDto(request, exerciseDto);
     }
@@ -91,11 +95,13 @@ public class ExerciseController {
     }
 
     @PutMapping("/{id}")
-    public Exercise updatExercise(@PathVariable String id, @RequestBody ExerciseDto exerciseDto) {
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
+    public Exercise updateExercise(@PathVariable String id, @RequestBody ExerciseDto exerciseDto) {
         return exerciseService.updateExerciseById(id, exerciseDto);
     }
 
     @DeleteMapping("/{id}")
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
     public void deleteExercise(@PathVariable String id) {
         exerciseService.deleteExerciseById(id);
     }

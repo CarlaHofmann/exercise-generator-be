@@ -25,6 +25,9 @@ import com.frauas.exercisegenerator.helpers.StringHelper;
 import com.frauas.exercisegenerator.services.LatexGeneratorService;
 import com.frauas.exercisegenerator.services.SheetService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping("/sheet")
 public class SheetController {
@@ -66,6 +69,7 @@ public class SheetController {
     }
 
     @PostMapping
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
     public Sheet createSheet(HttpServletRequest request, @RequestBody SheetDto createSheetDto) {
         return sheetService.createSheet(request, createSheetDto);
     }
@@ -96,6 +100,7 @@ public class SheetController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
     public void deleteSheet(@PathVariable String id) {
         sheetService.deleteSheetById(id);
     }
