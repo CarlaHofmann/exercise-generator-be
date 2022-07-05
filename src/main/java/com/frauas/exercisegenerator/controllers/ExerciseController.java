@@ -5,12 +5,18 @@ import com.frauas.exercisegenerator.dtos.ExerciseDto;
 import com.frauas.exercisegenerator.helpers.StringHelper;
 import com.frauas.exercisegenerator.services.ExerciseService;
 import com.frauas.exercisegenerator.services.LatexGeneratorService;
+import com.frauas.exercisegenerator.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @RestController
 @RequestMapping("/exercise")
@@ -18,6 +24,9 @@ public class ExerciseController {
 
     @Autowired
     ExerciseService exerciseService;
+
+    @Autowired
+    TokenUtil tokenUtil;
 
     @Autowired
     LatexGeneratorService latexGeneratorService;
@@ -78,12 +87,32 @@ public class ExerciseController {
     }
 
     @PutMapping("/{id}")
-    public Exercise updatExercise(@PathVariable String id, @RequestBody ExerciseDto exerciseDto) {
+    public Exercise updatExercise(HttpServletRequest request, HttpServletResponse response, @PathVariable String id, @RequestBody ExerciseDto exerciseDto) throws IOException
+    {
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        String token = authorizationHeader.substring("Bearer ".length());
+        String givenUsername = tokenUtil.getUsernameFromToken(token);
+        String actualUsername = exerciseService.getExerciseById(id).getAuthor().getUsername();
+
+        if(givenUsername.equals(actualUsername) == false){
+            response.sendError(UNAUTHORIZED.value());
+        }
+
         return exerciseService.updateExerciseById(id, exerciseDto);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteExercise(@PathVariable String id) {
+    public void deleteExercise(HttpServletRequest request, HttpServletResponse response,@PathVariable String id) throws IOException
+    {
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        String token = authorizationHeader.substring("Bearer ".length());
+        String givenUsername = tokenUtil.getUsernameFromToken(token);
+        String actualUsername = exerciseService.getExerciseById(id).getAuthor().getUsername();
+
+        if(givenUsername.equals(actualUsername) == false){
+            response.sendError(UNAUTHORIZED.value());
+        }
+
         exerciseService.deleteExerciseById(id);
     }
 }
