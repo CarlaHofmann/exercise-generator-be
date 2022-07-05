@@ -47,6 +47,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Sheet'
+      security:
+      - bearerAuth: []
     delete:
       tags:
       - sheet-controller
@@ -263,6 +265,8 @@ paths:
                 items:
                   type: string
                   format: byte
+      security:
+      - bearerAuth: []
   /courses:
     get:
       tags:
@@ -416,6 +420,8 @@ paths:
                 items:
                   type: string
                   format: byte
+      security:
+      - bearerAuth: []
   /courses/{id}:
     get:
       tags:
