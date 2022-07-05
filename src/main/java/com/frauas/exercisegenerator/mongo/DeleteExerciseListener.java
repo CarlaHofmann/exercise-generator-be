@@ -29,6 +29,12 @@ public class DeleteExerciseListener extends AbstractMongoEventListener<Exercise>
 
             exercises.removeIf((exercise) -> exercise.getId() == exerciseId);
 
+            // Empty sheets will be unpublished
+            if (exercises.isEmpty()) {
+                sheet.setIsPublished(false);
+                sheet.setPublishedAt(null);
+            }
+
             sheetRepository.save(sheet);
         }
     }
