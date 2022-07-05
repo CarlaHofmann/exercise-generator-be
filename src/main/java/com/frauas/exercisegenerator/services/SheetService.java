@@ -1,24 +1,30 @@
 package com.frauas.exercisegenerator.services;
 
-import com.frauas.exercisegenerator.documents.*;
-import com.frauas.exercisegenerator.dtos.SheetDto;
-import com.frauas.exercisegenerator.repositories.ExerciseRepository;
-import com.frauas.exercisegenerator.repositories.SheetRepository;
-import com.frauas.exercisegenerator.repositories.UserRepository;
-import com.frauas.exercisegenerator.util.TokenUtil;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import com.frauas.exercisegenerator.documents.Category;
+import com.frauas.exercisegenerator.documents.Course;
+import com.frauas.exercisegenerator.documents.Exercise;
+import com.frauas.exercisegenerator.documents.Sheet;
+import com.frauas.exercisegenerator.documents.User;
+import com.frauas.exercisegenerator.dtos.SheetDto;
+import com.frauas.exercisegenerator.repositories.ExerciseRepository;
+import com.frauas.exercisegenerator.repositories.SheetRepository;
+import com.frauas.exercisegenerator.repositories.UserRepository;
+import com.frauas.exercisegenerator.util.TokenUtil;
 
 @Service
 public class SheetService {
@@ -47,18 +53,7 @@ public class SheetService {
                         "Sheet with id '" + id + "' could not be found!"));
     }
 
-    public Sheet prepareSheet(HttpServletRequest request, SheetDto sheetDto) {
-        String authorizationHeader = request.getHeader(AUTHORIZATION);
-        String token = authorizationHeader.substring("Bearer ".length());
-
-        tokenUtil.validateToken(token);
-
-        Optional<User> user = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(token));
-        if (user.isPresent() == false) {
-            throw new RuntimeException("username not valid");
-        }
-
-
+    public Sheet prepareSheet(SheetDto sheetDto) {
         ArrayList<Course> courses = new ArrayList<>();
         sheetDto.getCourses().forEach(courseDto -> {
             Course course = Course.builder()
@@ -93,7 +88,6 @@ public class SheetService {
             sheet.setShowSolutions(true);
         }
 
-        sheet.setAuthor(user.get());
         sheet.setCourses(courses);
         sheet.setCategories(categories);
         sheet.setExercises(exercises);
@@ -102,7 +96,20 @@ public class SheetService {
     }
 
     public Sheet createSheet(HttpServletRequest request, SheetDto sheetDto) {
-        Sheet sheet = prepareSheet(request, sheetDto);
+        Sheet sheet = prepareSheet(sheetDto);
+
+        String authorizationHeader = request.getHeader(AUTHORIZATION);
+        String token = authorizationHeader.substring("Bearer ".length());
+
+        tokenUtil.validateToken(token);
+
+        Optional<User> user = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(token));
+
+        if (user.isPresent() == false) {
+            throw new RuntimeException("username not valid");
+        }
+
+        sheet.setAuthor(user.get());
 
         return sheetRepository.save(sheet);
     }

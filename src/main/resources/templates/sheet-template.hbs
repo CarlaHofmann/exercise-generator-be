@@ -54,18 +54,39 @@
 \end{frame}
 
 <%#each exercises %>
-   \section{<% title %>}
+   <%#if ../useNumericTitles %>
+      \section{Aufgabe <%inc @index %>}
+   <%else %>
+      \section{<% title %>}
+   <%/if %>
+
    <%#each texts %>
       \begin{frame}[allowframebreaks]
-         \frametitle{<% ../title %>}
+         <%#if ../../useNumericTitles %>
+            \frametitle{Aufgabe <%inc ../@index %>}
+         <%else %>
+            \frametitle{<% ../title %>}
+         <%/if %>
+         
          <% this %>
       \end{frame}
    <%/each %>
+   
    <%#if solutions%>
-      \section{<% title %> - Lösung}
+      <%#if ../useNumericTitles %>
+         \section{Aufgabe <%inc @index %> - Lösung}
+      <%else %>
+         \section{<% title %>}
+      <%/if %>
+
       <%#each solutions %>
          \begin{frame}[allowframebreaks]
-            \frametitle{<% ../title %> - Lösung}
+            <%#if ../../useNumericTitles %>
+               \frametitle{Aufgabe <%inc ../@index %> - Lösung}
+            <%else %>
+               \frametitle{<% ../title %> - Lösung}
+            <%/if %>
+
             <% this %>
          \end{frame}
       <%/each %>

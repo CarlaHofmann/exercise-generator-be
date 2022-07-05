@@ -1,10 +1,15 @@
 package com.frauas.exercisegenerator.controllers;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import com.frauas.exercisegenerator.documents.Sheet;
 import com.frauas.exercisegenerator.dtos.SheetDto;
 import com.frauas.exercisegenerator.helpers.StringHelper;
 import com.frauas.exercisegenerator.services.LatexGeneratorService;
 import com.frauas.exercisegenerator.services.SheetService;
+
 import com.frauas.exercisegenerator.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -14,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
@@ -67,8 +73,8 @@ public class SheetController {
     }
 
     @PostMapping(path = "/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> getSheetPdf(HttpServletRequest request, @RequestBody SheetDto sheetDto) {
-        Sheet sheet = sheetService.prepareSheet(request, sheetDto);
+    public ResponseEntity<byte[]> previewSheetDto(@RequestBody SheetDto sheetDto) {
+        Sheet sheet = sheetService.prepareSheet(sheetDto);
 
         byte[] contents = latexGeneratorService.createSheetPdf(sheet);
 

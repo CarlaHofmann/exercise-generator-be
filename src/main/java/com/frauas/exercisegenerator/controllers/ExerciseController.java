@@ -1,5 +1,9 @@
 package com.frauas.exercisegenerator.controllers;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import com.frauas.exercisegenerator.documents.Exercise;
 import com.frauas.exercisegenerator.dtos.ExerciseDto;
 import com.frauas.exercisegenerator.helpers.StringHelper;
