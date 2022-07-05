@@ -23,10 +23,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.frauas.exercisegenerator.documents.Exercise;
 import com.frauas.exercisegenerator.dtos.ExerciseDto;
 import com.frauas.exercisegenerator.helpers.StringHelper;
+import com.frauas.exercisegenerator.repositories.UserRepository;
 import com.frauas.exercisegenerator.services.ExerciseService;
 import com.frauas.exercisegenerator.services.LatexGeneratorService;
 import com.frauas.exercisegenerator.util.TokenUtil;
@@ -47,6 +49,9 @@ public class ExerciseController {
     @Autowired
     LatexGeneratorService latexGeneratorService;
 
+    @Autowired
+    UserRepository userRepository;
+
     @GetMapping
     public List<Exercise> getAllExercises() {
         return exerciseService.getAllExercises();
@@ -58,8 +63,28 @@ public class ExerciseController {
     }
 
     @GetMapping(path = "/{id}/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> getExercisePdf(@PathVariable String id) {
+    @Operation(security = { @SecurityRequirement(name = "bearerAuth"), @SecurityRequirement(name = "") })
+    public ResponseEntity<byte[]> getExercisePdf(HttpServletRequest request, @PathVariable String id) {
         Exercise exercise = exerciseService.getExerciseById(id);
+
+        if (!exercise.getIsPublished()) {
+            String authorizationHeader = request.getHeader(AUTHORIZATION);
+
+            if (authorizationHeader == null) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                        "Unauthorized users may not generate pdf files for unpublished exercises");
+            }
+
+            String token = authorizationHeader.substring("Bearer ".length());
+            tokenUtil.validateToken(token);
+
+            String username = tokenUtil.getUsernameFromToken(token);
+
+            if (!username.equals(exercise.getAuthor().getUsername())) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                        "Users may only generate pdf files of unpublished exercises for their own exercises");
+            }
+        }
 
         byte[] contents = latexGeneratorService.createExercisePdf(exercise);
 
@@ -84,6 +109,7 @@ public class ExerciseController {
     }
 
     @PostMapping(path = "/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<byte[]> previewExerciseDto(HttpServletRequest request, @RequestBody ExerciseDto exerciseDto) {
         Exercise exercise = exerciseService.prepareExerciseFromDto(request, exerciseDto);
 
