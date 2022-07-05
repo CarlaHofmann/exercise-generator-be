@@ -19,8 +19,6 @@ public class ExerciseDto {
 
     private Boolean isPublished = false;
 
-    private Boolean isUsed = false;
-
     private List<ImageDto> images = new ArrayList<>();
 
     @NotNull
