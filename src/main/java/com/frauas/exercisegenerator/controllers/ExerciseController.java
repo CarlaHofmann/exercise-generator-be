@@ -4,6 +4,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,13 +54,65 @@ public class ExerciseController {
     UserRepository userRepository;
 
     @GetMapping
-    public List<Exercise> getAllExercises() {
-        return exerciseService.getAllExercises();
+    @Operation(security = { @SecurityRequirement(name = "bearerAuth"), @SecurityRequirement(name = "") })
+    public List<Exercise> getAllExercises(HttpServletRequest request)
+    {
+        List<Exercise> allExercises = exerciseService.getAllExercises();
+        List<Exercise> allowedExercises = new ArrayList<>();
+
+        for(Exercise e: allExercises)
+        {
+            if (!e.getIsPublished()) {
+                String authorizationHeader = request.getHeader(AUTHORIZATION);
+
+                if (authorizationHeader != null && authorizationHeader.startsWith("Bearer "))
+                {
+                    String token = authorizationHeader.substring("Bearer ".length());
+                    tokenUtil.validateToken(token);
+
+                    String username = tokenUtil.getUsernameFromToken(token);
+
+                    if (username.equals(e.getAuthor().getUsername()))
+                    {
+                        allowedExercises.add(e);
+                    }
+                }
+            }
+            else {
+                allowedExercises.add(e);
+            }
+        }
+
+        return allowedExercises;
     }
 
     @GetMapping("/{id}")
-    public Exercise getExerciseById(@PathVariable String id) {
-        return exerciseService.getExerciseById(id);
+    @Operation(security = { @SecurityRequirement(name = "bearerAuth"), @SecurityRequirement(name = "") })
+    public Exercise getExerciseById(HttpServletRequest request, @PathVariable String id) {
+        Exercise exercise = exerciseService.getExerciseById(id);
+
+        if (!exercise.getIsPublished()) {
+            String authorizationHeader = request.getHeader(AUTHORIZATION);
+
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer "))
+            {
+                String token = authorizationHeader.substring("Bearer ".length());
+                tokenUtil.validateToken(token);
+
+                String username = tokenUtil.getUsernameFromToken(token);
+
+                if (!username.equals(exercise.getAuthor().getUsername())) {
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                            "Users may only see their own unpublished exercises");
+                }
+            }
+            else {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                        "Unauthorized users may not see unpublished exercises");
+            }
+
+        }
+        return exercise;
     }
 
     @GetMapping(path = "/{id}/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
