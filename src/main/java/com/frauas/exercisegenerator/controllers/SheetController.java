@@ -4,11 +4,13 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.frauas.exercisegenerator.documents.Exercise;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -33,6 +35,7 @@ import com.frauas.exercisegenerator.util.TokenUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/sheet")
@@ -48,18 +51,90 @@ public class SheetController {
     private LatexGeneratorService latexGeneratorService;
 
     @GetMapping
-    public List<Sheet> getAllSheets() {
-        return sheetService.getSheets();
+    @Operation(security = { @SecurityRequirement(name = "bearerAuth"), @SecurityRequirement(name = "") })
+    public List<Sheet> getAllSheets(HttpServletRequest request) {
+        List<Sheet> allSheets = sheetService.getSheets();
+        List<Sheet> allowedSheets = new ArrayList<>();
+
+        for(Sheet s: allSheets)
+        {
+            if (!s.getIsPublished()) {
+                String authorizationHeader = request.getHeader(AUTHORIZATION);
+
+                if (authorizationHeader != null && authorizationHeader.startsWith("Bearer "))
+                {
+                    String token = authorizationHeader.substring("Bearer ".length());
+                    tokenUtil.validateToken(token);
+
+                    String username = tokenUtil.getUsernameFromToken(token);
+
+                    if (username.equals(s.getAuthor().getUsername()))
+                    {
+                        allowedSheets.add(s);
+                    }
+                }
+            }
+            else {
+                allowedSheets.add(s);
+            }
+        }
+
+        return allowedSheets;
     }
 
     @GetMapping("/{id}")
-    public Sheet getSheetById(@PathVariable String id) {
-        return sheetService.getSheetById(id);
+    @Operation(security = { @SecurityRequirement(name = "bearerAuth"), @SecurityRequirement(name = "") })
+    public Sheet getSheetById(HttpServletRequest request, @PathVariable String id) {
+        Sheet sheet = sheetService.getSheetById(id);
+
+        if (!sheet.getIsPublished()) {
+            String authorizationHeader = request.getHeader(AUTHORIZATION);
+
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer "))
+            {
+                String token = authorizationHeader.substring("Bearer ".length());
+                tokenUtil.validateToken(token);
+
+                String username = tokenUtil.getUsernameFromToken(token);
+
+                if (!username.equals(sheet.getAuthor().getUsername())) {
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                            "Users may only see their own unpublished sheets");
+                }
+            }
+            else {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                        "Unauthorized users may not see unpublished sheets");
+            }
+
+        }
+
+        return sheet;
     }
 
     @GetMapping(path = "/{id}/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> getSheetPdf(@PathVariable String id) {
+    @Operation(security = { @SecurityRequirement(name = "bearerAuth"), @SecurityRequirement(name = "") })
+    public ResponseEntity<byte[]> getSheetPdf(HttpServletRequest request, @PathVariable String id) {
         Sheet sheet = sheetService.getSheetById(id);
+
+        if (!sheet.getIsPublished()) {
+            String authorizationHeader = request.getHeader(AUTHORIZATION);
+
+            if (authorizationHeader == null) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                        "Unauthorized users may not generate pdf files for unpublished sheets");
+            }
+
+            String token = authorizationHeader.substring("Bearer ".length());
+            tokenUtil.validateToken(token);
+
+            String username = tokenUtil.getUsernameFromToken(token);
+
+            if (!username.equals(sheet.getAuthor().getUsername())) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                        "Users may only generate pdf files of unpublished sheets for their own exercises");
+            }
+        }
 
         byte[] contents = latexGeneratorService.createSheetPdf(sheet);
 
