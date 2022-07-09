@@ -1,14 +1,5 @@
 package com.frauas.exercisegenerator.services;
 
-import com.frauas.exercisegenerator.converters.ImageBase64Converter;
-import com.frauas.exercisegenerator.documents.Exercise;
-import com.frauas.exercisegenerator.documents.Image;
-import com.frauas.exercisegenerator.dtos.ImageDto;
-import org.apache.commons.io.FileUtils;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -16,6 +7,19 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.io.FileUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.frauas.exercisegenerator.converters.ImageBase64Converter;
+import com.frauas.exercisegenerator.documents.Exercise;
+import com.frauas.exercisegenerator.documents.Image;
+import com.frauas.exercisegenerator.dtos.ImageDto;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class ImageService {
 
@@ -71,7 +75,7 @@ public class ImageService {
                 try {
                     image.setContent(getImageContent(image));
                 } catch (IOException e) {
-                    System.err.println("Error during image content hydration for exercise:\n" + e);
+                    log.warn("Error during image content hydration for exercise", e);
                 }
             });
         }

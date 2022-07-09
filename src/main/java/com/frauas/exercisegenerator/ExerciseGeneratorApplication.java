@@ -13,11 +13,6 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.frauas.exercisegenerator.helpers.handlebars.IncrementHelper;
-import com.frauas.exercisegenerator.mongo.CascadeSaveMongoEventListener;
-import com.frauas.exercisegenerator.mongo.DeleteExerciseListener;
-import com.frauas.exercisegenerator.mongo.ExerciseVirtualFieldListener;
-import com.frauas.exercisegenerator.mongo.SaveSheetListener;
-import com.frauas.exercisegenerator.mongo.UpsertSaveMongoEventListener;
 import com.frauas.exercisegenerator.util.TokenUtil;
 import com.github.jknack.handlebars.EscapingStrategy;
 import com.github.jknack.handlebars.Handlebars;
@@ -77,31 +72,6 @@ public class ExerciseGeneratorApplication {
                 .registerHelper(IncrementHelper.NAME, new IncrementHelper());
 
         return handlebars;
-    }
-
-    @Bean
-    ExerciseVirtualFieldListener exerciseVirtualFieldListener() {
-        return new ExerciseVirtualFieldListener();
-    }
-
-    @Bean
-    CascadeSaveMongoEventListener cascadeSaveMongoEventListener() {
-        return new CascadeSaveMongoEventListener();
-    }
-
-    @Bean
-    UpsertSaveMongoEventListener upsertSaveMongoEventListener() {
-        return new UpsertSaveMongoEventListener();
-    }
-
-    @Bean
-    DeleteExerciseListener deleteExerciseListener() {
-        return new DeleteExerciseListener();
-    }
-
-    @Bean
-    SaveSheetListener saveSheetListener() {
-        return new SaveSheetListener();
     }
 
     @Configuration
