@@ -1,19 +1,5 @@
 package com.frauas.exercisegenerator.services;
 
-import com.frauas.exercisegenerator.documents.Exercise;
-import com.frauas.exercisegenerator.documents.Image;
-import com.frauas.exercisegenerator.documents.Sheet;
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.Template;
-import org.buildobjects.process.ExternalProcessFailureException;
-import org.buildobjects.process.ProcBuilder;
-import org.buildobjects.process.StartupException;
-import org.buildobjects.process.TimeoutException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +9,24 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
+import org.buildobjects.process.ExternalProcessFailureException;
+import org.buildobjects.process.ProcBuilder;
+import org.buildobjects.process.StartupException;
+import org.buildobjects.process.TimeoutException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.frauas.exercisegenerator.documents.Exercise;
+import com.frauas.exercisegenerator.documents.Image;
+import com.frauas.exercisegenerator.documents.Sheet;
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class LatexGeneratorService {
 
@@ -83,8 +87,7 @@ public class LatexGeneratorService {
         try {
             command.run();
         } catch (ExternalProcessFailureException e) {
-            System.out.println("Error during LaTeX compilation, but can probably be ignored.");
-            System.out.println(e.getMessage());
+            log.warn("Error during LaTeX compilation, but can probably be ignored.", e);
         }
 
         // Read contents of created pdf file
@@ -138,7 +141,10 @@ public class LatexGeneratorService {
         List<Image> images = exercise.getImages();
 
         for (Image image : images) {
-            latexContent = latexContent.replaceAll(image.getReference(), image.getFilepath());
+            latexContent = latexContent
+                    .replaceAll(
+                            image.getReference(),
+                            image.getFilepath().replaceAll("\\\\", "/"));
         }
 
         return latexContent;
