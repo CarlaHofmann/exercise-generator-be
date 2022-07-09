@@ -105,8 +105,8 @@ public class ExerciseGeneratorApplication {
     }
 
     @Configuration
-    @SecurityScheme(name = "bearerAuth", type = SecuritySchemeType.HTTP, scheme = "bearer")
-    @SecurityScheme(name = "refreshToken", type = SecuritySchemeType.HTTP, scheme = "bearer")
+    @SecurityScheme(name = "bearerAuth", type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT")
+    @SecurityScheme(name = "refreshToken", type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT")
     public class OpenApi30Config {
     }
 }

@@ -24,6 +24,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Sheet'
+      security:
+      - bearerAuth: []
     put:
       tags:
       - sheet-controller
@@ -82,6 +84,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Exercise'
+      security:
+      - bearerAuth: []
     put:
       tags:
       - exercise-controller
@@ -171,6 +175,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Sheet'
+      security:
+      - bearerAuth: []
     post:
       tags:
       - sheet-controller
@@ -225,6 +231,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Exercise'
+      security:
+      - bearerAuth: []
     post:
       tags:
       - exercise-controller
@@ -399,6 +407,8 @@ paths:
                 items:
                   type: string
                   format: byte
+      security:
+      - bearerAuth: []
   /exercise/{id}/pdf:
     get:
       tags:
@@ -484,6 +494,25 @@ paths:
       responses:
         "200":
           description: OK
+  /login:
+    post:
+      tags:
+      - login-endpoint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: OK
+        "403":
+          description: Forbidden
 components:
   schemas:
     CreateCategoryDto:
@@ -551,6 +580,9 @@ components:
       properties:
         id:
           type: string
+        updatedAt:
+          type: string
+          format: date-time
         publishedAt:
           type: string
           format: date-time
@@ -700,6 +732,8 @@ components:
     bearerAuth:
       type: http
       scheme: bearer
+      bearerFormat: JWT
     refreshToken:
       type: http
       scheme: bearer
+      bearerFormat: JWT
