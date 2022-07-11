@@ -131,7 +131,9 @@ public class LatexGeneratorService {
         List<Exercise> exercises = sheet.getExercises();
 
         for (Exercise exercise : exercises) {
-            latexContent = replaceImageReferences(latexContent, exercise);
+            if (exercise != null) {
+                latexContent = replaceImageReferences(latexContent, exercise);
+            }
         }
 
         return latexContent;
@@ -141,10 +143,12 @@ public class LatexGeneratorService {
         List<Image> images = exercise.getImages();
 
         for (Image image : images) {
-            latexContent = latexContent
-                    .replaceAll(
-                            image.getReference(),
-                            image.getFilepath().replaceAll("\\\\", "/"));
+            if (image != null) {
+                latexContent = latexContent
+                        .replaceAll(
+                                image.getReference(),
+                                image.getFilepath().replaceAll("\\\\", "/"));
+            }
         }
 
         return latexContent;
