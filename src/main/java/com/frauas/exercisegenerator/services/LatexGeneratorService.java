@@ -133,6 +133,8 @@ public class LatexGeneratorService {
         for (Exercise exercise : exercises) {
             if (exercise != null) {
                 latexContent = replaceImageReferences(latexContent, exercise);
+            } else {
+                log.warn("Null reference to exercise in sheet with id '" + sheet.getId() + "'");
             }
         }
 
@@ -148,6 +150,8 @@ public class LatexGeneratorService {
                         .replaceAll(
                                 image.getReference(),
                                 image.getFilepath().replaceAll("\\\\", "/"));
+            } else {
+                log.warn("Null reference to image in exercise with id '" + exercise.getId() + "'");
             }
         }
 
