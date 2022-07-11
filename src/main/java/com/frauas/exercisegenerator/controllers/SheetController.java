@@ -1,7 +1,6 @@
 package com.frauas.exercisegenerator.controllers;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,7 +9,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.frauas.exercisegenerator.documents.Exercise;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -25,6 +23,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.frauas.exercisegenerator.documents.Sheet;
 import com.frauas.exercisegenerator.dtos.SheetDto;
@@ -35,7 +34,6 @@ import com.frauas.exercisegenerator.util.TokenUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/sheet")
@@ -56,25 +54,21 @@ public class SheetController {
         List<Sheet> allSheets = sheetService.getSheets();
         List<Sheet> allowedSheets = new ArrayList<>();
 
-        for(Sheet s: allSheets)
-        {
+        for (Sheet s : allSheets) {
             if (!s.getIsPublished()) {
                 String authorizationHeader = request.getHeader(AUTHORIZATION);
 
-                if (authorizationHeader != null && authorizationHeader.startsWith("Bearer "))
-                {
+                if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                     String token = authorizationHeader.substring("Bearer ".length());
                     tokenUtil.validateToken(token);
 
                     String username = tokenUtil.getUsernameFromToken(token);
 
-                    if (username.equals(s.getAuthor().getUsername()))
-                    {
+                    if (username.equals(s.getAuthor().getUsername())) {
                         allowedSheets.add(s);
                     }
                 }
-            }
-            else {
+            } else {
                 allowedSheets.add(s);
             }
         }
@@ -90,8 +84,7 @@ public class SheetController {
         if (!sheet.getIsPublished()) {
             String authorizationHeader = request.getHeader(AUTHORIZATION);
 
-            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer "))
-            {
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 String token = authorizationHeader.substring("Bearer ".length());
                 tokenUtil.validateToken(token);
 
@@ -101,8 +94,7 @@ public class SheetController {
                     throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                             "Users may only see their own unpublished sheets");
                 }
-            }
-            else {
+            } else {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                         "Unauthorized users may not see unpublished sheets");
             }
@@ -188,7 +180,8 @@ public class SheetController {
         String actualUsername = sheetService.getSheetById(id).getAuthor().getUsername();
 
         if (givenUsername.equals(actualUsername) == false) {
-            response.sendError(UNAUTHORIZED.value());
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "Users may only update sheets which they've authored themselves");
         }
 
         return sheetService.updateSheetById(id, createSheetDto);
@@ -204,7 +197,8 @@ public class SheetController {
         String actualUsername = sheetService.getSheetById(id).getAuthor().getUsername();
 
         if (givenUsername.equals(actualUsername) == false) {
-            response.sendError(UNAUTHORIZED.value());
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "Users may only delete sheets which they've authored themselves");
         }
 
         sheetService.deleteSheetById(id);

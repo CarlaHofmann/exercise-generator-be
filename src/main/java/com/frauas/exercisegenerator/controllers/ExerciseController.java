@@ -1,7 +1,6 @@
 package com.frauas.exercisegenerator.controllers;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,30 +54,25 @@ public class ExerciseController {
 
     @GetMapping
     @Operation(security = { @SecurityRequirement(name = "bearerAuth"), @SecurityRequirement(name = "") })
-    public List<Exercise> getAllExercises(HttpServletRequest request)
-    {
+    public List<Exercise> getAllExercises(HttpServletRequest request) {
         List<Exercise> allExercises = exerciseService.getAllExercises();
         List<Exercise> allowedExercises = new ArrayList<>();
 
-        for(Exercise e: allExercises)
-        {
+        for (Exercise e : allExercises) {
             if (!e.getIsPublished()) {
                 String authorizationHeader = request.getHeader(AUTHORIZATION);
 
-                if (authorizationHeader != null && authorizationHeader.startsWith("Bearer "))
-                {
+                if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                     String token = authorizationHeader.substring("Bearer ".length());
                     tokenUtil.validateToken(token);
 
                     String username = tokenUtil.getUsernameFromToken(token);
 
-                    if (username.equals(e.getAuthor().getUsername()))
-                    {
+                    if (username.equals(e.getAuthor().getUsername())) {
                         allowedExercises.add(e);
                     }
                 }
-            }
-            else {
+            } else {
                 allowedExercises.add(e);
             }
         }
@@ -94,8 +88,7 @@ public class ExerciseController {
         if (!exercise.getIsPublished()) {
             String authorizationHeader = request.getHeader(AUTHORIZATION);
 
-            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer "))
-            {
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 String token = authorizationHeader.substring("Bearer ".length());
                 tokenUtil.validateToken(token);
 
@@ -105,8 +98,7 @@ public class ExerciseController {
                     throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                             "Users may only see their own unpublished exercises");
                 }
-            }
-            else {
+            } else {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                         "Unauthorized users may not see unpublished exercises");
             }
@@ -192,7 +184,8 @@ public class ExerciseController {
         String actualUsername = exerciseService.getExerciseById(id).getAuthor().getUsername();
 
         if (givenUsername.equals(actualUsername) == false) {
-            response.sendError(UNAUTHORIZED.value());
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "Users may only update exercises which they've authored themselves");
         }
 
         return exerciseService.updateExerciseById(id, exerciseDto);
@@ -208,7 +201,8 @@ public class ExerciseController {
         String actualUsername = exerciseService.getExerciseById(id).getAuthor().getUsername();
 
         if (givenUsername.equals(actualUsername) == false) {
-            response.sendError(UNAUTHORIZED.value());
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "Users may only delete exercises which they've authored themselves");
         }
 
         exerciseService.deleteExerciseById(id);
