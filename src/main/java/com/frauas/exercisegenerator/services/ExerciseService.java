@@ -108,7 +108,6 @@ public class ExerciseService {
 
         if (exerciseDto.getIsPublished()) {
             exercise.setPublishedAt(LocalDateTime.now());
-            exercise.setIsPublished(true);
         }
 
         exercise.setAuthor(user.get());
@@ -164,20 +163,20 @@ public class ExerciseService {
             }
         });
 
-        modelMapper.map(exerciseDto, exercise);
-
         if (exerciseDto.getIsPublished() && !exercise.getIsPublished()) {
             exercise.setPublishedAt(LocalDateTime.now());
-            exercise.setIsPublished(true);
         } else if (!exerciseDto.getIsPublished() && exercise.getIsPublished()) {
             exercise.setPublishedAt(null);
-            exercise.setIsPublished(false);
         }
+
+        modelMapper.map(exerciseDto, exercise);
 
         exercise.setCourses(courses);
         exercise.setCategories(categories);
         exercise.setImages(images);
 
+        // System.out.println(exerciseDto);
+        // System.out.println(exercise);
         return exerciseRepository.save(exercise);
     }
 

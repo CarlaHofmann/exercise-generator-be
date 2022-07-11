@@ -119,8 +119,6 @@ public class SheetService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Sheet with id '" + id + "' could not be found!"));
 
-        modelMapper.map(sheetDto, sheet);
-
         ArrayList<Course> courses = new ArrayList<>();
         sheetDto.getCourses().forEach(courseDto -> {
             Course course = Course.builder()
@@ -142,11 +140,11 @@ public class SheetService {
 
         if (sheetDto.getIsPublished() && !sheet.getIsPublished()) {
             sheet.setPublishedAt(LocalDateTime.now());
-            sheet.setIsPublished(true);
         } else if (!sheetDto.getIsPublished() && sheet.getIsPublished()) {
             sheet.setPublishedAt(null);
-            sheet.setIsPublished(false);
         }
+
+        modelMapper.map(sheetDto, sheet);
 
         if (sheetDto.getUseNumericTitles() && !sheet.getUseNumericTitles()) {
             sheet.setUseNumericTitles(true);
