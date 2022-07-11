@@ -55,21 +55,21 @@ public class SheetController {
         List<Sheet> allowedSheets = new ArrayList<>();
 
         for (Sheet s : allSheets) {
-            if (!s.getIsPublished()) {
-                String authorizationHeader = request.getHeader(AUTHORIZATION);
+            String authorizationHeader = request.getHeader(AUTHORIZATION);
 
-                if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-                    String token = authorizationHeader.substring("Bearer ".length());
-                    tokenUtil.validateToken(token);
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+                String token = authorizationHeader.substring("Bearer ".length());
+                tokenUtil.validateToken(token);
 
-                    String username = tokenUtil.getUsernameFromToken(token);
+                String username = tokenUtil.getUsernameFromToken(token);
 
-                    if (username.equals(s.getAuthor().getUsername())) {
-                        allowedSheets.add(s);
-                    }
+                if (username.equals(s.getAuthor().getUsername())) {
+                    allowedSheets.add(s);
                 }
             } else {
-                allowedSheets.add(s);
+                if (s.getIsPublished()) {
+                    allowedSheets.add(s);
+                }
             }
         }
 

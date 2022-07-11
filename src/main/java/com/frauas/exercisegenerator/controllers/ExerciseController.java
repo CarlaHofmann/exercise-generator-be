@@ -59,21 +59,21 @@ public class ExerciseController {
         List<Exercise> allowedExercises = new ArrayList<>();
 
         for (Exercise e : allExercises) {
-            if (!e.getIsPublished()) {
-                String authorizationHeader = request.getHeader(AUTHORIZATION);
+            String authorizationHeader = request.getHeader(AUTHORIZATION);
 
-                if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-                    String token = authorizationHeader.substring("Bearer ".length());
-                    tokenUtil.validateToken(token);
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+                String token = authorizationHeader.substring("Bearer ".length());
+                tokenUtil.validateToken(token);
 
-                    String username = tokenUtil.getUsernameFromToken(token);
+                String username = tokenUtil.getUsernameFromToken(token);
 
-                    if (username.equals(e.getAuthor().getUsername())) {
-                        allowedExercises.add(e);
-                    }
+                if (username.equals(e.getAuthor().getUsername())) {
+                    allowedExercises.add(e);
                 }
             } else {
-                allowedExercises.add(e);
+                if (e.getIsPublished()) {
+                    allowedExercises.add(e);
+                }
             }
         }
 
