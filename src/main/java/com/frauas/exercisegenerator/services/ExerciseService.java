@@ -1,30 +1,24 @@
 package com.frauas.exercisegenerator.services;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.frauas.exercisegenerator.documents.*;
+import com.frauas.exercisegenerator.dtos.ExerciseDto;
+import com.frauas.exercisegenerator.repositories.CategoryRepository;
+import com.frauas.exercisegenerator.repositories.ExerciseRepository;
+import com.frauas.exercisegenerator.repositories.UserRepository;
+import com.frauas.exercisegenerator.util.TokenUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.frauas.exercisegenerator.documents.Category;
-import com.frauas.exercisegenerator.documents.Course;
-import com.frauas.exercisegenerator.documents.Exercise;
-import com.frauas.exercisegenerator.documents.Image;
-import com.frauas.exercisegenerator.documents.User;
-import com.frauas.exercisegenerator.dtos.ExerciseDto;
-import com.frauas.exercisegenerator.repositories.CategoryRepository;
-import com.frauas.exercisegenerator.repositories.ExerciseRepository;
-import com.frauas.exercisegenerator.repositories.UserRepository;
-import com.frauas.exercisegenerator.util.TokenUtil;
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Service
 public class ExerciseService {
@@ -169,14 +163,14 @@ public class ExerciseService {
             exercise.setPublishedAt(null);
         }
 
-        modelMapper.map(exerciseDto, exercise);
+        this.modelMapper.map(exerciseDto, exercise);
 
+        exercise.setTexts(exerciseDto.getTexts());
+        exercise.setSolutions(exerciseDto.getSolutions());
         exercise.setCourses(courses);
         exercise.setCategories(categories);
         exercise.setImages(images);
 
-        // System.out.println(exerciseDto);
-        // System.out.println(exercise);
         return exerciseRepository.save(exercise);
     }
 
