@@ -46,8 +46,10 @@ public class LatexGeneratorService {
             String filename = writeContentFile(fileContent);
             content = renderLatexPdfContent(filename);
         } catch (IOException e) {
+            log.error("Error during sheet pdf generation!", e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         } catch (TimeoutException e) {
+            log.error("Error during sheet pdf generation!", e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Timeout during LaTeX compilation!");
         }
 
@@ -80,6 +82,7 @@ public class LatexGeneratorService {
                 .withArg("-interaction=nonstopmode")
                 .withArg("-pdf")
                 .withArg("-silent")
+                .withArg("-f")
                 .withArg(filename)
                 .withTimeoutMillis(20 * 1000);
 
